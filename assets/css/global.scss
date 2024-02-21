@@ -1,0 +1,76 @@
+
+// info container
+.combodo-github-integration--repository-info-container{
+	margin-bottom: 15px;
+	font-size: 1rem;
+	color: #969696;
+}
+
+// info
+.combodo-github-integration--repository-info{
+	display:flex;
+	margin-bottom: 20px;
+	align-items: stretch;
+}
+
+.combodo-github-integration--repository-info--logo i{
+	font-size: 2.5rem;
+	margin-right: 15px;
+	color: #8c8c8c;
+}
+
+// owner
+.combodo-github-integration--repository-info--owner{
+	display:flex;
+	margin: 4px 16px 4px 0px;
+	padding: 5px 10px;
+	align-items: center;
+	min-width: 200px;
+	background-color: #eaeaea;
+	border-radius: 3px;
+	>img{
+		width: 20px;
+		margin-right: 5px;
+	}
+	>span{
+		font-weight: 500;
+		color: #646464;
+	}
+}
+
+// help
+.combodo-github-integration--help-container{
+	background-color: #f6f6f6;
+	padding: 8px;
+	border-radius: 8px;
+	margin-top: 25px;
+	>h2{
+		font-size: 1.3rem;
+		font-weight: 500;
+	}
+	>div{
+		display: flex;
+		>div{
+			&:first-child{
+				flex-grow: 1;
+			}
+			padding: 0px 30px 0px 0px;
+			ul {
+				margin-top: 8px;
+				margin-left: 20px;
+				list-style-type: disc;
+				li{
+					margin-bottom: 8px;
+				}
+			}
+			code{
+				color: black;
+			}
+		}
+	}
+}
+
+// external links
+.combodo-github-integration--help-container--external-links{
+	margin-top: 20px;
+}

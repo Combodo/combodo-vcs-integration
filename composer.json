@@ -1,0 +1,16 @@
+{
+  "config": {
+    "classmap-authoritative": true
+  },
+  "autoload": {
+    "psr-4": {
+      "Combodo\\iTop\\VCSManagement\\": "src"
+    }
+  },
+  "name": "combodo/combodo-github-integration",
+  "type": "itop-extension",
+  "description": "GitHub Integration",
+  "require": {
+    "composer-runtime-api": "^2.0"
+  }
+}

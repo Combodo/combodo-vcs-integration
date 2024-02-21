@@ -1,0 +1,36 @@
+
+{# help container #}
+<div class="combodo-github-integration--help-container">
+    <h2>{{ 'Class:AbstractVCSAutomation/UI:Label:templating_syntax'|dict_s }}</h2>
+    <div>
+        <div>
+            <ul>
+                <li>{{ 'Class:AbstractVCSAutomation/UI:Label:templating_syntax_1'|dict_s }}<br><code>Event <span style="color: #d38f05;">[[event]]</span> received from user with login <span style="color: #d38f05;">[[sender->login]]</span> and ID <span style="color: #d38f05;">[[sender->id]]</span>...</code></li>
+                <li>{{ 'Class:AbstractVCSAutomation/UI:Label:templating_syntax_2'|dict_s }}<br><code><span style="color: #d38f05;">[[@for commits as commit]]</span><br>&nbsp;&nbsp;&nbsp;&nbsp;commit <span style="color: #d38f05;">[[commit->ref]]</span><br><span style="color: #d38f05;">[[@endfor]]</span></code></li>
+                <li>{{ 'Class:AbstractVCSAutomation/UI:Label:templating_syntax_3'|dict_s }}<br><code>Open on GitHub <span style="color: #d38f05;">[[@url url as ref]]</span></code></li>
+                <li>{{ 'Class:AbstractVCSAutomation/UI:Label:templating_syntax_4'|dict_s }}<br><code>Send a mail to <span style="color: #d38f05;">[[@mailto author->email as author->username]]</span></code></li>
+                <li>{{ 'Class:AbstractVCSAutomation/UI:Label:templating_syntax_5'|dict_s }}<code>Show avatar <span style="color: #d38f05;">[[@image sender->avatar_url]]</span></code></li>
+                <li>{{ 'Class:AbstractVCSAutomation/UI:Label:templating_syntax_6'|dict_s }}<code>Extract 6 firsts characters from commit id <span style="color: #d38f05;">[[@substring id 0 6]]</span></code></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{# external links #}
+<div class="combodo-github-integration--help-container--external-links">
+
+    {# open wiki #}
+    <a class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" href="https://www.itophub.io/wiki/page?id=latest%3Aadmin%3Alog" target="_blank" title="Open Wiki Documentation" aria-label="Open Wiki Documentation">
+        <span class="ibo-button--loading-icon fas fa-spinner fa-pulse"></span>
+        <span class="ibo-button--icon fas fa-external-link-alt"></span>
+        <span class="ibo-button--label">{{ 'Class:AbstractVCSAutomation/UI:Button:open_wiki_documentation'|dict_s }}</span>
+    </a>
+
+    {# open github doc #}
+    <a class="ibo-button ibo-button ibo-block  ibo-is-alternative ibo-is-neutral " data-role="ibo-button" href="https://docs.github.com/en/webhooks/webhook-events-and-payloads" target="_self" title="Edit General Configuration" aria-label="Edit General Configuration">
+        <span class="ibo-button--loading-icon fas fa-spinner fa-pulse"></span>
+        <span class="ibo-button--icon fas fa-cog"></span>
+        <span class="ibo-button--label">{{ 'Class:AbstractVCSAutomation/UI:Button:open_github_documentation'|dict_s }}</span>
+    </a>
+
+</div>

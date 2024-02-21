@@ -1,0 +1,35 @@
+
+{# repository info #}
+<div class="combodo-github-integration--repository-info">
+
+	{# owner #}
+	<a href="{{ url }}" target="_blank" class="combodo-github-integration--repository-info--owner">
+		<img alt="user" src="{{ user_avatar }}">
+		<span>{{ user_login }}</span>
+	</a>
+
+	{# watchers #}
+    <span id="ibo-pill-65b3c207a40cc301409688" class="ibo-pill ibo-content-block ibo-block  ibo-dm-enum--Contact-status-active" data-role="ibo-pill" data-github-data="watchers_count">
+	  <span class="ibo-dashlet-header-dynamic--count">{{ watchers_count }}</span>
+	  <span class="ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis">watchers</span>
+	</span>
+
+	{# forks #}
+    <span id="ibo-pill-65b3c207a40cc301409688" class="ibo-pill ibo-content-block ibo-block" data-role="ibo-pill"  data-github-data="forks">
+	  <span class="ibo-dashlet-header-dynamic--count">{{ forks_count }}</span>
+	  <span class="ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis">forks</span>
+	</span>
+
+	{# issues #}
+    <span id="ibo-pill-65b3c207a40cc301409688" class="ibo-pill ibo-content-block ibo-block  ibo-dm-enum--Contact-status-inactive" data-role="ibo-pill"   data-github-data="open_issues">
+	  <span class="ibo-dashlet-header-dynamic--count">{{ issues_count }}</span>
+	  <span class="ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis">open issues</span>
+	</span>
+
+</div>
+
+{# github last update #}
+<div class="combodo-github-integration--help-container--external-links">
+	{{ 'Class:AbstractVCSAutomation/UI:Label:last_update_on'|dict_s }} <span data-github-data="date">{{ date }}</span>
+</div>
+
