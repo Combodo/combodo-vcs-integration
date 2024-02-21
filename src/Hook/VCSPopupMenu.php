@@ -40,7 +40,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 						$oItem = new JSPopupMenuItem('GitHubSynchronizeRepositoryWebhook',
 							Dict::S('Class:VCSRepository/UI:Button:synchronize_configuration'),
 							'iTopGithubWorker.SynchronizeRepository("'.$param->GetKey().'");',
-							[utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/js/github.js']);
+							['env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;
 
@@ -48,7 +48,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 						$oItem = new JSPopupMenuItem('GitHubCheckRepositoryWebhookSynchro',
 							Dict::S('Class:VCSRepository/UI:Button:check_configuration'),
 							'iTopGithubWorker.CheckRepositoryWebhookSynchro("'.$param->GetKey().'");',
-							[utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/js/github.js']);
+							['env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;
 					}

@@ -151,7 +151,7 @@ class GitHubManager
 		foreach($oRepository->Get('automations')->GetValues() as $sLinkRef){
 			$oLink = MetaModel::GetObject('lnkVCSRepositoryToVCSAutomation', $sLinkRef);
 			$oAutomation = MetaModel::GetObject('AbstractVCSAutomation', $oLink->Get('automation_id'));
-			$aEvents = array_merge($aEvents, $oAutomation->Get('events')->GetValues());
+			$aEvents = array_unique(array_merge($aEvents, $oAutomation->Get('events')->GetValues()));
 		}
 
 		if(empty($aEvents)){
