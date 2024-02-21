@@ -589,10 +589,10 @@ your private key goes here
                     $sCondition = $this->Get('condition');
                     if(!\utils::IsNullOrEmptyString($sCondition)){
                         $aMatch = [];
-                        $res = preg_match('#([\>\w-]+)=(.*)#', $sCondition, $aMatch);
+                        $res = preg_match('/([\>\w-]+)=(.*)/', $sCondition, $aMatch);
                         if($res === 1){
                             $val = $oTemplatingService->ExtractDataFromPayload($aPayload, $aPayload, $aMatch[1]);
-                            if(!preg_match("/$aMatch[2]/", $val)){
+                            if(!preg_match("#$aMatch[2]#", $val)){
                                 false;
                             }
                         }
