@@ -26,7 +26,7 @@
         </naming>
         <display_template/>
         <style>
-          <icon>assets/img/vcs_connector.png</icon>
+          <icon>assets/img/icons8-cloud-connection-code-fork.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -212,7 +212,7 @@ your private key goes here
         </fields_semantic>
         <display_template/>
         <style>
-          <icon>assets/img/vcs_repository.png</icon>
+          <icon>assets/img/icons8-repository-code-fork.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -516,7 +516,7 @@ your private key goes here
         </naming>
         <display_template/>
         <style>
-          <icon>assets/img/vcs_automation.png</icon>
+          <icon>assets/img/icons8-cloud-connection-code-fork-automation.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -667,7 +667,7 @@ your private key goes here
         </naming>
         <display_template/>
         <style>
-          <icon>assets/img/vcs_automation.png</icon>
+          <icon>assets/img/icons8-cloud-connection-code-fork-automation.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1132,13 +1132,6 @@ your private key goes here
     </class>
   </classes>
   <menus>
-    <menu id="VCSMenu" xsi:type="MenuGroup" _delta="define">
-      <rank>10</rank>
-      <style>
-        <icon>assets/img/git.png</icon>
-        <decoration_classes>fab fa-github-alt</decoration_classes>
-      </style>
-    </menu>
     <menu id="VCSRepositoryMenu" xsi:type="OQLMenuNode" _delta="define">
       <rank>10</rank>
       <parent>ConfigurationTools</parent>
