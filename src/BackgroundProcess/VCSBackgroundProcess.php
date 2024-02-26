@@ -44,6 +44,15 @@ class VCSBackgroundProcess implements iBackgroundProcess
 	/** @inheritDoc * */
 	public function GetPeriodicity() : int
 	{
+		// periodicity from module configuration
+		$sSynchroAUtoInterval = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_SYNCHRO_AUTO_INTERVAL, null);
+		if($sSynchroAUtoInterval !== null){
+			try{
+				return intval($sSynchroAUtoInterval);
+			}
+			catch(Exception){}
+		}
+
 		return self::$iPERIODICITY;
 	}
 
@@ -55,11 +64,9 @@ class VCSBackgroundProcess implements iBackgroundProcess
 		// log
 		ModuleHelper::LogDebug('Background task execution');
 
-		// Create db search
+		// search repositories
 		$oDbObjectSearch = DBSearch::FromOQL('SELECT VCSRepository');
 		$oDbObjectSearch->SetShowObsoleteData(false);
-
-		// Create db set from db search
 		$oDbObjectSet = new DBObjectSet($oDbObjectSearch);
 
 		// iterate throw repositories...
@@ -72,14 +79,17 @@ class VCSBackgroundProcess implements iBackgroundProcess
 					continue;
 				}
 
-				// ignore if synchro mode manual
-				if($oRepository->Get('synchro_mode') === 'manual'){
+				// check repository status
+				$this->oGitHubManager->UpdateWebhookStatus($oRepository);
+				$oRepository->DBUpdate();
+
+				// synchronize if needed
+				if($oRepository->Get('synchro_mode') === 'auto'
+				&& $oRepository->Get('webhook_status') === 'unsynchronized' ){
+					$this->oGitHubManager->SynchronizeRepository($oRepository);
 					continue;
 				}
 
-				// check repository
-				$this->oGitHubManager->UpdateWebhookStatus($oRepository);
-				$oRepository->DBUpdate();
 			}
 			catch(Exception $e){
 

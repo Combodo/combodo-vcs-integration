@@ -204,7 +204,7 @@ your private key goes here
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="webhook"/>
+            <attribute id="webhook_url"/>
           </complementary_attributes>
         </naming>
         <fields_semantic>
@@ -226,6 +226,24 @@ your private key goes here
           <sql>name</sql>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <!-- synchro_mode -->
+        <field id="synchro_mode" xsi:type="AttributeEnum">
+          <values>
+            <value id="none">
+              <code>none</code>
+            </value>
+            <value id="manual">
+              <code>manual</code>
+            </value>
+            <value id="auto">
+              <code>auto</code>
+            </value>
+          </values>
+          <sql>synchro_mode</sql>
+          <default_value>auto</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <!-- connector -->
         <field id="connector_id" xsi:type="AttributeExternalKey">
           <sql>connector_id</sql>
@@ -233,9 +251,9 @@ your private key goes here
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <!-- webhook -->
-        <field id="webhook" xsi:type="AttributeString">
-          <sql>webhook</sql>
+        <!-- webhook_url -->
+        <field id="webhook_url" xsi:type="AttributeString">
+          <sql>webhook_url</sql>
           <is_null_allowed>true</is_null_allowed>
           <copy_link>true</copy_link>
         </field>
@@ -248,6 +266,9 @@ your private key goes here
         <!-- webhook status -->
         <field id="webhook_status" xsi:type="AttributeEnum">
           <values>
+            <value id="unset">
+              <code>unset</code>
+            </value>
             <value id="error">
               <code>error</code>
               <style>
@@ -281,24 +302,6 @@ your private key goes here
           <default_value>unsynchronized</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
-        </field>
-        <!-- synchro_mode -->
-        <field id="synchro_mode" xsi:type="AttributeEnum">
-          <values>
-            <value id="none">
-              <code>none</code>
-            </value>
-            <value id="manual">
-              <code>manual</code>
-            </value>
-            <value id="auto">
-              <code>auto</code>
-            </value>
-          </values>
-          <sql>synchro_mode</sql>
-          <default_value>auto</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>radio_horizontal</display_style>
         </field>
         <!-- event count -->
         <field id="event_count" xsi:type="AttributeInteger">
@@ -362,7 +365,7 @@ your private key goes here
           <code><![CDATA[
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
               {
-                  if (in_array($sAttCode, ['webhook', 'webhook_status', 'event_count', 'last_event_date', 'github_webhook_configuration'])) {
+                  if (in_array($sAttCode, ['webhook_url', 'webhook_status', 'event_count', 'last_event_date', 'github_webhook_configuration'])) {
                       return OPT_ATT_HIDDEN;
                   }
                   return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
@@ -382,7 +385,11 @@ your private key goes here
                       return OPT_ATT_HIDDEN;
                   }
 
-                  if (in_array($sAttCode, ['name', 'webhook', 'webhook_status', 'event_count', 'last_event_date'])) {
+                  if (in_array($sAttCode, ['webhook_url', 'webhook_status', 'event_count', 'last_event_date'])) {
+                      return OPT_ATT_READONLY;
+                  }
+
+                  if($sAttCode === 'name' && $this->Get('webhook_status') !== 'error'){
                       return OPT_ATT_READONLY;
                   }
 
@@ -432,16 +439,16 @@ your private key goes here
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="connector_id">
+            <item id="synchro_mode">
               <rank>20</rank>
             </item>
-            <item id="synchro_mode">
+            <item id="connector_id">
               <rank>30</rank>
             </item>
             <item id="webhook_status">
               <rank>40</rank>
             </item>
-            <item id="webhook">
+            <item id="webhook_url">
               <rank>50</rank>
             </item>
             <item id="secret">
@@ -593,7 +600,7 @@ your private key goes here
                         if($res === 1){
                             $val = $oTemplatingService->ExtractDataFromPayload($aPayload, $aPayload, $aMatch[1]);
                             if(!preg_match("#$aMatch[2]#", $val)){
-                                false;
+                                return false;
                             }
                         }
                     }
@@ -729,27 +736,6 @@ your private key goes here
             ]]>
           </code>
         </method>
-        <!-- DisplayBareRelations -->
-        <method id="DisplayBareRelations">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-
-
-            public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
-            {
-              if($bEditMode){
-                // add css
-                $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
-                $oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
-              }
-            }
-
-
-            ]]>
-          </code>
-        </method>
       </methods>
       <presentation>
         <details>
@@ -835,8 +821,29 @@ your private key goes here
 		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $context);
 
                     // log parsed template
-		            IssueLog::Info($sText);
+		            \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo($sText);
 	            }
+
+            ]]>
+          </code>
+        </method>
+        <!-- DisplayBareRelations -->
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+
+
+            public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+            {
+              if($bEditMode){
+                // add css
+                $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
+                $oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
+              }
+            }
+
 
             ]]>
           </code>
@@ -980,9 +987,6 @@ your private key goes here
           </arguments>
           <code>
             <![CDATA[
-
-
-
 	            public function HandleEvent($sEvent, $aPayload, $context = []){
 
                     // retrieve useful data
@@ -1039,9 +1043,23 @@ your private key goes here
                     // update object
                     $oObject->DBUpdate();
 	            }
-
-
-
+            ]]>
+          </code>
+        </method>
+        <!-- DisplayBareRelations -->
+        <method id="DisplayBareRelations">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+            public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+            {
+              if($bEditMode){
+                // add css
+                $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
+                $oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
+              }
+            }
             ]]>
           </code>
         </method>

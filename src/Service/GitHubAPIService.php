@@ -182,7 +182,7 @@ class GitHubAPIService
 			$sAppInstallationAccessToken = $aResponse['token'];
 
 			// log
-			ModuleHelper::LogInfo('Create new application access token for repository ' . $sRepositoryName);
+			ModuleHelper::LogDebug('Create new application access token for repository ' . $sRepositoryName);
 
 			// store it in session
 			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sRepositoryName, $sInstallationId);
@@ -241,6 +241,9 @@ class GitHubAPIService
 	 */
 	public function GetRepositoryInfo(DBObject $oRepository) : array
 	{
+		// log
+		ModuleHelper::LogDebug('GetRepositoryInfo');
+
 		// retrieve useful settings
 		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
 		$sRepositoryName = $oRepository->Get('name');
@@ -280,6 +283,9 @@ class GitHubAPIService
 	 */
 	public function CreateRepositoryWebhook(DBObject $oRepository, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
+		// log
+		ModuleHelper::LogDebug('CreateRepositoryWebhook');
+
 		// retrieve useful settings
 		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
 		$sRepositoryName = $oRepository->Get('name');
@@ -321,6 +327,9 @@ class GitHubAPIService
 	 */
 	public function UpdateRepositoryWebhook(DBObject $oRepository, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
+		// log
+		ModuleHelper::LogDebug('UpdateRepositoryWebhook');
+
 		// retrieve useful settings
 		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
 		$sRepositoryName = $oRepository->Get('name');
@@ -355,6 +364,14 @@ class GitHubAPIService
 	 */
 	public function DeleteRepositoryWebhook(DBObject $oRepository, string $sHookId) : bool
 	{
+		// log
+		ModuleHelper::LogDebug('DeleteRepositoryWebhook');
+
+		// security
+		if($oRepository->Get('connector_id') === 0){
+			return -1;
+		}
+
 		// retrieve useful settings
 		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
 		$sRepositoryName = $oRepository->Get('name');
@@ -381,6 +398,9 @@ class GitHubAPIService
 	 */
 	public function GetRepositoryWebhook(DBObject $oRepository, string $sHookId) : array
 	{
+		// log
+		ModuleHelper::LogDebug('GetRepositoryWebhook');
+
 		// retrieve useful settings
 		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
 		$sRepositoryName = $oRepository->Get('name');
@@ -404,6 +424,9 @@ class GitHubAPIService
 	 */
 	public function GetRepositoryAppInstallation(DBObject $oRepository) : array
 	{
+		// log
+		ModuleHelper::LogDebug('GetRepositoryAppInstallation');
+
 		// retrieve useful settings
 		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
 		$sRepositoryName = $oRepository->Get('name');
@@ -430,6 +453,9 @@ class GitHubAPIService
 	 */
 	public function CreateApplicationInstallationAccessToken(DBObject $oRepository, string $InstallationId) : array
 	{
+		// log
+		ModuleHelper::LogDebug('CreateApplicationInstallationAccessToken');
+
 		// retrieve useful settings
 		$oConnector = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'));
 

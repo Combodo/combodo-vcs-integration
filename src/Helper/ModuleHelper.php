@@ -23,6 +23,11 @@ class ModuleHelper
 	// module name
     public const MODULE_NAME = "combodo-github-integration";
 
+	// module parameters
+	public static $PARAM_SYNCHRO_AUTO_INTERVAL = 'synchro_auto_interval';
+	public static $PARAM_WEBHOOK_HOST_OVERLOAD = 'webhook_host_overload';
+	public static $PARAM_WEBHOOK_SCHEME_OVERLOAD = 'webhook_scheme_overload';
+
 	/**
 	 * Get module absolute url.
 	 *

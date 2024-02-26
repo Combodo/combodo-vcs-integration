@@ -10,8 +10,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Dictionary entries go here
 
 	// MENU elements
-	'Menu:VCSRepositoryMenu' => 'VCS Repositories',
-	'Menu:VCSRepositoryMenu+' => 'VCS Repositories',
+	'Menu:VCSRepositoryMenu' => 'GitHub Repositories',
+	'Menu:VCSRepositoryMenu+' => 'GitHub Repositories',
 
 	// CLASS VCSConnector
 	'Class:VCSConnector' => 'Connector',
@@ -48,6 +48,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSRepository/Attribute:webhook+' => 'URL to provide to version control system webhook repository configuration',
 	'Class:VCSRepository/Attribute:webhook_status' => 'Status',
 	'Class:VCSRepository/Attribute:webhook_status+' => 'Status on GitHub',
+	'Class:VCSRepository/Attribute:webhook_status/Value:unset' => 'unset',
 	'Class:VCSRepository/Attribute:webhook_status/Value:unsynchronized' => 'Unsynchronized',
 	'Class:VCSRepository/Attribute:webhook_status/Value:active' => 'Active',
 	'Class:VCSRepository/Attribute:webhook_status/Value:inactive' => 'Inactive',

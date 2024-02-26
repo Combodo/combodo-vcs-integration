@@ -1,16 +1,9 @@
 
 <?php
-
-/**
- * GitHub webhook handler template.
- *
- * @see  https://developer.github.com/webhooks/
- * @author  Miloslav Hůla (https://github.com/milo)
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-// In this file: /etc/apache2/sites-available/example.com.conf
-// Put this line: SetEnv GITHUB_WEBHOOK_SECRET MY_SECRET
-//$hookSecret = getenv('GITHUB_WEBHOOK_SECRET');
 
 use Combodo\iTop\VCSManagement\Service\AutomationManager;
 

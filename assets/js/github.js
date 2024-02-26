@@ -16,9 +16,6 @@ const iTopGithubWorker = new function(){
     const ROUTE_GET_REPOSITORY_INFO = 'github.get_repository_info';
     const ROUTE_SYNCHRONIZE_REPOSITORY_WEBHOOK = 'github.synchronize_repository_webhook';
     const ROUTE_CHECK_REPOSITORY_WEBHOOK_SYNCHRO = 'github.check_repository_webhook_synchro';
-    const ROUTE_GET_REPOSITORY_APP_INSTALLATION = 'github.get_repository_app_installation';
-    const ROUTE_CLEAR_SESSION = 'github.clear_session';
-    const ROUTE_STOP_SYNCHRONIZATION = 'github.stop_repository_synchronization';
 
     /**
      * Synchronize repository.
@@ -127,105 +124,12 @@ const iTopGithubWorker = new function(){
 
     }
 
-
-    /**
-     * Get repository app installation.
-     *
-     * @param repository_reference
-     */
-    async function GetRepositoryAppInstallation(repository_reference){
-
-        try{
-
-            // endpoint call
-            const response = await fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_APP_INSTALLATION}&repository_id=` + repository_reference);
-            const data = await response.json();
-
-            // check errors
-            if(CheckErrors('Unable to get app installation', data)){
-                console.log(data.data.installation);
-            }
-
-        }
-        catch(error){
-
-            // log
-            console.error(error);
-        }
-
-
-    }
-
-    /**
-     * Clear session.
-     *
-     * @param repository_reference
-     */
-    async function ClearSession(repository_reference){
-
-        try{
-
-            // endpoint call
-            const response = await fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CLEAR_SESSION}&repository_id=` + repository_reference);
-            const data = await response.json();
-
-            // check errors
-            if(CheckErrors('Unable to clear session', data)){
-                console.log(data.data);
-            }
-
-        }
-        catch(error){
-
-            // log
-            console.error(error);
-        }
-
-
-    }
-
-    /**
-     * Stop synchronization.
-     *
-     * @param repository_reference
-     */
-    async function StopSynchronization(repository_reference){
-
-        try{
-
-            // endpoint call
-            const response = await fetch(`${ROUTER_BASE_URL}?route=${ROUTE_STOP_SYNCHRONIZATION}&repository_id=` + repository_reference);
-            const data = await response.json();
-
-            // check errors
-            if(CheckErrors('Unable to stop synchronization', data)){
-
-                // update webhook_status
-                const oStatusElement = document.querySelector('[data-role="ibo-field"][data-attribute-code="webhook_status"] .ibo-field--value');
-                oStatusElement.innerHTML = data.data.webhook_status_field_html;
-
-                // update template
-                const oGitHubInfoElement = document.querySelector('#github_info');
-                oGitHubInfoElement.innerHTML = '';
-            }
-
-        }
-        catch(error){
-
-            // log
-            console.error(error);
-        }
-
-
-    }
-
     /**
      * Check errors.
      *
-     * @param title
-     * @param data
+     * @param title modal title
+     * @param data ajax data
      * @returns {boolean}
-     * @constructor
      */
     function CheckErrors(title, data){
         // handle errors
@@ -237,10 +141,10 @@ const iTopGithubWorker = new function(){
     }
 
     /**
-     * Show errors in modal.
+     * Show errors in a modal.
      *
-     * @param title
-     * @param errors
+     * @param title modal title
+     * @param errors errors array
      */
     function ShowErrors(title, errors){
 
@@ -260,7 +164,6 @@ const iTopGithubWorker = new function(){
      * Open url.
      *
      * @param url
-     * @constructor
      */
     function OpenUrl(url){
         window.open(url, '_blank');
@@ -270,9 +173,6 @@ const iTopGithubWorker = new function(){
         GetRepositoryInfo,
         SynchronizeRepositoryWebhook,
         CheckRepositoryWebhookSynchro,
-        GetRepositoryAppInstallation,
-        ClearSession,
-        StopSynchronization,
         OpenUrl,
         SynchronizeRepository,
     }

@@ -10,8 +10,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Dictionary entries go here
 
 	// MENU elements
-	'Menu:VCSRepositoryMenu' => 'Dépôts de sources',
-	'Menu:VCSRepositoryMenu+' => 'Dépôts de sources',
+	'Menu:VCSRepositoryMenu' => 'Dépôts de sources GitHub',
+	'Menu:VCSRepositoryMenu+' => 'Dépôts de sources GitHub',
 
 	// CLASS VCSConnector
 	'Class:VCSConnector' => 'Connecteur',
@@ -48,6 +48,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSRepository/Attribute:webhook+' => 'URL du webhook à définir dans le système de gestion de versions',
 	'Class:VCSRepository/Attribute:webhook_status' => 'Status',
 	'Class:VCSRepository/Attribute:webhook_status+' => 'Status sur GitHub',
+	'Class:VCSRepository/Attribute:webhook_status/Value:unset' => 'non défini',
 	'Class:VCSRepository/Attribute:webhook_status/Value:unsynchronized' => 'Non Synchronisé',
 	'Class:VCSRepository/Attribute:webhook_status/Value:active' => 'Actif',
 	'Class:VCSRepository/Attribute:webhook_status/Value:inactive' => 'Inactif',
@@ -56,7 +57,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSRepository/Attribute:synchro_mode+' => 'Mode de synchronization (Aucun, Automatique ou Manuel)',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:none' => 'Aucun',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:auto' => 'Automatique',
-	'Class:VCSRepository/Attribute:synchro_mode/Value:manual' => 'Manuel',
+	'Class:VCSRepository/Attribute:synchro_mode/Value:manual' => 'Manuelle',
 	'Class:VCSRepository/Attribute:secret' => 'Clé secrète webhook',
 	'Class:VCSRepository/Attribute:secret+' => 'Clé secrète webhook',
 	'Class:VCSRepository/Attribute:last_event_date' => 'Dernier événement le',
