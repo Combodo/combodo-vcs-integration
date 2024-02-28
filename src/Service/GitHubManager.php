@@ -109,7 +109,7 @@ class GitHubManager
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public function DeleteWebhookSynchronization(DBObject $oRepository)
+	public function DeleteWebhookSynchronization(DBObject $oRepository) : void
 	{
 		// delete github webhook
 		$iExistingWebhookId = $this->GetGithubWebhookConfigurationId($oRepository);
@@ -131,16 +131,17 @@ class GitHubManager
 	 * @param string $sRepositoryReference The reference of the repository.
 	 *
 	 * @return string The webhook URL.
+	 * @throws \Exception
 	 */
 	public function GetWebhookUrl(string $sRepositoryReference) : string
 	{
 		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/exec.php?exec_module=combodo-github-integration&exec_page=github.php&repository=' . $sRepositoryReference;
 
-		$sHost = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_HOST_OVERLOAD, null);
+		$sHost = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_HOST_OVERLOAD);
 		if($sHost !== null){
 			$sUrl = preg_replace(self::$REGEX_HOST_REPLACEMENT, '${1}://' . $sHost . '/', $sUrl);
 		}
-		$sScheme = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_SCHEME_OVERLOAD, null);
+		$sScheme = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_SCHEME_OVERLOAD);
 		if($sScheme !== null){
 			$sUrl = str_replace('http', $sScheme, $sUrl);
 		}
@@ -200,6 +201,7 @@ class GitHubManager
 	 * @param array $aGitHubWebhookConfiguration
 	 *
 	 * @return bool
+	 * @throws \CoreException
 	 */
 	public function IsWebhookConfigurationEquals($oRepository, array $aGitHubWebhookConfiguration) : bool
 	{
@@ -226,8 +228,9 @@ class GitHubManager
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
-	public function UpdateWebhookURL(DBObject $oRepository)
+	public function UpdateWebhookURL(DBObject $oRepository) : void
 	{
 		$oGitHubManager = GitHubManager::GetInstance();
 		$sUrlWebhookUrl = $oGitHubManager->GetWebhookUrl($oRepository->Get('id'));
@@ -243,6 +246,7 @@ class GitHubManager
 	 * @param $special_characters
 	 *
 	 * @return string
+	 * @noinspection PhpUnused
 	 */
 	public function GenerateSecret($lower, $upper, $digits, $special_characters) : string
 	{
@@ -273,6 +277,7 @@ class GitHubManager
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
 	public function SynchronizeRepository(DBObject $oRepository) : ?array
 	{
@@ -349,6 +354,7 @@ class GitHubManager
 	 * @return void
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
 	public function UpdateExternalData(DBObject $oRepository) : void
 	{
@@ -379,6 +385,7 @@ class GitHubManager
 	 * @return \DBObject
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function ExtractRepositoryFromRequestParam() : DBObject
 	{
@@ -389,5 +396,22 @@ class GitHubManager
 		}
 
 		return MetaModel::GetObject('VCSRepository', $sRepositoryRef);
+	}
+
+	/**
+	 * Append webhook status field html to data.
+	 *
+	 * @param DBObject $oRepository
+	 * @param array $aData
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function AppendWebhookStatusFieldHtml(DBObject $oRepository, array &$aData) : void
+	{
+		/** @var \AttributeEnumSet $oAttributeSet */
+		$oAttributeEnumSet = MetaModel::GetAttributeDef('VCSRepository', 'webhook_status');
+		$aData['webhook_status_field_html'] = $oAttributeEnumSet->GetAsHTML($oRepository->Get('webhook_status'));
+		$aData['webhook_status'] = $oRepository->Get('webhook_status');
 	}
 }

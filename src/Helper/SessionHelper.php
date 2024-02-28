@@ -79,34 +79,6 @@ class SessionHelper
 	}
 
 	/**
-	 * Unset a session variable.
-	 *
-	 * @param string $sSessionVar
-	 * @param string $sRepository
-	 *
-	 * @return void
-	 */
-	static public function UnsetVar(string $sSessionVar, string $sRepository) : void
-	{
-		$sVarName = self::GetVarName($sSessionVar, $sRepository);
-		Session::Unset($sVarName);
-	}
-
-	/**
-	 * Clear session variables.
-	 *
-	 * @param string $sRepository
-	 *
-	 * @return void
-	 */
-	static public function ClearVars(string $sRepository) : void
-	{
-		self::UnsetVar(self::$SESSION_APP_INSTALLATION_ID, $sRepository);
-		self::UnsetVar(self::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository);
-		self::UnsetVar(self::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sRepository);
-	}
-
-	/**
 	 * Check if current app installation access token is expired.
 	 *
 	 * @param string $sRepository

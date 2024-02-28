@@ -32,6 +32,7 @@ class VCSEventListener implements iEventServiceSetup
 	 */
 	public function __construct()
 	{
+		// service injection
 		$this->oGitHubManager = GitHubManager::GetInstance();
 	}
 
@@ -70,48 +71,55 @@ class VCSEventListener implements iEventServiceSetup
 	 */
 	public function OnDBAfterWrite(EventData $oEventData): void
 	{
-		// retrieve repository
-		$oRepository = $oEventData->GetEventData()['object'];
+		try{
 
-		// changes
-		$aChanges = $oEventData->GetEventData()['changes'];
+			// retrieve repository
+			$oRepository = $oEventData->GetEventData()['object'];
 
-		// cannot detect change with UpdateWebhookStatus (secret isn't visible entirely)
-		if(array_key_exists('secret', $aChanges)){
-			$oRepository->Set('webhook_status', 'unsynchronized');
-		}
+			// changes
+			$aChanges = $oEventData->GetEventData()['changes'];
 
-		// if synchro mode disabling
-		if(array_key_exists('synchro_mode', $aChanges)){
-			if($oRepository->Get('synchro_mode') === 'none'){
-				try{
-					$this->oGitHubManager->DeleteWebhookSynchronization($oRepository);
-				}
-				catch(Exception $e){
-					// log exception
-					ExceptionLog::LogException($e);
+			// cannot detect change with UpdateWebhookStatus (secret isn't visible entirely)
+			if(array_key_exists('secret', $aChanges)){
+				$oRepository->Set('webhook_status', 'unsynchronized');
+			}
+
+			// if synchro mode disabling
+			if(array_key_exists('synchro_mode', $aChanges)){
+				if($oRepository->Get('synchro_mode') === 'none'){
+					try{
+						$this->oGitHubManager->DeleteWebhookSynchronization($oRepository);
+					}
+					catch(Exception $e){
+						// log exception
+						ExceptionLog::LogException($e);
+					}
 				}
 			}
-		}
 
-		// if not synchro and synchro auto
-		if($oRepository->Get('synchro_mode') === 'auto'
-		&& in_array($oRepository->Get('webhook_status'), [ 'unsynchronized', 'error'])){
-			if($this->oGitHubManager->SynchronizeRepository($oRepository) !== null){
-				$this->oGitHubManager->UpdateExternalData($oRepository);
+			// if not synchro and synchro auto
+			if($oRepository->Get('synchro_mode') === 'auto'
+				&& in_array($oRepository->Get('webhook_status'), [ 'unsynchronized', 'error'])){
+				if($this->oGitHubManager->SynchronizeRepository($oRepository) !== null){
+					$this->oGitHubManager->UpdateExternalData($oRepository);
+				}
+			}
+			else if($oRepository->Get('synchro_mode') === 'manual'){
+				$this->oGitHubManager->UpdateWebhookStatus($oRepository);
+			}
+
+			// update webhook url (needs repository id)
+			$sOldUrl = $oRepository->Get('webhook_url');
+			$this->oGitHubManager->UpdateWebhookURL($oRepository);
+			if($sOldUrl !== $oRepository->Get('webhook_url')){
+				$oRepository->DBUpdate();
 			}
 		}
-		else if($oRepository->Get('synchro_mode') === 'manual'){
-			$this->oGitHubManager->UpdateWebhookStatus($oRepository);
-		}
+		catch(Exception $e){
 
-		// update webhook url (needs repository id)
-		$sOldUrl = $oRepository->Get('webhook_url');
-		$this->oGitHubManager->UpdateWebhookURL($oRepository);
-		if($sOldUrl !== $oRepository->Get('webhook_url')){
-			$oRepository->DBUpdate();
+			// log
+			ExceptionLog::LogException($e);
 		}
-
 	}
 
 	/**
@@ -127,10 +135,11 @@ class VCSEventListener implements iEventServiceSetup
 	 */
 	public function OnDBLinksChanged(EventData $oEventData): void
 	{
-		// retrieve repository
-		$oRepository = $oEventData->GetEventData()['object'];
-
 		try{
+
+			// retrieve repository
+			$oRepository = $oEventData->GetEventData()['object'];
+
 			// update synchro state
 			$this->oGitHubManager->UpdateWebhookStatus($oRepository);
 
@@ -157,10 +166,11 @@ class VCSEventListener implements iEventServiceSetup
 	 */
 	public function OnDBAfterDelete(EventData $oEventData): void
 	{
-		// retrieve repository
-		$oRepository = $oEventData->GetEventData()['object'];
-
 		try{
+
+			// retrieve repository
+			$oRepository = $oEventData->GetEventData()['object'];
+
 			// delete synchronization
 			$this->oGitHubManager->DeleteWebhookSynchronization($oRepository);
 		}

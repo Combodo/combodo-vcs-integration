@@ -65,6 +65,7 @@ class GitHubAPIService
 	 * @param  DBObject $oConnector
 	 *
 	 * @return array header elements array
+	 * @throws \CoreException
 	 */
 	private function CreateAppAuthorizationHeader(DBObject $oConnector) : array
 	{
@@ -121,6 +122,7 @@ class GitHubAPIService
 	 * @param DBObject $oRepository VCS repository
 	 *
 	 * @return array header elements array
+	 * @throws \CoreException
 	 */
 	private function CreateAuthorizationHeader(DBObject $oRepository) : array
 	{
@@ -164,6 +166,7 @@ class GitHubAPIService
 	 * @param DBObject $oRepository
 	 *
 	 * @return string
+	 * @throws \CoreException
 	 */
 	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oRepository) : string
 	{
@@ -207,6 +210,7 @@ class GitHubAPIService
 	 * @param array|null $data
 	 *
 	 * @return bool true if exist
+	 * @throws \CoreException
 	 */
 	public function RepositoryWebhookExist(DBObject $oRepository, string $sHookId, array &$data = null) : bool
 	{
@@ -238,6 +242,7 @@ class GitHubAPIService
 	 *
 	 * @return array The repository information, including the number of watchers, forks,
 	 *               open issues, and clone URL.
+	 * @throws \CoreException
 	 */
 	public function GetRepositoryInfo(DBObject $oRepository) : array
 	{
@@ -280,6 +285,7 @@ class GitHubAPIService
 	 * @param array $aListeningEvents events to listen
 	 *
 	 * @return array The created webhook object.
+	 * @throws \CoreException
 	 */
 	public function CreateRepositoryWebhook(DBObject $oRepository, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
@@ -324,6 +330,7 @@ class GitHubAPIService
 	 * @param array $aListeningEvents events to listen
 	 *
 	 * @return array The created webhook object.
+	 * @throws \CoreException
 	 */
 	public function UpdateRepositoryWebhook(DBObject $oRepository, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
@@ -361,6 +368,7 @@ class GitHubAPIService
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
+	 * @throws \CoreException
 	 */
 	public function DeleteRepositoryWebhook(DBObject $oRepository, string $sHookId) : bool
 	{
@@ -395,6 +403,7 @@ class GitHubAPIService
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
+	 * @throws \CoreException
 	 */
 	public function GetRepositoryWebhook(DBObject $oRepository, string $sHookId) : array
 	{
@@ -421,6 +430,7 @@ class GitHubAPIService
 	 * @param DBObject $oRepository The repository
 	 *
 	 * @return array
+	 * @throws \CoreException
 	 */
 	public function GetRepositoryAppInstallation(DBObject $oRepository) : array
 	{
@@ -450,6 +460,7 @@ class GitHubAPIService
 	 * @param string $InstallationId ID of the application installation.
 	 *
 	 * @return array Application installation access token.
+	 * @throws \CoreException
 	 */
 	public function CreateApplicationInstallationAccessToken(DBObject $oRepository, string $InstallationId) : array
 	{

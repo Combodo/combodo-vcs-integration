@@ -45,9 +45,10 @@ class TemplatingService
 	 * @param string $sTemplate
 	 * @param string $sEvent
 	 * @param array $aPayload
-	 * @param array|null $aContext
+	 * @param array $aContext
 	 *
 	 * @return string
+	 * @noinspection PhpUnused
 	 */
 	public function ParseTemplate(string $sTemplate, string $sEvent, array $aPayload, array $aContext = []) : string
 	{

@@ -19,7 +19,7 @@ use iBackgroundProcess;
  * Background task for GitHub integration.
  *
  * - check synchronization state
- * - get repository metrics
+ * - synchronize and get repository metrics if synchro auto
  *
  */
 class VCSBackgroundProcess implements iBackgroundProcess
@@ -45,7 +45,7 @@ class VCSBackgroundProcess implements iBackgroundProcess
 	public function GetPeriodicity() : int
 	{
 		// periodicity from module configuration
-		$sSynchroAUtoInterval = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_SYNCHRO_AUTO_INTERVAL, null);
+		$sSynchroAUtoInterval = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_SYNCHRO_AUTO_INTERVAL);
 		if($sSynchroAUtoInterval !== null){
 			try{
 				return intval($sSynchroAUtoInterval);

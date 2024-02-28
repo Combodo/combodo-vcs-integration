@@ -13,7 +13,6 @@ use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\VCSManagement\Service\GitHubManager;
 use Exception;
 use ExceptionLog;
-use MetaModel;
 
 /**
  * GitHub integration endpoints.
@@ -57,7 +56,6 @@ class GitHubController extends AbstractController
 			// error handling
 			ExceptionLog::LogException($e);
 			$aData['errors'][] = $e->getMessage();
-
 		}
 
 		return $oPage->SetData($aData);
@@ -84,13 +82,11 @@ class GitHubController extends AbstractController
 			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
 
 			// synchronize repository
-			$aGitHubDataCheck = $oGitHubManager->SynchronizeRepository($oRepository);
+			$oGitHubManager->SynchronizeRepository($oRepository);
 			$oRepository->DBUpdate();
 
-			// add webhook_status HTML
-			/** @var \AttributeEnumSet $oAttributeSet */
-			$oAttributeEnumSet = MetaModel::GetAttributeDef('VCSRepository', 'webhook_status');
-			$aData['webhook_status_field_html'] = $oAttributeEnumSet->GetAsHTML($oRepository->Get('webhook_status'));
+			// append webhook status field html
+			$oGitHubManager->AppendWebhookStatusFieldHtml($oRepository, $aData);
 		}
 		catch(Exception $e){
 
@@ -127,12 +123,11 @@ class GitHubController extends AbstractController
 			$oGitHubManager->UpdateWebhookStatus($oRepository);
 			$oRepository->DBUpdate();
 
-			/** @var \AttributeEnumSet $oAttributeSet */
-			$oAttributeEnumSet = MetaModel::GetAttributeDef('VCSRepository', 'webhook_status');
-			$aData['webhook_status_field_html'] = $oAttributeEnumSet->GetAsHTML($oRepository->Get('webhook_status'));
-			$aData['webhook_status'] = $oRepository->Get('webhook_status');
+			// append webhook status field html
+			$oGitHubManager->AppendWebhookStatusFieldHtml($oRepository, $aData);
 		}
 		catch(Exception  $e){
+
 			ExceptionLog::LogException($e);
 			$aData['errors'][] = $e->getMessage();
 		}

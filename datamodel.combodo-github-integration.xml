@@ -102,6 +102,40 @@ your private key goes here
         </field>
         </fields>
       <methods>
+        <!-- GetInitialStateAttributeFlags -->
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+              public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+              {
+                  if($sAttCode === 'provider'){
+                      return OPT_ATT_READONLY;
+                  }
+
+                  return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+              }
+          ]]>
+          </code>
+        </method>
+        <!-- GetAttributeFlags -->
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+              public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+              {
+                  if($sAttCode === 'provider'){
+                      return OPT_ATT_READONLY;
+                  }
+
+                  return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+              }
+            ]]>
+          </code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -821,7 +855,7 @@ your private key goes here
 		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $context);
 
                     // log parsed template
-		            \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo($sText);
+                    IssueLog::Info($sText);
 	            }
 
             ]]>

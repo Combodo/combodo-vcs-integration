@@ -24,9 +24,9 @@ class ModuleHelper
     public const MODULE_NAME = "combodo-github-integration";
 
 	// module parameters
-	public static $PARAM_SYNCHRO_AUTO_INTERVAL = 'synchro_auto_interval';
-	public static $PARAM_WEBHOOK_HOST_OVERLOAD = 'webhook_host_overload';
-	public static $PARAM_WEBHOOK_SCHEME_OVERLOAD = 'webhook_scheme_overload';
+	public static string $PARAM_SYNCHRO_AUTO_INTERVAL = 'synchro_auto_interval';
+	public static string $PARAM_WEBHOOK_HOST_OVERLOAD = 'webhook_host_overload';
+	public static string $PARAM_WEBHOOK_SCHEME_OVERLOAD = 'webhook_scheme_overload';
 
 	/**
 	 * Get module absolute url.
@@ -60,22 +60,6 @@ class ModuleHelper
 	static public function GetModuleSetting(string $sProperty, mixed $defaultValue = null) : mixed
 	{
 		return MetaModel::GetModuleSetting(Self::MODULE_NAME, $sProperty, $defaultValue);
-	}
-
-	/**
-	 * Check if a connector is installed.
-	 *
-	 * @param \DBObject $oRepository
-	 *
-	 * @return bool
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 */
-	static public function IsConnectorInstalled(DBObject $oRepository) : bool
-	{
-		$sConnectorRef = $oRepository->Get('connector_id');
-		$oConnector = MetaModel::GetObject('VCSConnector', $sConnectorRef);
-		return $oConnector->Get('mode') !== 'none';
 	}
 
 	/**
@@ -119,8 +103,8 @@ class ModuleHelper
 			'issues_count' => $aData['github']['open_issues'],
 			'description' => $aData['github']['description'],
 			'date' => $aData['date'],
-			'user_login' => $aData['github']['owner']['login'],
-			'user_avatar' => $aData['github']['owner']['avatar_url'],
+			'owner_login' => $aData['github']['owner']['login'],
+			'owner_avatar' => $aData['github']['owner']['avatar_url'],
 		]);
 
 	}
