@@ -7,12 +7,11 @@
 namespace Combodo\iTop\VCSManagement\Controller;
 
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\VCSManagement\Helper\GithubAPIHelper;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
-use Combodo\iTop\Application\WebPage\JsonPage;
 use Combodo\iTop\VCSManagement\Service\GitHubManager;
 use Exception;
 use ExceptionLog;
+use JsonPage;
 
 /**
  * GitHub integration endpoints.
