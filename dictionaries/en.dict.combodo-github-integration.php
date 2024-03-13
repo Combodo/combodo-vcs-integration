@@ -7,11 +7,8 @@
  */
 
 Dict::Add('EN US', 'English', 'English', array(
-	// Dictionary entries go here
-
 	// MENU elements
-	'Menu:VCSRepositoryMenu' => 'GitHub Repositories',
-	'Menu:VCSRepositoryMenu+' => 'GitHub Repositories',
+	'Menu:ConfigurationTools:VCS' => 'VCS management',
 
 	// CLASS VCSConnector
 	'Class:VCSConnector' => 'Connector',
@@ -40,21 +37,21 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CLASS VCSRepository
 	'Class:VCSRepository' => 'Repository',
 	'Class:VCSRepository+' => 'Version Control System Repository',
-	'Class:VCSRepository/Attribute:name' => 'Repository name',
-	'Class:VCSRepository/Attribute:name+' => 'The name of the repository on version control system',
+	'Class:VCSRepository/Attribute:name' => 'Name',
+	'Class:VCSRepository/Attribute:name+' => 'Name of the repository on the version control system',
 	'Class:VCSRepository/Attribute:connector_id' => 'Connector',
-	'Class:VCSRepository/Attribute:connector_id+' => 'Version control system connector',
+	'Class:VCSRepository/Attribute:connector_id+' => 'Connector used for the synchronization with the version control system',
 	'Class:VCSRepository/Attribute:webhook' => 'Webhook URL',
-	'Class:VCSRepository/Attribute:webhook+' => 'URL to provide to version control system webhook repository configuration',
+	'Class:VCSRepository/Attribute:webhook+' => 'URL to provide to the version control system for the webhook repository configuration',
 	'Class:VCSRepository/Attribute:webhook_status' => 'Status',
-	'Class:VCSRepository/Attribute:webhook_status+' => 'Status on GitHub',
-	'Class:VCSRepository/Attribute:webhook_status/Value:unset' => 'unset',
+	'Class:VCSRepository/Attribute:webhook_status+' => 'Status of the synchronization with the version control system',
+	'Class:VCSRepository/Attribute:webhook_status/Value:unset' => 'Unset',
 	'Class:VCSRepository/Attribute:webhook_status/Value:unsynchronized' => 'Unsynchronized',
 	'Class:VCSRepository/Attribute:webhook_status/Value:active' => 'Active',
 	'Class:VCSRepository/Attribute:webhook_status/Value:inactive' => 'Inactive',
 	'Class:VCSRepository/Attribute:webhook_status/Value:error' => 'Synchronization failed',
 	'Class:VCSRepository/Attribute:synchro_mode' => 'Synchronization mode',
-	'Class:VCSRepository/Attribute:synchro_mode+' => 'Synchronization mode (None, Automatic or Manual)',
+	'Class:VCSRepository/Attribute:synchro_mode+' => 'Synchronization mode with the VCS repository',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:none' => 'None',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:auto' => 'Automatic',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:manual' => 'Manual',
@@ -66,27 +63,47 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSRepository/Attribute:event_count+' => 'Number of events received',
 	'Class:VCSRepository/Attribute:events_log' => 'Events log',
 	'Class:VCSRepository/Attribute:events_log+' => 'Log for received events',
-	'Class:VCSRepository/Attribute:automations' => 'Automations',
-	'Class:VCSRepository/Attribute:automations+' => 'Automations to execute when receiving events',
-	'Class:VCSRepository/Attribute:automations/UI:Links:Add:Button'                           => 'Add an automation',
-	'Class:VCSRepository/Attribute:automations/UI:Links:Add:Button+'                          => 'Add an automation',
-	'Class:VCSRepository/Attribute:automations/UI:Links:Add:Modal:Title'                      => 'Add an automation',
+	'Class:VCSRepository/Attribute:contacts_list' => 'Contacts',
+	'Class:VCSRepository/Attribute:contacts_list+' => 'List of contacts dealing with the repository',
+	'Class:VCSRepository/Attribute:documents_list' => 'Documents',
+	'Class:VCSRepository/Attribute:documents_list+' => 'All documents related to the repository',
+	'Class:VCSRepository/Attribute:automations_list' => 'Automations',
+	'Class:VCSRepository/Attribute:automations_list+' => 'Automations to execute when receiving events',
+	'Class:VCSRepository/Attribute:automations_list/UI:Links:Add:Button' => 'Add an automation',
+	'Class:VCSRepository/Attribute:automations_list/UI:Links:Add:Button+' => '',
+	'Class:VCSRepository/Attribute:automations_list/UI:Links:Add:Modal:Title' => 'Add an automation',
 	'Class:VCSRepository/UI:Button:synchronize_configuration' => 'Synchronize repository',
 	'Class:VCSRepository/UI:Button:check_configuration' => 'Check synchronization',
 	'Class:VCSRepository/UI:Button:get_information' => 'Update metrics',
 	'Class:VCSRepository/UI:Button:open' => 'Open on GitHub',
 
+	// CLASS lnkContactToVCSRepository
+	'Class:lnkContactToVCSRepository' => 'Link Contact To VCSRepository',
+	'Class:lnkContactToVCSRepository+' => '',
+	'Class:lnkContactToVCSRepository/Attribute:contact_id' => 'Contact',
+	'Class:lnkContactToVCSRepository/Attribute:contact_id+' => '',
+	'Class:lnkContactToVCSRepository/Attribute:vcsrepository_id' => 'Repository',
+	'Class:lnkContactToVCSRepository/Attributevcs:vcsrepository_id+' => 'VCS Repository',
+
+	// CLASS lnkDocumentToVCSRepository
+	'Class:lnkDocumentToVCSRepository' => 'Link Document To VCSRepository',
+	'Class:lnkDocumentToVCSRepository+' => '',
+	'Class:lnkDocumentToVCSRepository/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToVCSRepository/Attribute:document_id+' => '',
+	'Class:lnkDocumentToVCSRepository/Attribute:vcsrepository_id' => 'Repository',
+	'Class:lnkDocumentToVCSRepository/Attributevcs:vcsrepository_id+' => 'VCS Repository',
+
 	// CLASS lnkVCSRepositoryToVCSAutomation
-	'Class:lnkVCSRepositoryToVCSAutomation' => 'Automation link',
-	'Class:lnkVCSRepositoryToVCSAutomation+' => 'Link to automation objects',
+	'Class:lnkVCSRepositoryToVCSAutomation' => 'Link Automation To Repository',
+	'Class:lnkVCSRepositoryToVCSAutomation+' => '',
 	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:status' => 'Status',
 	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:status+' => 'Automation status',
 	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:condition' => 'Condition',
 	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:condition+' => 'Condition for the automation execution (ex: context->ref=refs/heads/(develop|master).*)',
 	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:automation_id' => 'Automation',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:automation_id+' => 'Automation object',
+	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:automation_id+' => 'VCS Automation',
 	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:repository_id' => 'Repository',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:repository_id+' => 'Repository object',
+	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:repository_id+' => 'VCS Repository',
 
 	// CLASS AbstractVCSAutomation
 	'Class:AbstractVCSAutomation' => 'Automation',
