@@ -62,33 +62,46 @@
           <values>
             <value id="none">
               <code>none</code>
-            </value>
-            <value id="app">
-              <code>app</code>
+              <rank>1</rank>
             </value>
             <value id="personal">
               <code>personal</code>
+              <rank>2</rank>
+            </value>
+            <value id="app">
+              <code>app</code>
+              <rank>3</rank>
             </value>
           </values>
           <sql>mode</sql>
           <default_value>none</default_value>
           <is_null_allowed>false</is_null_allowed>
+          <sort_type>rank</sort_type>
           <display_style>list</display_style>
         </field>
         <!-- personal access token -->
         <field id="personal_access_token" xsi:type="AttributeString">
           <sql>personal_access_token</sql>
           <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="mode"/>
+          </dependencies>
         </field>
         <!-- app id -->
         <field id="app_id" xsi:type="AttributeString">
           <sql>app_id</sql>
           <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="mode"/>
+          </dependencies>
         </field>
         <!-- app private key -->
         <field id="app_private_key" xsi:type="AttributeLongText">
           <sql>app_private_key</sql>
           <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="mode"/>
+          </dependencies>
           <has_blur>true</has_blur>
           <default_value><![CDATA[-----BEGIN RSA PRIVATE KEY-----
 your private key goes here
@@ -110,11 +123,24 @@ your private key goes here
           <code><![CDATA[
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
               {
-                  if($sAttCode === 'provider'){
-                      return OPT_ATT_READONLY;
-                  }
+                  $sMode = $this->Get('mode');
+                  switch ($sAttCode) {
+                      case 'provider':
+                          $iFlag = OPT_ATT_READONLY;
+                          break;
+                      case 'personal_access_token':
+                         $iFlag = ($sMode == 'personal') ? OPT_ATT_MANDATORY : 0;
+                          break;
+                      case 'app_id':
+                      case 'app_private_key':
+                          $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
+                          break;
+                      case 'app_id':
+                          $iFlag = 0;
+                          break;
+                   }
 
-                  return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+                  return $iFlag | parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
               }
           ]]>
           </code>
@@ -127,11 +153,24 @@ your private key goes here
           <code><![CDATA[
               public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
               {
-                  if($sAttCode === 'provider'){
-                      return OPT_ATT_READONLY;
+                  $sMode = $this->Get('mode');
+                  switch ($sAttCode) {
+                      case 'provider':
+                          $iFlag = OPT_ATT_READONLY;
+                          break;
+                      case 'personal_access_token':
+                         $iFlag = ($sMode == 'personal') ? OPT_ATT_MANDATORY : 0;
+                          break;
+                      case 'app_id':
+                      case 'app_private_key':
+                          $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
+                          break;
+                      case 'app_id':
+                          $iFlag = 0;
+                          break;
                   }
 
-                  return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+                  return $iFlag | parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
               }
             ]]>
           </code>
