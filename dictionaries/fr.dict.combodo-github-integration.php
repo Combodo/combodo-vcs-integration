@@ -34,8 +34,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSConnector/Attribute:app_id+' => 'ID de l\'application',
 	'Class:VCSConnector/Attribute:app_private_key' => 'Clé privée',
 	'Class:VCSConnector/Attribute:app_private_key+' => 'Clé privée liée à l\'application',
-	'Class:VCSConnector/Attribute:repositories' => 'Dépots',
-	'Class:VCSConnector/Attribute:repositories+' => 'Dépots du connecteur',
+	'Class:VCSConnector/Attribute:repositories_list' => 'Dépots',
+	'Class:VCSConnector/Attribute:repositories_list+' => 'Dépots du connecteur',
 
 	// CLASS VCSRepository
 	'Class:VCSRepository' => 'Dépot',
