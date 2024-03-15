@@ -93,17 +93,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentToVCSRepository/Attribute:vcsrepository_id' => 'Repository',
 	'Class:lnkDocumentToVCSRepository/Attributevcs:vcsrepository_id+' => 'VCS Repository',
 
-	// CLASS lnkVCSRepositoryToVCSAutomation
-	'Class:lnkVCSRepositoryToVCSAutomation' => 'Link Automation To Repository',
-	'Class:lnkVCSRepositoryToVCSAutomation+' => '',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:status' => 'Status',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:status+' => 'Automation status',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:condition' => 'Condition',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:condition+' => 'Condition for the automation execution (ex: context->ref=refs/heads/(develop|master).*)',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:automation_id' => 'Automation',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:automation_id+' => 'VCS Automation',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:repository_id' => 'Repository',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:repository_id+' => 'VCS Repository',
+	// CLASS lnkVCSAutomationToVCSRepository
+	'Class:lnkVCSAutomationToVCSRepository' => 'Link Automation To Repository',
+	'Class:lnkVCSAutomationToVCSRepository+' => '',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status' => 'Status',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status+' => 'Automation status',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition' => 'Condition',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition+' => 'Condition for the automation execution (ex: context->ref=refs/heads/(develop|master).*)',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:automation_id' => 'Automation',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:automation_id+' => 'VCS Automation',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id' => 'Repository',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id+' => 'VCS Repository',
 
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automation',

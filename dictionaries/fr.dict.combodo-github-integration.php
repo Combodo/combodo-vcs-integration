@@ -76,17 +76,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSRepository/UI:Button:get_information' => 'Mettre à jour les données du dépôt',
 	'Class:VCSRepository/UI:Button:open' => 'Ouvrir sur GitHub',
 
-	// CLASS lnkVCSRepositoryToVCSAutomation
-	'Class:lnkVCSRepositoryToVCSAutomation' => 'Lien automatisme',
-	'Class:lnkVCSRepositoryToVCSAutomation+' => 'Lien avec un automatisme',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:status' => 'Status',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:status+' => 'Status automatisme',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:condition' => 'Condition',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:condition+' => 'Condition pour l\'éxécution de l\'automatisme (ex: context->ref=refs/heads/(develop|master).*)',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:automation_id' => 'Automatisme',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:automation_id+' => 'Automatisme',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:repository_id' => 'Dépot de sources',
-	'Class:lnkVCSRepositoryToVCSAutomation/Attribute:repository_id+' => 'Dépot de sources',
+	// CLASS lnkVCSAutomationToVCSRepository
+	'Class:lnkVCSAutomationToVCSRepository' => 'Lien automatisme',
+	'Class:lnkVCSAutomationToVCSRepository+' => 'Lien avec un automatisme',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status' => 'Status',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status+' => 'Status automatisme',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition' => 'Condition',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition+' => 'Condition pour l\'éxécution de l\'automatisme (ex: context->ref=refs/heads/(develop|master).*)',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:automation_id' => 'Automatisme',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:automation_id+' => 'Automatisme',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id' => 'Dépot de sources',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id+' => 'Dépot de sources',
 
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automatisme',
