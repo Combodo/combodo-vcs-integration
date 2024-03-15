@@ -57,7 +57,7 @@ class AutomationManager
 		foreach($oRepository->Get('automations') as $oLnk){
 
 			// retrieve automation
-			$oAutomation = MetaModel::GetObject('AbstractVCSAutomation', $oLnk->Get('automation_id'));
+			$oAutomation = MetaModel::GetObject('VCSAutomation', $oLnk->Get('automation_id'));
 
 			// handle event
 			if(in_array($sType, $oAutomation->Get('events')->GetValues())){

@@ -794,7 +794,7 @@ your private key goes here
         <!-- automation -->
         <field id="automation_id" xsi:type="AttributeExternalKey">
           <sql>automation_id</sql>
-          <target_class>AbstractVCSAutomation</target_class>
+          <target_class>VCSAutomation</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -906,13 +906,13 @@ your private key goes here
 
     /* Abstract VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
 
-    <class id="AbstractVCSAutomation" _delta="define">
+    <class id="VCSAutomation" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>abstract_vcs_automation</db_table>
+        <db_table>vcs_automation</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <obsolescence>
@@ -1024,7 +1024,7 @@ your private key goes here
     /* VCS Log journal Automation *///////////////////////////////////////////////////////////////////////////////////////////////
 
     <class id="VCSLogJournalAutomation" _delta="define">
-      <parent>AbstractVCSAutomation</parent>
+      <parent>VCSAutomation</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
@@ -1170,7 +1170,7 @@ your private key goes here
     /* VCS Log Attribute Automation *///////////////////////////////////////////////////////////////////////////////////////////////
 
     <class id="VCSLogAttributeAutomation" _delta="define">
-      <parent>AbstractVCSAutomation</parent>
+      <parent>VCSAutomation</parent>
       <properties>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
