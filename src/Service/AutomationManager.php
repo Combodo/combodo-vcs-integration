@@ -54,7 +54,7 @@ class AutomationManager
 		$iAutomationTriggeredCount = 0;
 
 		// iterate through automations...
-		foreach($oRepository->Get('automations') as $oLnk){
+		foreach($oRepository->Get('automations_list') as $oLnk){
 
 			// retrieve automation
 			$oAutomation = MetaModel::GetObject('VCSAutomation', $oLnk->Get('automation_id'));
