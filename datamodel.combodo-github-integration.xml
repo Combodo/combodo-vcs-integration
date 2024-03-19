@@ -812,9 +812,9 @@ your private key goes here
         <obsolescence>
         </obsolescence>
         <naming>
-          <format>%1$s</format>
           <attributes>
-            <attribute id="status"/>
+            <attribute id="repository_name"/>
+            <attribute id="automation_label"/>
           </attributes>
         </naming>
         <display_template/>
@@ -823,7 +823,8 @@ your private key goes here
         </style>
         <reconciliation>
           <attributes>
-            <attribute id="id"/>
+            <attribute id="repository_id"/>
+            <attribute id="automation_id"/>
           </attributes>
         </reconciliation>
       </properties>
@@ -834,6 +835,10 @@ your private key goes here
           <target_class>VCSRepository</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="repository_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>repository_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
         </field>
         <!-- automation -->
         <field id="automation_id" xsi:type="AttributeExternalKey">
@@ -1381,6 +1386,7 @@ your private key goes here
                   </items>
                 </item>
                 <item id="fieldset:Target Of The Message">
+                  <rank>20</rank>
                   <items>
                     <item id="object_class">
                       <rank>10</rank>
