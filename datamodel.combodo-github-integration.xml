@@ -18,11 +18,14 @@
         <obsolescence>
         </obsolescence>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="label"/>
-            <attribute id="provider"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="provider"/>
+            <attribute id="owner"/>
+            <attribute id="mode"/>
+          </complementary_attributes>
         </naming>
         <display_template/>
         <style>
@@ -108,7 +111,7 @@ your private key goes here
 -----END RSA PRIVATE KEY-----]]></default_value>
         </field>
         <!-- repositories -->
-        <field id="repositories" xsi:type="AttributeLinkedSet">
+        <field id="repositories_list" xsi:type="AttributeLinkedSet">
         <linked_class>VCSRepository</linked_class>
         <ext_key_to_me>connector_id</ext_key_to_me>
         <edit_mode>actions</edit_mode>
@@ -180,6 +183,7 @@ your private key goes here
         <details>
           <items>
             <item id="fieldset:Connector">
+              <rank>10</rank>
               <items>
                 <item id="label">
                   <rank>10</rank>
@@ -193,6 +197,7 @@ your private key goes here
               </items>
             </item>
             <item id="fieldset:Authentication">
+              <rank>20</rank>
               <items>
                 <item id="mode">
                   <rank>40</rank>
@@ -206,10 +211,10 @@ your private key goes here
                 <item id="app_private_key">
                   <rank>70</rank>
                 </item>
-                <item id="repositories">
-                  <rank>80</rank>
-                </item>
               </items>
+            </item>
+            <item id="repositories_list">
+              <rank>30</rank>
             </item>
           </items>
         </details>
