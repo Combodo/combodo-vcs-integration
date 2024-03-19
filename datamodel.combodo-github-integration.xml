@@ -1440,30 +1440,45 @@ your private key goes here
     </class>
   </classes>
   <menus>
-    <menu id="ConfigurationTools:VCS" xsi:type="DashboardMenuNode" _delta="define">
-      <rank>100</rank>
+    <menu id="ConfigurationTools:VCSManagement" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>200</rank>
       <parent>ConfigurationTools</parent>
       <definition>
         <layout>DashboardLayoutOneCol</layout>
         <title>Menu:ConfigurationTools:VCS</title>
         <cells>
-          <cell id="0">
-            <rank>0</rank>
+          <cell id="1">
+            <rank>1</rank>
             <dashlets>
-              <dashlet id="1" xsi:type="DashletBadge">
+              <dashlet id="10" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
+                <title>Menu:VCSIntegration:General</title>
+                <icon>combodo-github-integration/assets/img/icons8-code-fork.svg</icon>
+              </dashlet>
+              <dashlet id="11" xsi:type="DashletBadge">
+                <rank>1</rank>
                 <class>VCSRepository</class>
               </dashlet>
-              <dashlet id="2" xsi:type="DashletBadge">
-                <rank>1</rank>
+              <dashlet id="12" xsi:type="DashletBadge">
+                <rank>2</rank>
                 <class>VCSConnector</class>
               </dashlet>
-              <dashlet id="3" xsi:type="DashletBadge">
-                <rank>2</rank>
+            </dashlets>
+          </cell>
+          <cell id="2">
+            <rank>2</rank>
+            <dashlets>
+              <dashlet id="20" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:VCSIntegration:Automation</title>
+                <icon>combodo-github-integration/assets/img/icons8-automation.svg</icon>
+              </dashlet>
+              <dashlet id="21" xsi:type="DashletBadge">
+                <rank>1</rank>
                 <class>VCSLogJournalAutomation</class>
               </dashlet>
-              <dashlet id="4" xsi:type="DashletBadge">
-                <rank>3</rank>
+              <dashlet id="22" xsi:type="DashletBadge">
+                <rank>2</rank>
                 <class>VCSLogAttributeAutomation</class>
               </dashlet>
             </dashlets>

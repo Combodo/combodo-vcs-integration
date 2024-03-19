@@ -8,7 +8,9 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	// MENU elements
-	'Menu:ConfigurationTools:VCS' => 'VCS management',
+	'Menu:ConfigurationTools:VCSManagement' => 'VCS management',
+	'Menu:VCSIntegration:General' => 'General',
+	'Menu:VCSIntegration:Automation' => 'Automation',
 
 	// CLASS VCSConnector
 	'Class:VCSConnector' => 'Connector',
