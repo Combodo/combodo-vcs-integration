@@ -1013,10 +1013,11 @@ your private key goes here
         </field>
       </fields>
       <methods>
-        <!-- Execute -->
-        <method id="Execute">
+        <!-- HandleEvent -->
+        <method id="HandleEvent">
           <static>false</static>
           <access>public</access>
+          <type>Custom</type>
           <arguments>
             <argument>event</argument>
           </arguments>
@@ -1094,10 +1095,11 @@ your private key goes here
         </field>
       </fields>
       <methods>
-        <!-- Execute -->
-        <method id="Execute">
+        <!-- HandleEvent -->
+        <method id="HandleEvent">
           <static>false</static>
           <access>public</access>
+          <type>Custom</type>
           <arguments>
             <argument>$event</argument>
           </arguments>
@@ -1268,10 +1270,11 @@ your private key goes here
         </field>
       </fields>
       <methods>
-        <!-- Execute -->
-        <method id="Execute">
+        <!-- HandleEvent -->
+        <method id="HandleEvent">
           <static>false</static>
           <access>public</access>
+          <type>Custom</type>
           <arguments>
             <argument>$event</argument>
           </arguments>
