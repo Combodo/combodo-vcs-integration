@@ -182,7 +182,7 @@ your private key goes here
       <presentation>
         <details>
           <items>
-            <item id="fieldset:Connector">
+            <item id="fieldset:Class:VCSConnector:connector">
               <rank>10</rank>
               <items>
                 <item id="label">
@@ -196,7 +196,7 @@ your private key goes here
                 </item>
               </items>
             </item>
-            <item id="fieldset:Authentication">
+            <item id="fieldset:Class:VCSConnector:authentication">
               <rank>20</rank>
               <items>
                 <item id="mode">
@@ -1170,7 +1170,7 @@ your private key goes here
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Automation">
+                <item id="fieldset:Class:VCSLogJournalAutomation:automation">
                   <rank>10</rank>
                   <items>
                     <item id="label">
@@ -1189,7 +1189,7 @@ your private key goes here
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Message Templating">
+                <item id="fieldset:Class:VCSLogJournalAutomation:message">
                   <rank>10</rank>
                   <items>
                     <item id="template">
@@ -1394,7 +1394,7 @@ your private key goes here
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Automation">
+                <item id="fieldset:Class:VCSLogAttributeAutomation:automation">
                   <rank>10</rank>
                   <items>
                     <item id="label">
@@ -1408,7 +1408,7 @@ your private key goes here
                     </item>
                   </items>
                 </item>
-                <item id="fieldset:Target Of The Message">
+                <item id="fieldset:Class:VCSLogAttributeAutomation:target">
                   <rank>20</rank>
                   <items>
                     <item id="object_class">
@@ -1430,7 +1430,7 @@ your private key goes here
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Message Templating">
+                <item id="fieldset:Class:VCSLogAttributeAutomation:message">
                   <rank>10</rank>
                   <items>
                     <item id="template">
