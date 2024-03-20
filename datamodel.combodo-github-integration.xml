@@ -1151,20 +1151,17 @@ your private key goes here
           <access>public</access>
           <type>Overload-DBObject</type>
           <code><![CDATA[
-
-
             public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
             {
-              if($bEditMode){
-                // add css
-                $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
-                $oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
-              }
+            	parent::DisplayBareRelations($oPage, $bEditMode);
+
+            	if($bEditMode) {
+            		// add css
+            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
+            		$oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
+            	}
             }
-
-
-            ]]>
-          </code>
+              ]]></code>
         </method>
       </methods>
       <presentation>
@@ -1174,6 +1171,7 @@ your private key goes here
               <rank>10</rank>
               <items>
                 <item id="fieldset:Automation">
+                  <rank>10</rank>
                   <items>
                     <item id="label">
                       <rank>10</rank>
@@ -1192,6 +1190,7 @@ your private key goes here
               <rank>20</rank>
               <items>
                 <item id="fieldset:Message Templating">
+                  <rank>10</rank>
                   <items>
                     <item id="template">
                       <rank>10</rank>
@@ -1377,11 +1376,13 @@ your private key goes here
           <code><![CDATA[
             public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
             {
-              if($bEditMode){
-                // add css
-                $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
-                $oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
-              }
+            	parent::DisplayBareRelations($oPage, $bEditMode);
+
+            	if($bEditMode) {
+            		// add css
+            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
+            		$oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
+            	}
             }
             ]]>
           </code>
