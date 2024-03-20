@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright   Copyright (C) 2013 XXXXX
+ * @copyright   Copyright (C) 2013 2024
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -15,6 +15,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CLASS VCSConnector
 	'Class:VCSConnector' => 'Connector',
 	'Class:VCSConnector+' => 'Version Control System Connector',
+	'Class:VCSConnector:connector' => 'Connector',
+	'Class:VCSConnector:authentication' => 'Authentication',
 	'Class:VCSConnector/Attribute:label' => 'Label',
 	'Class:VCSConnector/Attribute:label+' => 'Label of the connector',
 	'Class:VCSConnector/Attribute:provider' => 'Provider',
@@ -44,7 +46,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSRepository/Attribute:connector_id' => 'Connector',
 	'Class:VCSRepository/Attribute:connector_id+' => 'Connector used for the synchronization with the version control system',
 	'Class:VCSRepository/Attribute:webhook_url' => 'Webhook URL',
-	'Class:VCSRepository/Attribute:webhook_url+' => 'URL to provide to the version control system for the webhook repository configuration',
+	'Class:VCSRepository/Attribute:webhook_url+' => 'URL to configure in the version control system for the webhook repository configuration',
 	'Class:VCSRepository/Attribute:webhook_status' => 'Synchronization status',
 	'Class:VCSRepository/Attribute:webhook_status+' => 'Status of the synchronization with the version control system',
 	'Class:VCSRepository/Attribute:webhook_status/Value:unset' => 'Unset',
@@ -109,17 +111,19 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automation',
-	'Class:VCSAutomation+' => 'Automation executed on version control system events',
+	'Class:VCSAutomation+' => 'Automation executed on the reception of version control system events',
 	'Class:VCSAutomation/Attribute:repository_id' => 'Repository',
 	'Class:VCSAutomation/Attribute:repository_id+' => 'Version Control System Repository',
 	'Class:VCSAutomation/Attribute:events' => 'Trigger on event(s)',
-	'Class:VCSAutomation/Attribute:events+' => 'List events for witch automation must be executed',
+	'Class:VCSAutomation/Attribute:events+' => 'List of events for witch automation must be executed',
 	'Class:VCSAutomation/Attribute:status' => 'Status',
 	'Class:VCSAutomation/Attribute:status+' => 'Automation status',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Scope',
 	'Class:VCSAutomation/Attribute:scope_var+' => 'Automation scope',
 	'Class:VCSAutomation/Attribute:label' => 'Label',
 	'Class:VCSAutomation/Attribute:label+' => 'Label describing the automation',
+	'Class:VCSAutomation/Attribute:repositories_list' => 'Repositories',
+	'Class:VCSAutomation/Attribute:repositories_list+' => 'List of repositories that have subscribed to the automation',
 	'Class:VCSAutomation/UI:Button:open_wiki_documentation' => 'Open WIKI documentation',
 	'Class:VCSAutomation/UI:Button:open_github_documentation' => 'Open GitHub documentation',
 	'Class:VCSAutomation/UI:Button:synchronize_with_github' => 'Synchronize',
@@ -135,22 +139,27 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CLASS VCSLogAttributeAutomation
 	'Class:VCSLogAttributeAutomation' => 'Append Message to Object',
 	'Class:VCSLogAttributeAutomation+' => 'Append a message to an object attribute',
+	'Class:VCSLogAttributeAutomation:automation' => 'Automation',
+	'Class:VCSLogAttributeAutomation:target' => 'Target Of The Message',
+	'Class:VCSLogAttributeAutomation:message' => 'Message',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data' => 'Subject data for regex',
-	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data+' => 'Subject data for regex',
+	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data+' => '',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern' => 'Regex to extract reference',
-	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern+' => 'Regex to extract reference',
+	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern+' => '',
 	'Class:VCSLogAttributeAutomation/Attribute:object_att_code' => 'Attribute',
 	'Class:VCSLogAttributeAutomation/Attribute:object_att_code+' => 'Attribute of the target object',
 	'Class:VCSLogAttributeAutomation/Attribute:object_class' => 'Object Class',
 	'Class:VCSLogAttributeAutomation/Attribute:object_class+' => 'Class of the target object',
-	'Class:VCSLogAttributeAutomation/Attribute:template' => 'Message',
+	'Class:VCSLogAttributeAutomation/Attribute:template' => 'Template',
 	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Message template',
 
 	// CLASS VCSLogJournalAutomation
 	'Class:VCSLogJournalAutomation' => 'Append Message to System Log',
-	'Class:VCSLogJournalAutomation+' => 'Append a message to Log System',
-	'Class:VCSLogJournalAutomation/Attribute:template' => 'Message',
+	'Class:VCSLogJournalAutomation+' => '',
+	'Class:VCSLogJournalAutomation:automation' => 'Automation',
+	'Class:VCSLogJournalAutomation:message' => 'Message',
+	'Class:VCSLogJournalAutomation/Attribute:template' => 'Template',
 	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Message template',
 
 ));
-?>
+
