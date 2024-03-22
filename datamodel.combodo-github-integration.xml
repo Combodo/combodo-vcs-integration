@@ -404,9 +404,9 @@ your private key goes here
           <sql>events_log</sql>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <!-- github_webhook_configuration -->
-        <field id="github_webhook_configuration" xsi:type="AttributeLongText">
-          <sql>github_webhook_configuration</sql>
+        <!-- webhook_configuration -->
+        <field id="webhook_configuration" xsi:type="AttributeLongText">
+          <sql>webhook_configuration</sql>
           <is_null_allowed>true</is_null_allowed>
         </field>
         <!-- contacts_list -->
@@ -468,7 +468,7 @@ your private key goes here
           <code><![CDATA[
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
               {
-                  if (in_array($sAttCode, ['webhook_url', 'webhook_status', 'event_count', 'last_event_date', 'github_webhook_configuration'])) {
+                  if (in_array($sAttCode, ['webhook_url', 'webhook_status', 'event_count', 'last_event_date', 'webhook_configuration'])) {
                       return OPT_ATT_HIDDEN;
                   }
                   return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
@@ -496,7 +496,7 @@ your private key goes here
                       return OPT_ATT_READONLY;
                   }
 
-                  if($sAttCode === 'github_webhook_configuration' && utils::IsNullOrEmptyString($this->Get('github_webhook_configuration'))){
+                  if($sAttCode === 'webhook_configuration' && utils::IsNullOrEmptyString($this->Get('webhook_configuration'))){
                       return OPT_ATT_HIDDEN;
                   }
 

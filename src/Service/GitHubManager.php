@@ -68,7 +68,7 @@ class GitHubManager
 		}
 
 		// check webhook configuration
-		$sData = $oRepository->Get('github_webhook_configuration');
+		$sData = $oRepository->Get('webhook_configuration');
 		if(utils::IsNullOrEmptyString($sData)){
 			$oRepository->Set('webhook_status', 'unsynchronized');
 			return;
@@ -119,7 +119,7 @@ class GitHubManager
 
 		// set to unset
 		$oRepository->Set('webhook_status', 'unset');
-		$oRepository->Set('github_webhook_configuration',  '');
+		$oRepository->Set('webhook_configuration',  '');
 		$oRepository->Set('external_data',  '');
 	}
 
@@ -185,7 +185,7 @@ class GitHubManager
 	 */
 	public function GetGithubWebhookConfigurationId($oRepository) : mixed
 	{
-		$sGitHubWebhookConfiguration = $oRepository->Get('github_webhook_configuration');
+		$sGitHubWebhookConfiguration = $oRepository->Get('webhook_configuration');
 		if(!utils::IsNullOrEmptyString($sGitHubWebhookConfiguration)){
 			$aGitHubWebhookConfiguration = json_decode($sGitHubWebhookConfiguration, true);
 			return $aGitHubWebhookConfiguration['github']['id'];
@@ -326,12 +326,12 @@ class GitHubManager
 			// synchronized data
 			$aData['github']['id'] = $aGitHubData['id'];
 			$aData['github']['date'] = AttributeDateTime::GetFormat()->format(new DateTime('now'));
-			$oRepository->Set('github_webhook_configuration',  json_encode($aData, JSON_UNESCAPED_SLASHES));
+			$oRepository->Set('webhook_configuration',  json_encode($aData, JSON_UNESCAPED_SLASHES));
 
 		}
 		catch(Exception $e){
 			ExceptionLog::LogException($e);
-			$oRepository->Set('github_webhook_configuration',  null);
+			$oRepository->Set('webhook_configuration',  null);
 			$bError = true;
 		}
 
