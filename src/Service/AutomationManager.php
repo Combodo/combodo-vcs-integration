@@ -9,7 +9,6 @@ namespace Combodo\iTop\VCSManagement\Service;
 use DBObject;
 use Exception;
 use ExceptionLog;
-use GithubRepository;
 use MetaModel;
 use utils;
 use VCSRepository;
