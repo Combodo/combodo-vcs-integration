@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<VCSEvent alias="VCSEvent" id="1">
+		<name>create</name>
+		<provider>github</provider>
+	</VCSEvent>
+	<VCSEvent alias="VCSEvent" id="2">
+		<name>push</name>
+		<provider>github</provider>
+	</VCSEvent>
+	<VCSEvent alias="VCSEvent" id="3">
+		<name>issues</name>
+		<provider>github</provider>
+	</VCSEvent>
+	<VCSEvent alias="VCSEvent" id="4">
+		<name>pull_request</name>
+		<provider>github</provider>
+	</VCSEvent>
+	<VCSEvent alias="VCSEvent" id="5">
+		<name>milestone</name>
+		<provider>github</provider>
+	</VCSEvent>
+	<VCSEvent alias="VCSEvent" id="6">
+		<name>fork</name>
+		<provider>github</provider>
+	</VCSEvent>
+	<VCSEvent alias="VCSEvent" id="7">
+		<name>delete</name>
+		<provider>github</provider>
+	</VCSEvent>
+</Set>
