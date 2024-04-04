@@ -109,13 +109,22 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id' => 'Repository',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id+' => 'VCS Repository',
 
+	// CLASS VCSEvent
+	'Class:VCSEvent' => 'VCS Event',
+	'Class:VCSEvent+' => 'Event that can be triggered by a VCS on its repositories',
+	'Class:VCSEvent/Attribute:provider' => 'Provider',
+	'Class:VCSEvent/Attribute:provider+' => 'Version control system provider',
+	'Class:VCSEvent/Attribute:provider/Value:github' => 'GitHub',
+	'Class:VCSEvent/Attribute:automations_list' => 'Automations',
+	'Class:VCSEvent/Attribute:automations_list+' => 'List of automations using that event',
+
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automation',
 	'Class:VCSAutomation+' => 'Automation executed on the reception of version control system events',
 	'Class:VCSAutomation/Attribute:repository_id' => 'Repository',
 	'Class:VCSAutomation/Attribute:repository_id+' => 'Version Control System Repository',
-	'Class:VCSAutomation/Attribute:events' => 'Trigger on event(s)',
-	'Class:VCSAutomation/Attribute:events+' => 'List of events for witch automation must be executed',
+	'Class:VCSAutomation/Attribute:events_list' => 'Trigger on event(s)',
+	'Class:VCSAutomation/Attribute:events_list+' => 'List of events for witch automation must be executed',
 	'Class:VCSAutomation/Attribute:status' => 'Status',
 	'Class:VCSAutomation/Attribute:status+' => 'Automation status',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Scope',

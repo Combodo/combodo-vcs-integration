@@ -15,10 +15,11 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			
+			'itop-config-mgmt/3.1.1',
 		),
 		'mandatory' => false,
 		'visible' => true,
+		'installer' => 'VCSIntegrationInstaller',
 
 		// Components
 		//
@@ -52,4 +53,50 @@ SetupWebPage::AddModule(
 	)
 );
 
-?>
+if (!class_exists('VCSIntegrationInstaller')) {
+	// Module installation handler
+	//
+	class VCSIntegrationInstaller extends ModuleInstallerAPI
+	{
+		public static function BeforeWritingConfig(Config $oConfiguration)
+		{
+			// If you want to override/force some configuration values, do it here
+			return $oConfiguration;
+		}
+
+		/**
+		 * Handler called before creating or upgrading the database schema
+		 * @param $oConfiguration Config The new configuration of the application
+		 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
+		 * @param $sCurrentVersion string Current version number of the module
+		 */
+		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+		{
+			// If you want to migrate data from one format to another, do it here
+		}
+
+		/**
+		 * Handler called after the creation/update of the database schema
+		 * @param $oConfiguration Config The new configuration of the application
+		 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
+		 * @param $sCurrentVersion string Current version number of the module
+		 */
+		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+		{
+			// Load event data in typology
+			if (version_compare($sPreviousVersion, $sCurrentVersion, '!=')) {
+				$oDataLoader = new XMLDataLoader();
+
+				CMDBObject::SetTrackInfo("Initialization");
+				$oMyChange = CMDBObject::GetCurrentChange();
+
+				$sFileName = dirname(__FILE__)."/data/en_us.data.combodo-github-integration.xml";
+				SetupLog::Info("Loading file: $sFileName");
+				$oDataLoader->StartSession($oMyChange);
+				$oDataLoader->LoadFile($sFileName, false, true);
+				$oDataLoader->EndSession();
+			}
+		}
+	}
+}
+

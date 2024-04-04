@@ -165,7 +165,12 @@ class GitHubManager
 			$oLink = MetaModel::GetObject('lnkVCSAutomationToVCSRepository', $sLinkRef);
 			if($oLink->Get('status') == 'active'){
 				$oAutomation = MetaModel::GetObject('VCSAutomation', $oLink->Get('automation_id'));
-				$aEvents = array_unique(array_merge($aEvents, $oAutomation->Get('events')->GetValues()));
+				$aAutomationEvents = [];
+				$oLnkAutomationToEventSet = $oAutomation->Get('events_list');
+				while ($oLnkAutomationToEvent = $oLnkAutomationToEventSet->Fetch()) {
+					$aAutomationEvents[] = $oLnkAutomationToEvent->Get('event_name');
+				}
+				$aEvents = array_unique(array_merge($aEvents, $aAutomationEvents));
 			}
 		}
 

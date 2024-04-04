@@ -52,6 +52,7 @@ class AutomationManager
 	{
 		// variables
 		$iAutomationTriggeredCount = 0;
+		$aAutomationEvents = [];
 
 		// iterate through automations...
 		foreach($oRepository->Get('automations_list') as $oLnk){
@@ -60,7 +61,11 @@ class AutomationManager
 			$oAutomation = MetaModel::GetObject('VCSAutomation', $oLnk->Get('automation_id'));
 
 			// handle event
-			if(in_array($sType, $oAutomation->Get('events')->GetValues())){
+			$oLnkAutomationToEventSet = $oAutomation->Get('events_list');
+			while ($oLnkAutomationToEvent = $oLnkAutomationToEventSet->Fetch()) {
+				$aAutomationEvents[] = $oLnkAutomationToEvent->Get('event_name');
+			}
+			if(in_array($sType, $aAutomationEvents)){
 
 				// automation inactive
 				if($oLnk->Get('status') === 'inactive'){

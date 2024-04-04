@@ -109,13 +109,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id' => 'Dépôt',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id+' => 'Dépôt de sources',
 
+	// CLASS VCSEvent
+	'Class:VCSEvent' => 'Evénement VCS',
+	'Class:VCSEvent+' => 'Evénement qu\'un système de gestsion de versions peut déclancher sur l\'un de ses dépôts',
+	'Class:VCSEvent/Attribute:provider' => 'Fournisseur',
+	'Class:VCSEvent/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
+	'Class:VCSEvent/Attribute:provider/Value:github' => 'GitHub',
+
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automatisme',
 	'Class:VCSAutomation+' => 'Automatisme éxécutés à la réception d\'événements du système de gestion de versions',
 	'Class:VCSAutomation/Attribute:repository_id' => 'Dépôt',
 	'Class:VCSAutomation/Attribute:repository_id+' => 'Dépôt de sources',
-	'Class:VCSAutomation/Attribute:events' => 'Déclenché sur les événement(s)',
-	'Class:VCSAutomation/Attribute:events+' => 'Liste des événements déclenchant l\'automatisme',
+	'Class:VCSAutomation/Attribute:events_list' => 'Déclenché sur les événement(s)',
+	'Class:VCSAutomation/Attribute:events_list+' => 'Liste des événements déclenchant l\'automatisme',
 	'Class:VCSAutomation/Attribute:status' => 'Statut',
 	'Class:VCSAutomation/Attribute:status+' => 'Statut de l\'automatisme',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Périmètre',
