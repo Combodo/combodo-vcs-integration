@@ -121,6 +121,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automatisme',
 	'Class:VCSAutomation+' => 'Automatisme éxécutés à la réception d\'événements du système de gestion de versions',
+	'Class:VCSAutomation/Attribute:provider' => 'Fournisseur',
+	'Class:VCSAutomation/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
+	'Class:VCSAutomation/Attribute:provider/Value:github' => 'GitHub',
 	'Class:VCSAutomation/Attribute:events_list' => 'Déclenché sur les événement(s)',
 	'Class:VCSAutomation/Attribute:events_list+' => 'Liste des événements déclenchant l\'automatisme',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Périmètre',

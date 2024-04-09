@@ -1217,6 +1217,18 @@ your private key goes here
         </reconciliation>
       </properties>
       <fields>
+        <!-- provider -->
+        <field id="provider" xsi:type="AttributeEnum">
+          <values>
+            <value id="github">
+              <code>github</code>
+            </value>
+          </values>
+          <sql>provider</sql>
+          <default_value>github</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
         <!-- events_list -->
         <field id="events_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVCSAutomationToVCSEvent</linked_class>
@@ -1262,6 +1274,19 @@ your private key goes here
             ]]>
           </code>
         </method>
+        <method id="PrefillSearchForm">
+          <code><![CDATA[ public function PrefillSearchForm(&$aContextParam)
+{
+	if ($aContextParam['dest_class'] == 'VCSRepository') {
+		$aContextParam['filter']->ResetCondition();
+		$aContextParam['filter']->AddCondition('connector_provider', $aContextParam['source_obj']->Get('provider'));
+    } elseif ($aContextParam['dest_class'] == 'VCSEvent') {
+		$aContextParam['filter']->ResetCondition();
+		$aContextParam['filter']->AddCondition('provider', $aContextParam['source_obj']->Get('provider'));
+    }
+}
+]]></code>
+        </method>
       </methods>
       <presentation>
         <default_search>
@@ -1272,6 +1297,9 @@ your private key goes here
             <item id="provider">
               <rank>20</rank>
             </item>
+            <item id="events_list">
+              <rank>30</rank>
+            </item>
           </items>
         </default_search>
         <search>
@@ -1279,14 +1307,14 @@ your private key goes here
             <item id="label">
               <rank>10</rank>
             </item>
-            <item id="events_list">
+            <item id="provider">
               <rank>20</rank>
             </item>
           </items>
         </search>
         <list>
           <items>
-            <item id="events_list">
+            <item id="provider">
               <rank>20</rank>
             </item>
           </items>
@@ -1383,8 +1411,11 @@ your private key goes here
                     <item id="label">
                       <rank>10</rank>
                     </item>
-                    <item id="events_list">
+                    <item id="provider">
                       <rank>20</rank>
+                    </item>
+                    <item id="events_list">
+                      <rank>30</rank>
                     </item>
                     <item id="scope_var">
                       <rank>40</rank>
@@ -1416,7 +1447,7 @@ your private key goes here
             <item id="label">
               <rank>10</rank>
             </item>
-            <item id="events_list">
+            <item id="provider">
               <rank>20</rank>
             </item>
           </items>
@@ -1426,18 +1457,15 @@ your private key goes here
             <item id="label">
               <rank>10</rank>
             </item>
-            <item id="events_list">
+            <item id="provider">
               <rank>20</rank>
             </item>
           </items>
         </search>
         <list>
           <items>
-            <item id="label">
+            <item id="provider">
               <rank>10</rank>
-            </item>
-            <item id="events_list">
-              <rank>20</rank>
             </item>
           </items>
         </list>
@@ -1607,11 +1635,14 @@ your private key goes here
                     <item id="label">
                       <rank>10</rank>
                     </item>
-                    <item id="events_list">
+                    <item id="provider">
                       <rank>20</rank>
                     </item>
-                    <item id="scope_var">
+                    <item id="events_list">
                       <rank>30</rank>
+                    </item>
+                    <item id="scope_var">
+                      <rank>40</rank>
                     </item>
                   </items>
                 </item>
@@ -1657,7 +1688,7 @@ your private key goes here
             <item id="label">
               <rank>10</rank>
             </item>
-            <item id="events_list">
+            <item id="provider">
               <rank>20</rank>
             </item>
           </items>
@@ -1667,18 +1698,15 @@ your private key goes here
             <item id="label">
               <rank>10</rank>
             </item>
-            <item id="events_list">
+            <item id="provider">
               <rank>20</rank>
             </item>
           </items>
         </search>
         <list>
           <items>
-            <item id="label">
+            <item id="provider">
               <rank>10</rank>
-            </item>
-            <item id="events_list">
-              <rank>20</rank>
             </item>
           </items>
         </list>

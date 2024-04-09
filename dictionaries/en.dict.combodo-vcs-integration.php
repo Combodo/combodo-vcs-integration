@@ -123,6 +123,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automation',
 	'Class:VCSAutomation+' => 'Automation executed on the reception of version control system events',
+	'Class:VCSAutomation/Attribute:provider' => 'Provider',
+	'Class:VCSAutomation/Attribute:provider+' => 'Version control system provider',
+	'Class:VCSAutomation/Attribute:provider/Value:github' => 'GitHub',
 	'Class:VCSAutomation/Attribute:events_list' => 'Trigger on event(s)',
 	'Class:VCSAutomation/Attribute:events_list+' => 'List of events for witch automation must be executed',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Scope',
