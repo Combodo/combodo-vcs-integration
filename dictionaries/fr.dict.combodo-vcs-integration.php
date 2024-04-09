@@ -101,7 +101,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVCSAutomationToVCSRepository' => 'Lien Automatisme / Dépôt',
 	'Class:lnkVCSAutomationToVCSRepository+' => '',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:status' => 'Statut',
-	'Class:lnkVCSAutomationToVCSRepository/Attribute:status+' => 'Statut de l\'automatisme',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status+' => 'Statut de l\'automatisme pour le dépôt lié',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status/Value:active' => 'Actif',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status/Value:inactive' => 'Inactif',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition' => 'Condition',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition+' => 'Condition pour l\'éxécution de l\'automatisme (ex: context->ref=refs/heads/(develop|master).*)',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:automation_id' => 'Automatisme',
@@ -119,14 +121,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automatisme',
 	'Class:VCSAutomation+' => 'Automatisme éxécutés à la réception d\'événements du système de gestion de versions',
-	'Class:VCSAutomation/Attribute:repository_id' => 'Dépôt',
-	'Class:VCSAutomation/Attribute:repository_id+' => 'Dépôt de sources',
 	'Class:VCSAutomation/Attribute:events_list' => 'Déclenché sur les événement(s)',
 	'Class:VCSAutomation/Attribute:events_list+' => 'Liste des événements déclenchant l\'automatisme',
-	'Class:VCSAutomation/Attribute:status' => 'Statut',
-	'Class:VCSAutomation/Attribute:status+' => 'Statut de l\'automatisme',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Périmètre',
-	'Class:VCSAutomation/Attribute:scope_var+' => 'Périmètre d\'éxécution',
+	'Class:VCSAutomation/Attribute:scope_var+' => 'Restreint l\'automatisme à un ensemble d\éléments contenus dans la charge utile du webhook.',
 	'Class:VCSAutomation/Attribute:label' => 'Etiquette',
 	'Class:VCSAutomation/Attribute:label+' => 'Etiquette décrivant l\'automatisme',
 	'Class:VCSAutomation/Attribute:repositories_list' => 'Dépôts',
@@ -158,7 +156,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSLogAttributeAutomation/Attribute:object_class' => 'Classe de l\'objet',
 	'Class:VCSLogAttributeAutomation/Attribute:object_class+' => 'Classe de l\'objet destinataire',
 	'Class:VCSLogAttributeAutomation/Attribute:template' => 'Modèle',
-	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Modèle de message',
+	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Modèle utilisé por générer le message',
 
 	// CLASS VCSLogJournalAutomation
 	'Class:VCSLogJournalAutomation' => 'Insérer un message dans le journal des logs',
@@ -166,7 +164,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSLogJournalAutomation:automation' => 'Automatisme',
 	'Class:VCSLogJournalAutomation:message' => 'Message',
 	'Class:VCSLogJournalAutomation/Attribute:template' => 'Modèle',
-	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Modèle de message',
+	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Modèle utilisé por générer le message',
 
 ));
 

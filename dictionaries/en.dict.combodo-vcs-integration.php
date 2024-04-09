@@ -101,7 +101,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkVCSAutomationToVCSRepository' => 'Link Automation To Repository',
 	'Class:lnkVCSAutomationToVCSRepository+' => '',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:status' => 'Status',
-	'Class:lnkVCSAutomationToVCSRepository/Attribute:status+' => 'Automation status',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status+' => 'Automation status for the linked repository',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status/Value:active' => 'Active',
+	'Class:lnkVCSAutomationToVCSRepository/Attribute:status/Value:inactive' => 'Inactive',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition' => 'Condition',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:condition+' => 'Condition for the automation execution (ex: context->ref=refs/heads/(develop|master).*)',
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:automation_id' => 'Automation',
@@ -122,14 +124,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automation',
 	'Class:VCSAutomation+' => 'Automation executed on the reception of version control system events',
-	'Class:VCSAutomation/Attribute:repository_id' => 'Repository',
-	'Class:VCSAutomation/Attribute:repository_id+' => 'Version Control System Repository',
 	'Class:VCSAutomation/Attribute:events_list' => 'Trigger on event(s)',
 	'Class:VCSAutomation/Attribute:events_list+' => 'List of events for witch automation must be executed',
-	'Class:VCSAutomation/Attribute:status' => 'Status',
-	'Class:VCSAutomation/Attribute:status+' => 'Automation status',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Scope',
-	'Class:VCSAutomation/Attribute:scope_var+' => 'Automation scope',
+	'Class:VCSAutomation/Attribute:scope_var+' => 'Restricts the automation to a set of elements contained in a webhook payload',
 	'Class:VCSAutomation/Attribute:label' => 'Label',
 	'Class:VCSAutomation/Attribute:label+' => 'Label describing the automation',
 	'Class:VCSAutomation/Attribute:repositories_list' => 'Repositories',
@@ -161,7 +159,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSLogAttributeAutomation/Attribute:object_class' => 'Object Class',
 	'Class:VCSLogAttributeAutomation/Attribute:object_class+' => 'Class of the target object',
 	'Class:VCSLogAttributeAutomation/Attribute:template' => 'Template',
-	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Message template',
+	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Template that will be used to create the message',
 
 	// CLASS VCSLogJournalAutomation
 	'Class:VCSLogJournalAutomation' => 'Append Message to System Log',
@@ -169,7 +167,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSLogJournalAutomation:automation' => 'Automation',
 	'Class:VCSLogJournalAutomation:message' => 'Message',
 	'Class:VCSLogJournalAutomation/Attribute:template' => 'Template',
-	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Message template',
+	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Template that will be used to create the message',
 
 ));
 
