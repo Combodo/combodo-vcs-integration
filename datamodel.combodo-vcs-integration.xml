@@ -516,7 +516,7 @@ your private key goes here
                 if(!$bEditMode){
 
                     // add css
-                    $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
+                    $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
 
                     // separator
                     $oPage->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html('<hr>'));
@@ -524,7 +524,7 @@ your private key goes here
                     // repository information
                     $aExternalData = json_decode($this->Get('external_data'), true);
                     $oBlockRepositoryInfo = new \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock('github_info');
-                    $oBlockRepositoryInfo->AddCSSClass('combodo-github-integration--repository-info-container');
+                    $oBlockRepositoryInfo->AddCSSClass('combodo-vcs-integration--repository-info-container');
                     $sRenderedText = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderGitHubInfoTemplate($this, $aExternalData);
                     $oBlockRepositoryInfo->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html($sRenderedText));
                     $oPage->AddUiBlock($oBlockRepositoryInfo);
@@ -1394,7 +1394,7 @@ your private key goes here
 
             	if($bEditMode) {
             		// add css
-            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
+            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
             		$oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
             	}
             }
@@ -1617,7 +1617,7 @@ your private key goes here
 
             	if($bEditMode) {
             		// add css
-            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-github-integration/assets/css/global.scss');
+            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
             		$oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
             	}
             }
@@ -1729,7 +1729,7 @@ your private key goes here
               <dashlet id="10" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:VCSIntegration:General</title>
-                <icon>combodo-github-integration/assets/img/icons8-code-fork.svg</icon>
+                <icon>combodo-vcs-integration/assets/img/icons8-code-fork.svg</icon>
               </dashlet>
               <dashlet id="11" xsi:type="DashletBadge">
                 <rank>1</rank>
@@ -1747,7 +1747,7 @@ your private key goes here
               <dashlet id="20" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:VCSIntegration:Automation</title>
-                <icon>combodo-github-integration/assets/img/icons8-automation.svg</icon>
+                <icon>combodo-vcs-integration/assets/img/icons8-automation.svg</icon>
               </dashlet>
               <dashlet id="21" xsi:type="DashletBadge">
                 <rank>1</rank>

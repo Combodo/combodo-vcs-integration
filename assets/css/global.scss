@@ -1,20 +1,20 @@
 
 // info container
-.combodo-github-integration--repository-info-container{
+.combodo-vcs-integration--repository-info-container{
 	margin-bottom: 15px;
 	font-size: 1rem;
 	color: #969696;
 }
 
 // info
-.combodo-github-integration--repository-info{
+.combodo-vcs-integration--repository-info{
 	display:flex;
 	margin-bottom: 20px;
 	align-items: stretch;
 }
 
 // owner
-.combodo-github-integration--repository-info--owner{
+.combodo-vcs-integration--repository-info--owner{
 	display:flex;
 	margin: 4px 16px 4px 0px;
 	padding: 5px 10px;
@@ -33,7 +33,7 @@
 }
 
 // help
-.combodo-github-integration--help-container{
+.combodo-vcs-integration--help-container{
 	background-color: #f6f6f6;
 	padding: 8px;
 	border-radius: 8px;
@@ -65,6 +65,6 @@
 }
 
 // external links
-.combodo-github-integration--help-container--external-links{
+.combodo-vcs-integration--help-container--external-links{
 	margin-top: 20px;
 }

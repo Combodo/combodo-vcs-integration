@@ -7,7 +7,7 @@
       "Combodo\\iTop\\VCSManagement\\": "src"
     }
   },
-  "name": "combodo/combodo-github-integration",
+  "name": "combodo/combodo-vcs-integration",
   "type": "itop-extension",
   "description": "GitHub Integration",
   "require": {

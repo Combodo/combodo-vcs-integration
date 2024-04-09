@@ -21,7 +21,7 @@ use utils;
 class ModuleHelper
 {
 	// module name
-    public const MODULE_NAME = "combodo-github-integration";
+    public const MODULE_NAME = "combodo-vcs-integration";
 
 	// module parameters
 	public static string $PARAM_WEBHOOK_USER_ID = 'webhook_user_id';

@@ -135,7 +135,7 @@ class GitHubManager
 	 */
 	public function GetWebhookUrl(string $sRepositoryReference) : string
 	{
-		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/exec.php?exec_module=combodo-github-integration&exec_page=github.php&repository=' . $sRepositoryReference;
+		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/exec.php?exec_module=combodo-vcs-integration&exec_page=github.php&repository=' . $sRepositoryReference;
 
 		$sHost = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_HOST_OVERLOAD);
 		if($sHost !== null){
