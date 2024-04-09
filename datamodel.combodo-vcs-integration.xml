@@ -1001,6 +1001,7 @@ your private key goes here
         <db_final_class_field/>
         <naming>
           <attributes>
+            <attribute id="provider"/>
             <attribute id="name"/>
           </attributes>
         </naming>
