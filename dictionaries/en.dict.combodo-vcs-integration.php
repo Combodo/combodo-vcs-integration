@@ -114,7 +114,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CLASS VCSEvent
 	'Class:VCSEvent' => 'VCS Event',
 	'Class:VCSEvent+' => 'Event that can be triggered by a VCS on its repositories',
-	'Class:VCSEvent/Name' => '%1$s / %2$s',
 	'Class:VCSEvent/Attribute:provider' => 'Provider',
 	'Class:VCSEvent/Attribute:provider+' => 'Version control system provider',
 	'Class:VCSEvent/Attribute:provider/Value:github' => 'GitHub',

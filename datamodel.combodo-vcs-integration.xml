@@ -1001,7 +1001,6 @@ your private key goes here
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="provider"/>
             <attribute id="name"/>
           </attributes>
         </naming>
@@ -1270,7 +1269,7 @@ your private key goes here
             <item id="label">
               <rank>10</rank>
             </item>
-            <item id="events_list">
+            <item id="provider">
               <rank>20</rank>
             </item>
           </items>
@@ -1388,7 +1387,7 @@ your private key goes here
                       <rank>20</rank>
                     </item>
                     <item id="scope_var">
-                      <rank>30</rank>
+                      <rank>40</rank>
                     </item>
                   </items>
                 </item>
