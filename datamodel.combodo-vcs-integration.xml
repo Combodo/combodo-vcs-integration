@@ -138,7 +138,7 @@ your private key goes here
                       case 'app_private_key':
                           $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
                           break;
-                      case 'app_id':
+                      default:
                           $iFlag = 0;
                           break;
                    }
@@ -168,7 +168,7 @@ your private key goes here
                       case 'app_private_key':
                           $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
                           break;
-                      case 'app_id':
+                      default:
                           $iFlag = 0;
                           break;
                   }
