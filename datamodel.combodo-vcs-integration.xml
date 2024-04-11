@@ -1813,8 +1813,37 @@ your private key goes here
   </menus>
   <user_rights>
     <groups>
+      <group id="VCS" _delta="define">
+        <classes>
+          <class id="Document"/>
+          <class id="VCSAutomation"/>
+          <class id="VCSConnector"/>
+          <class id="VCSEvent"/>
+          <class id="VCSRepository"/>
+        </classes>
+      </group>
     </groups>
     <profiles>
+      <profile id="20" _delta="define">
+        <name>VCS Manager</name>
+        <description>Person in charge of Version Control System management </description>
+        <groups>
+          <group id="VCS">
+            <actions>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
+             </actions>
+          </group>
+          <group id="*">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+            </actions>
+          </group>
+         </groups>
+      </profile>
     </profiles>
   </user_rights>
 </itop_design>
