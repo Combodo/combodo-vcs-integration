@@ -1129,6 +1129,10 @@ your private key goes here
           <extkey_attcode>event_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="event_provider" xsi:type="AttributeExternalField">
+          <extkey_attcode>event_id</extkey_attcode>
+          <target_attcode>provider</target_attcode>
+        </field>
         <!-- automation -->
         <field id="automation_id" xsi:type="AttributeExternalKey">
           <sql>automation_id</sql>
@@ -1286,6 +1290,34 @@ your private key goes here
     }
 }
 ]]></code>
+        </method>
+        <method id="DoCheckToWrite">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DoCheckToWrite()
+    {
+        parent::DoCheckToWrite();
+
+        // Make sure events and repositories share the same provider
+        $sProvider = $this->Get('provider');
+        $olnkVCSAutomationToVCSEventsList = $this->Get('events_list');
+        while ($oLnk = $olnkVCSAutomationToVCSEventsList->Fetch()) {
+            if ($oLnk->Get('event_provider') != $sProvider) {
+                $this->m_aCheckIssues[] = Dict::Format('UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent', $oLnk->Get('event_name'));
+            }
+        }
+        $olnkVCSAutomationToVCSRepositoriesList = $this->Get('repositories_list');
+        while ($oLnk = $olnkVCSAutomationToVCSRepositoriesList->Fetch()) {
+            $oVCSRepository = MetaModel::GetObject('VCSRepository', $oLnk->Get('repository_id'));
+            if (!is_null($oVCSRepository)) {
+                if ($oVCSRepository->Get('connector_provider') != $sProvider) {
+                    $this->m_aCheckIssues[] = Dict::Format('UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForRepositories', $oVCSRepository->Get('name'));
+                }
+            }
+        }
+	}]]></code>
         </method>
       </methods>
       <presentation>

@@ -169,5 +169,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSLogJournalAutomation/Attribute:template' => 'Modèle',
 	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Modèle utilisé por générer le message',
 
+	// Actions
+	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent' => 'L\'événement %1$s ne peut être associé à l\'automatisme car il n\'utilise pas le même fournisseur de VCS !',
+	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForRepositories' => 'Le depôt %1$s ne peut être lié à l\'automatisme car il n\'utilise pas le même fournisseur de VCS !',
 ));
 

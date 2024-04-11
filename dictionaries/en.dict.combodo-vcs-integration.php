@@ -171,5 +171,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSLogJournalAutomation/Attribute:template' => 'Template',
 	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Template that will be used to create the message',
 
+	// Actions
+	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent' => 'The event %1$s cannot be used for the automation as it belongs to a different provider!',
+	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForRepositories' => 'The repository %1$s cannot use that automation as it belongs to a different provider!',
 ));
 
