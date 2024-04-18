@@ -1548,18 +1548,18 @@ your private key goes here
         <!-- reference regex pattern -->
         <field id="ref_regex_pattern" xsi:type="AttributeString">
           <sql>regex</sql>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <!-- reference regex subject data -->
         <field id="ref_regex_subject_data" xsi:type="AttributeString">
           <sql>data</sql>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <!-- template -->
         <field id="template" xsi:type="AttributeText">
           <sql>template</sql>
           <height>300px</height>
-          <is_null_allowed>true</is_null_allowed>
+          <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
       <methods>
