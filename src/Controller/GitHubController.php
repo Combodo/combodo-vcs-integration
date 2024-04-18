@@ -43,7 +43,10 @@ class GitHubController extends AbstractController
 			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
 
 			// get repository info
-			$oGitHubManager->UpdateExternalData($oRepository);
+			$aRepositoryInfoResult = $oGitHubManager->UpdateExternalData($oRepository);
+			foreach($aRepositoryInfoResult['errors'] as $sError){
+				$aData['errors'][] = $sError;
+			}
 			$oRepository->DBUpdate();
 
 			// get repository info template
@@ -55,6 +58,7 @@ class GitHubController extends AbstractController
 			// error handling
 			ExceptionLog::LogException($e);
 			$aData['errors'][] = $e->getMessage();
+			$aData['fatal'] = true;
 		}
 
 		return $oPage->SetData($aData);
@@ -81,7 +85,10 @@ class GitHubController extends AbstractController
 			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
 
 			// synchronize repository
-			$oGitHubManager->SynchronizeRepository($oRepository);
+			$aSynchronizationResult = $oGitHubManager->SynchronizeRepository($oRepository);
+			foreach($aSynchronizationResult['errors'] as $sError){
+				$aData['errors'][] = $sError;
+			}
 			$oRepository->DBUpdate();
 
 			// append webhook status field html
@@ -92,7 +99,7 @@ class GitHubController extends AbstractController
 			// error handling
 			ExceptionLog::LogException($e);
 			$aData['errors'][] = $e->getMessage();
-
+			$aData['fatal'] = true;
 		}
 
 		return $oPage->SetData($aData);
@@ -119,7 +126,10 @@ class GitHubController extends AbstractController
 			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
 
 			// test GitHub repository existence
-			$oGitHubManager->UpdateWebhookStatus($oRepository);
+			$aCheckRepositoryWebhookSynchroResult = $oGitHubManager->UpdateWebhookStatus($oRepository);
+			foreach($aCheckRepositoryWebhookSynchroResult['errors'] as $sError){
+				$aData['errors'][] = $sError;
+			}
 			$oRepository->DBUpdate();
 
 			// append webhook status field html
@@ -129,6 +139,7 @@ class GitHubController extends AbstractController
 
 			ExceptionLog::LogException($e);
 			$aData['errors'][] = $e->getMessage();
+			$aData['fatal'] = true;
 		}
 
 		return $oPage->SetData($aData);

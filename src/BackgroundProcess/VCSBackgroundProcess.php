@@ -87,7 +87,6 @@ class VCSBackgroundProcess implements iBackgroundProcess
 				if($oRepository->Get('synchro_mode') === 'auto'
 				&& $oRepository->Get('webhook_status') === 'unsynchronized' ){
 					$this->oGitHubManager->SynchronizeRepository($oRepository);
-					continue;
 				}
 
 			}

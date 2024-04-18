@@ -113,7 +113,9 @@ class GitHubAPIService
 			'alg' => 'RS256'
 		];
 
-		return JWT::encode($aPayload, $sAppPrivateKey, 'RS256');
+		return ModuleHelper::CallFunctionWithoutDisplayingPHPErrors(function() use ($aPayload,$sAppPrivateKey) {
+			return JWT::encode($aPayload, $sAppPrivateKey, 'RS256');
+		});
 	}
 
 	/**
@@ -207,23 +209,28 @@ class GitHubAPIService
 	 *
 	 * @param DBObject $oRepository The repository.
 	 * @param string $sHookId The webhook configuration id.
-	 * @param array|null $data
 	 *
-	 * @return bool true if exist
+	 * @return array
 	 * @throws \CoreException
 	 */
-	public function RepositoryWebhookExist(DBObject $oRepository, string $sHookId, array &$data = null) : bool
+	public function RepositoryWebhookConfigurationExist(DBObject $oRepository, string $sHookId) : array
 	{
 		try{
-			$data = $this->GetRepositoryWebhook($oRepository, $sHookId);
+			$data = $this->GetRepositoryWebhookConfiguration($oRepository, $sHookId);
 
-			return true;
+			return [
+				'webhook_configuration_exist' => true,
+				'github_data' => $data
+			];
 		}
 		catch(ClientException $e){
 
 			// not found
 			if($e->getResponse()->getStatusCode() === 404){
-				return false;
+				return [
+					'webhook_configuration_exist' => false,
+					'github_data' => null
+				];
 			}
 
 			throw $e;
@@ -405,10 +412,10 @@ class GitHubAPIService
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryWebhook(DBObject $oRepository, string $sHookId) : array
+	public function GetRepositoryWebhookConfiguration(DBObject $oRepository, string $sHookId) : array
 	{
 		// log
-		ModuleHelper::LogDebug('GetRepositoryWebhook');
+		ModuleHelper::LogDebug('GetRepositoryWebhookConfiguration');
 
 		// retrieve useful settings
 		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');

@@ -84,7 +84,7 @@ class VCSEventListener implements iEventServiceSetup
 				$oRepository->Set('webhook_status', 'unsynchronized');
 			}
 
-			// if synchro mode disabling
+			// if synchro mode change to none
 			if(array_key_exists('synchro_mode', $aChanges)){
 				if($oRepository->Get('synchro_mode') === 'none'){
 					try{
@@ -99,16 +99,17 @@ class VCSEventListener implements iEventServiceSetup
 
 			// if not synchro and synchro auto
 			if($oRepository->Get('synchro_mode') === 'auto'
-				&& in_array($oRepository->Get('webhook_status'), [ 'unsynchronized', 'error'])){
-				if($this->oGitHubManager->SynchronizeRepository($oRepository) !== null){
+			&& $oRepository->Get('webhook_status') !== 'synchronized'){
+				if($this->oGitHubManager->SynchronizeRepository($oRepository)['github_data'] !== null){
 					$this->oGitHubManager->UpdateExternalData($oRepository);
 				}
 			}
-			else if($oRepository->Get('synchro_mode') === 'manual'){
+			else if($oRepository->Get('synchro_mode') === 'manual'
+			&& !empty($oRepository->Get('webhook_configuration') )){
 				$this->oGitHubManager->UpdateWebhookStatus($oRepository);
 			}
 
-			// update webhook url (needs repository id)
+			// update webhook url
 			$sOldUrl = $oRepository->Get('webhook_url');
 			$this->oGitHubManager->UpdateWebhookURL($oRepository);
 			if($sOldUrl !== $oRepository->Get('webhook_url')){

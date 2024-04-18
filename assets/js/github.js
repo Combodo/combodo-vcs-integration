@@ -22,9 +22,16 @@ const iTopGithubWorker = new function(){
      *
      * @param repository_reference
      */
-    async function SynchronizeRepository(repository_reference){
-        await iTopGithubWorker.SynchronizeRepositoryWebhook(repository_reference);
-        await iTopGithubWorker.GetRepositoryInfo(repository_reference);
+    function SynchronizeRepository(repository_reference){
+        iTopGithubWorker.SynchronizeRepositoryWebhook(repository_reference).then(function(res){
+            if(res === true){
+                iTopGithubWorker.GetRepositoryInfo(repository_reference).then(function(res){
+                    if(CombodoToast !== undefined){
+                        CombodoToast.OpenSuccessToast('Repository synchronized successfully');
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -81,14 +88,16 @@ const iTopGithubWorker = new function(){
                 // update webhook_status
                 const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="webhook_status"] .ibo-field--value');
                 oGitHubInfo.innerHTML = data.data.webhook_status_field_html;
-
             }
 
+            return data.data.errors === undefined;
         }
         catch(error){
 
             // log
             console.error(error);
+
+            return false;
         }
 
     }
@@ -114,11 +123,14 @@ const iTopGithubWorker = new function(){
                 oGitHubInfo.innerHTML = data.data.webhook_status_field_html;
             }
 
+            return data.data.errors === undefined;
         }
         catch(error){
 
             // log
             console.error(error);
+
+            return false;
         }
 
 
@@ -135,9 +147,8 @@ const iTopGithubWorker = new function(){
         // handle errors
         if(data.data.errors !== undefined){
             ShowErrors(title, data.data.errors)
-            return false;
         }
-        return true;
+        return data.data.fatal === undefined;
     }
 
     /**
@@ -149,14 +160,27 @@ const iTopGithubWorker = new function(){
     function ShowErrors(title, errors){
 
         // prepare message
-        let sErrorMessage = title + '\n\n';
-        sErrorMessage += 'Error(s):\n';
-        errors.forEach((error) => {
-            sErrorMessage += '- ' + error + '\n';
-        });
-        sErrorMessage = sErrorMessage.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        let sErrorMessage = '<div class="combodo-vcs-integration--informative-modal">';
 
-        // informative modal
+        // title
+        sErrorMessage += '<strong>' + title + '</strong><br><br>';
+
+        // multiple errors
+        if(errors.length > 1){
+            sErrorMessage += `${errors.length} Errors:<br>`;
+        }
+
+        // print errors
+        sErrorMessage += '<ul>';
+        errors.forEach((error) => {
+            sErrorMessage += '<li>' + error + '</li>';
+        });
+        sErrorMessage += '</ul>';
+
+        // end message
+        sErrorMessage += '</div>';
+
+        // show informative error modal
         CombodoModal.OpenInformativeModal(sErrorMessage, CombodoModal.INFORMATIVE_MODAL_SEVERITY_ERROR, {});
     }
 

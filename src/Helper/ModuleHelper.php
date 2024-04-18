@@ -135,4 +135,18 @@ class ModuleHelper
 	{
 		IssueLog::Info(ModuleHelper::MODULE_NAME . ' ' . $sMessage, null, $aContext);
 	}
+
+	/**
+	 * @param callable $oFunction
+	 *
+	 * @return mixed
+	 */
+	static public function CallFunctionWithoutDisplayingPHPErrors(callable $oFunction)
+	{
+		$ini = ini_get('display_errors');
+		ini_set('display_errors', 0);
+		$return = $oFunction();
+		ini_set('display_errors', $ini);
+		return $return;
+	}
 }
