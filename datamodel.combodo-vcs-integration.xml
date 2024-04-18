@@ -1684,10 +1684,10 @@ your private key goes here
                     <item id="object_att_code">
                       <rank>20</rank>
                     </item>
-                    <item id="ref_regex_pattern">
+                    <item id="ref_regex_subject_data">
                       <rank>30</rank>
                     </item>
-                    <item id="ref_regex_subject_data">
+                    <item id="ref_regex_pattern">
                       <rank>40</rank>
                     </item>
                   </items>
