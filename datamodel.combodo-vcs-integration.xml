@@ -1752,7 +1752,7 @@ your private key goes here
       <parent>ConfigurationTools</parent>
       <definition>
         <layout>DashboardLayoutOneCol</layout>
-        <title>Menu:ConfigurationTools:VCS</title>
+        <title>Menu:ConfigurationTools:VCSManagement</title>
         <cells>
           <cell id="1">
             <rank>1</rank>
@@ -1764,11 +1764,11 @@ your private key goes here
               </dashlet>
               <dashlet id="11" xsi:type="DashletBadge">
                 <rank>1</rank>
-                <class>VCSRepository</class>
+                <class>VCSConnector</class>
               </dashlet>
               <dashlet id="12" xsi:type="DashletBadge">
                 <rank>2</rank>
-                <class>VCSConnector</class>
+                <class>VCSRepository</class>
               </dashlet>
             </dashlets>
           </cell>
