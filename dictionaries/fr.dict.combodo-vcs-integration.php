@@ -14,7 +14,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	// CLASS VCSConnector
 	'Class:VCSConnector' => 'Connecteur',
-	'Class:VCSConnector+' => 'Connecteur au système de gestion de versions',
+	'Class:VCSConnector+' => 'Connecteur pour le système de gestion de versions',
 	'Class:VCSConnector:connector' => 'Connecteur',
 	'Class:VCSConnector:authentication' => 'Authentification',
 	'Class:VCSConnector/Attribute:label' => 'Etiquette',
@@ -22,11 +22,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSConnector/Attribute:provider' => 'Fournisseur',
 	'Class:VCSConnector/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
 	'Class:VCSConnector/Attribute:provider/Value:github' => 'GitHub',
-	'Class:VCSConnector/Attribute:owner' => 'Propriétaire ressource',
+	'Class:VCSConnector/Attribute:owner' => 'Propriétaire de la ressource',
 	'Class:VCSConnector/Attribute:owner+' => 'Ce propriétaire peut être un utilisateur ou une organisation',
 	'Class:VCSConnector/Attribute:mode' => 'Mode d\'authentification',
 	'Class:VCSConnector/Attribute:mode+' => 'Mode d\'authentification de l\'API',
-	'Class:VCSConnector/Attribute:mode/Value:none+' => 'Aucun',
+	'Class:VCSConnector/Attribute:mode/Value:none' => 'Aucun',
 	'Class:VCSConnector/Attribute:mode/Value:personal' => 'Jeton d\'access personel',
 	'Class:VCSConnector/Attribute:mode/Value:app' => 'Jeton d\'accès à l\'installation de l\'application',
 	'Class:VCSConnector/Attribute:personal_access_token' => 'Jeton d\'access personel',
@@ -35,11 +35,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSConnector/Attribute:app_id+' => 'Identificateur de l\'application',
 	'Class:VCSConnector/Attribute:app_private_key' => 'Clé privée',
 	'Class:VCSConnector/Attribute:app_private_key+' => 'Clé privée liée à l\'application',
-	'Class:VCSConnector/Attribute:repositories_list' => 'Dépots',
-	'Class:VCSConnector/Attribute:repositories_list+' => 'Liste des dépots utilisant le connecteur',
+	'Class:VCSConnector/Attribute:repositories_list' => 'Dépôts',
+	'Class:VCSConnector/Attribute:repositories_list+' => 'Liste des dépôts utilisant le connecteur',
 
 	// CLASS VCSRepository
-	'Class:VCSRepository' => 'Dépot',
+	'Class:VCSRepository' => 'Dépôt',
 	'Class:VCSRepository+' => 'Dépôt de sources',
 	'Class:VCSRepository/Attribute:name' => 'Nom',
 	'Class:VCSRepository/Attribute:name+' => 'Nom du dépôt sur le système de gestion de versions',
@@ -54,8 +54,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSRepository/Attribute:webhook_status/Value:active' => 'Actif',
 	'Class:VCSRepository/Attribute:webhook_status/Value:inactive' => 'Inactif',
 	'Class:VCSRepository/Attribute:webhook_status/Value:error' => 'Erreur de synchronisation',
-	'Class:VCSRepository/Attribute:synchro_mode' => 'Mode de synchronization',
-	'Class:VCSRepository/Attribute:synchro_mode+' => 'Mode de synchronization avec le dépôt du système de gestion de versions',
+	'Class:VCSRepository/Attribute:synchro_mode' => 'Mode de synchronisation',
+	'Class:VCSRepository/Attribute:synchro_mode+' => 'Mode de synchronisation avec le dépôt du système de gestion de versions',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:none' => 'Aucune',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:auto' => 'Automatique',
 	'Class:VCSRepository/Attribute:synchro_mode/Value:manual' => 'Manuelle',
@@ -113,18 +113,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	// CLASS VCSEvent
 	'Class:VCSEvent' => 'Evénement VCS',
-	'Class:VCSEvent+' => 'Evénement qu\'un système de gestsion de versions peut déclancher sur l\'un de ses dépôts',
+	'Class:VCSEvent+' => 'Evénement qu\'un système de gestsion de versions peut déclencher sur l\'un de ses dépôts',
 	'Class:VCSEvent/Attribute:provider' => 'Fournisseur',
 	'Class:VCSEvent/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
 	'Class:VCSEvent/Attribute:provider/Value:github' => 'GitHub',
 
 	// CLASS VCSAutomation
 	'Class:VCSAutomation' => 'Automatisme',
-	'Class:VCSAutomation+' => 'Automatisme éxécutés à la réception d\'événements du système de gestion de versions',
+	'Class:VCSAutomation+' => 'Automatisme éxécuté à la réception d\'événements du système de gestion de versions',
 	'Class:VCSAutomation/Attribute:provider' => 'Fournisseur',
 	'Class:VCSAutomation/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
 	'Class:VCSAutomation/Attribute:provider/Value:github' => 'GitHub',
-	'Class:VCSAutomation/Attribute:events_list' => 'Déclenché sur les événement(s)',
+	'Class:VCSAutomation/Attribute:events_list' => 'Evénements',
 	'Class:VCSAutomation/Attribute:events_list+' => 'Liste des événements déclenchant l\'automatisme',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Exécuter pour chaque élément du tableau',
 	'Class:VCSAutomation/Attribute:scope_var+' => 'Execute l\'automatisme pour chaque élément du tableau (ex: commits pour l\'événement push, pour exécuter l\'automatisme pour chaque commit)',
@@ -145,10 +145,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSAutomation/UI:Label:templating_syntax_6' => 'Utiliser @substring pour découper une chaîne de caractères.',
 
 	// CLASS VCSLogAttributeAutomation
-	'Class:VCSLogAttributeAutomation' => 'Insérer un message dans un object',
-	'Class:VCSLogAttributeAutomation+' => 'Insérer un message dans un attribut d\'un object',
+	'Class:VCSLogAttributeAutomation' => 'Insère dans un object',
+	'Class:VCSLogAttributeAutomation+' => 'Insère un message dans un attribut spécifique d\'un object iTop',
 	'Class:VCSLogAttributeAutomation:automation' => 'Automatisme',
-	'Class:VCSLogAttributeAutomation:target' => 'Objet cible du message',
+	'Class:VCSLogAttributeAutomation:target' => 'Objet cible',
 	'Class:VCSLogAttributeAutomation:message' => 'Message à insérer',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data' => 'Donnée contenant la réference de l\'objet',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data+' => 'Donnée de la charge utile du webhook contenant la référence de l\'objet cible',
@@ -162,14 +162,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Modèle utilisé pour générer le message (texte brut ou html)',
 
 	// CLASS VCSLogJournalAutomation
-	'Class:VCSLogJournalAutomation' => 'Insérer un message dans le log',
-	'Class:VCSLogJournalAutomation+' => '',
+	'Class:VCSLogJournalAutomation' => 'Insère dans le log système',
+	'Class:VCSLogJournalAutomation+' => 'Insère un message dans le fichier log/error.log d\'iTop',
 	'Class:VCSLogJournalAutomation:automation' => 'Automatisme',
-	'Class:VCSLogJournalAutomation:message' => 'Message',
-	'Class:VCSLogJournalAutomation/Attribute:template' => 'Modèle',
-	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Modèle utilisé por générer le message',
+	'Class:VCSLogJournalAutomation:message' => 'Message à insérer',
+	'Class:VCSLogJournalAutomation/Attribute:template' => 'Modèle du message',
+	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Modèle utilisé pour générer le message',
 
 	// Actions
+	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected' => 'Un atomatisme doit être lié à, au moins, un événement !',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent' => 'L\'événement %1$s ne peut être associé à l\'automatisme car il n\'utilise pas le même fournisseur de VCS !',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForRepositories' => 'Le depôt %1$s ne peut être lié à l\'automatisme car il n\'utilise pas le même fournisseur de VCS !',
 ));

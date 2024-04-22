@@ -23,7 +23,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSConnector/Attribute:provider+' => 'Version control system provider',
 	'Class:VCSConnector/Attribute:provider/Value:github' => 'GitHub',
 	'Class:VCSConnector/Attribute:owner' => 'Resource owner',
-	'Class:VCSConnector/Attribute:owner+' => 'It could be a user or an organization',
+	'Class:VCSConnector/Attribute:owner+' => 'Owner could be a user or an organization',
 	'Class:VCSConnector/Attribute:mode' => 'Authentication Mode',
 	'Class:VCSConnector/Attribute:mode+' => 'API Authentication Mode',
 	'Class:VCSConnector/Attribute:mode/Value:none' => 'None',
@@ -147,8 +147,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSAutomation/UI:Label:templating_syntax_6' => 'Use @substring statement to cut a string.',
 
 	// CLASS VCSLogAttributeAutomation
-	'Class:VCSLogAttributeAutomation' => 'Append Message to Object',
-	'Class:VCSLogAttributeAutomation+' => 'Append a message to an object attribute',
+	'Class:VCSLogAttributeAutomation' => 'Append to Object',
+	'Class:VCSLogAttributeAutomation+' => 'Append a message to a specific attribute of an iTop object',
 	'Class:VCSLogAttributeAutomation:automation' => 'Automation',
 	'Class:VCSLogAttributeAutomation:target' => 'Target object of the message',
 	'Class:VCSLogAttributeAutomation:message' => 'Message to append',
@@ -164,14 +164,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Template that will be used to create the message (plain text or html)',
 
 	// CLASS VCSLogJournalAutomation
-	'Class:VCSLogJournalAutomation' => 'Append Message to System Log',
-	'Class:VCSLogJournalAutomation+' => '',
+	'Class:VCSLogJournalAutomation' => 'Append to System Log',
+	'Class:VCSLogJournalAutomation+' => 'Append a message to iTop\'s log/error.log file',
 	'Class:VCSLogJournalAutomation:automation' => 'Automation',
 	'Class:VCSLogJournalAutomation:message' => 'Message',
 	'Class:VCSLogJournalAutomation/Attribute:template' => 'Template',
 	'Class:VCSLogJournalAutomation/Attribute:template+' => 'Template that will be used to create the message',
 
 	// Actions
+	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected' => 'An automation needs to be linked to, at least, one event!',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent' => 'The event %1$s cannot be used for the automation as it belongs to a different provider!',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForRepositories' => 'The repository %1$s cannot use that automation as it belongs to a different provider!',
 ));
