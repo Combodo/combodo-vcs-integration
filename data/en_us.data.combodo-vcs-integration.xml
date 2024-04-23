@@ -28,4 +28,28 @@
 		<name>delete</name>
 		<provider>github</provider>
 	</VCSEvent>
+	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="1">
+		<provider>github</provider>
+		<label>Commits into ticket</label>
+		<events_list>event_id:2</events_list>
+		<scope_var>commits</scope_var>
+		<object_class>Ticket</object_class>
+		<object_att_code>private_log</object_att_code>
+		<ref_regex_pattern>(R-\d{6})</ref_regex_pattern>
+		<ref_regex_subject_data>message</ref_regex_subject_data>
+		<template><![CDATA[&lt;strong&gt;[[event]]&lt;/strong&gt; event form GitHub !
+
+[[@image context-&gt;repository-&gt;owner-&gt;avatar_url 32]] [[@mailto committer-&gt;email as committer-&gt;username]]
+
+&lt;a href=&quot;[[url]]&quot; target=&quot;_blank&quot; style=&quot;font-size:1.5rem;&quot;&gt;#[[@substring id 0 6]]&lt;/a&gt; on 🌵 [[context-&gt;ref]]
+[[message]]
+
+[[@hyperlink context-&gt;compare as compare on GitHub]]]]></template>
+	</VCSLogAttributeAutomation>
+	<VCSLogJournalAutomation alias="VCSLogJournalAutomation" id="2">
+		<provider>github</provider>
+		<label>All events tracking</label>
+		<events_list>event_id:1|event_id:2</events_list>
+		<template>[[@image sender-&gt;avatar_url 25]] [[event]] fired by [[@hyperlink sender-&gt;html_url as sender-&gt;login]]</template>
+	</VCSLogJournalAutomation>
 </Set>
