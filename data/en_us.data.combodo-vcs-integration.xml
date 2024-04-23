@@ -31,7 +31,6 @@
 	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="1">
 		<provider>github</provider>
 		<label>Commits into ticket</label>
-		<events_list>event_id:2</events_list>
 		<scope_var>commits</scope_var>
 		<object_class>Ticket</object_class>
 		<object_att_code>private_log</object_att_code>
@@ -49,7 +48,18 @@
 	<VCSLogJournalAutomation alias="VCSLogJournalAutomation" id="2">
 		<provider>github</provider>
 		<label>All events tracking</label>
-		<events_list>event_id:1|event_id:2</events_list>
 		<template>[[@image sender-&gt;avatar_url 25]] [[event]] fired by [[@hyperlink sender-&gt;html_url as sender-&gt;login]]</template>
 	</VCSLogJournalAutomation>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="1">
+		<event_id>1</event_id>
+		<automation_id>1</automation_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="2">
+		<event_id>1</event_id>
+		<automation_id>2</automation_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="3">
+		<event_id>2</event_id>
+		<automation_id>2</automation_id>
+	</lnkVCSAutomationToVCSEvent>
 </Set>
