@@ -1301,8 +1301,10 @@ your private key goes here
         $sProvider = $this->Get('provider');
         $olnkVCSAutomationToVCSEventsList = $this->Get('events_list');
         if ($olnkVCSAutomationToVCSEventsList->Count() == 0) {
-        	$this->m_aCheckIssues[] = Dict::Format('UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected');
-        	return;
+        	if (!ContextTag::Check('Setup')) {
+        		$this->m_aCheckIssues[] = Dict::Format('UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected');
+        		return;
+        	}
         }
         while ($oLnk = $olnkVCSAutomationToVCSEventsList->Fetch()) {
             if ($oLnk->Get('event_provider') != $sProvider) {
