@@ -63,21 +63,17 @@
         <!-- mode -->
         <field id="mode" xsi:type="AttributeEnum">
           <values>
-            <value id="none">
-              <code>none</code>
-              <rank>1</rank>
-            </value>
             <value id="personal">
               <code>personal</code>
-              <rank>2</rank>
+              <rank>1</rank>
             </value>
             <value id="app">
               <code>app</code>
-              <rank>3</rank>
+              <rank>2</rank>
             </value>
           </values>
           <sql>mode</sql>
-          <default_value>none</default_value>
+          <default_value>personal</default_value>
           <is_null_allowed>false</is_null_allowed>
           <sort_type>rank</sort_type>
           <display_style>list</display_style>
@@ -308,17 +304,21 @@ your private key goes here
           <values>
             <value id="none">
               <code>none</code>
+              <rank>1</rank>
             </value>
             <value id="manual">
               <code>manual</code>
+              <rank>2</rank>
             </value>
             <value id="auto">
               <code>auto</code>
+              <rank>3</rank>
             </value>
           </values>
           <sql>synchro_mode</sql>
           <default_value>auto</default_value>
           <is_null_allowed>false</is_null_allowed>
+          <sort_type>rank</sort_type>
           <display_style>radio_horizontal</display_style>
         </field>
         <!-- connector -->
