@@ -19,7 +19,7 @@
         </obsolescence>
         <naming>
           <attributes>
-            <attribute id="label"/>
+            <attribute id="name"/>
           </attributes>
           <complementary_attributes>
             <attribute id="provider"/>
@@ -38,9 +38,9 @@
         </reconciliation>
       </properties>
       <fields>
-        <!-- label -->
-        <field id="label" xsi:type="AttributeString">
-          <sql>label</sql>
+        <!-- name -->
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <!-- provider -->
@@ -184,7 +184,7 @@ your private key goes here
             <item id="fieldset:Class:VCSConnector:connector">
               <rank>10</rank>
               <items>
-                <item id="label">
+                <item id="name">
                   <rank>10</rank>
                 </item>
                 <item id="provider">
@@ -219,7 +219,7 @@ your private key goes here
         </details>
         <default_search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -232,7 +232,7 @@ your private key goes here
         </default_search>
         <search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -245,7 +245,7 @@ your private key goes here
         </search>
         <list>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -819,7 +819,7 @@ your private key goes here
         <naming>
           <attributes>
             <attribute id="repository_name"/>
-            <attribute id="automation_label"/>
+            <attribute id="automation_name"/>
           </attributes>
         </naming>
         <display_template/>
@@ -852,10 +852,10 @@ your private key goes here
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <!-- automation::label -->
-        <field id="automation_label" xsi:type="AttributeExternalField">
+        <!-- automation::name -->
+        <field id="automation_name" xsi:type="AttributeExternalField">
           <extkey_attcode>automation_id</extkey_attcode>
-          <target_attcode>label</target_attcode>
+          <target_attcode>name</target_attcode>
         </field>
         <!-- status -->
         <field id="status" xsi:type="AttributeEnum">
@@ -1101,7 +1101,7 @@ your private key goes here
         </obsolescence>
         <naming>
           <attributes>
-            <attribute id="automation_label"/>
+            <attribute id="automation_name"/>
             <attribute id="event_name"/>
           </attributes>
         </naming>
@@ -1137,10 +1137,10 @@ your private key goes here
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <!-- automation::label -->
-        <field id="automation_label" xsi:type="AttributeExternalField">
+        <!-- automation::name -->
+        <field id="automation_name" xsi:type="AttributeExternalField">
           <extkey_attcode>automation_id</extkey_attcode>
-          <target_attcode>label</target_attcode>
+          <target_attcode>name</target_attcode>
         </field>
       </fields>
       <methods/>
@@ -1204,7 +1204,7 @@ your private key goes here
         <naming>
           <format>%1$s</format>
           <attributes>
-            <attribute id="label"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template/>
@@ -1239,9 +1239,9 @@ your private key goes here
           <count_min>0</count_min>
           <count_max>0</count_max>
         </field>
-        <!-- label -->
-        <field id="label" xsi:type="AttributeString">
-          <sql>label</sql>
+        <!-- name -->
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <!-- scope var -->
@@ -1326,7 +1326,7 @@ your private key goes here
       <presentation>
         <default_search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -1339,7 +1339,7 @@ your private key goes here
         </default_search>
         <search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -1373,7 +1373,7 @@ your private key goes here
         <naming>
           <format>%1$s</format>
           <attributes>
-            <attribute id="label"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template/>
@@ -1443,7 +1443,7 @@ your private key goes here
                 <item id="fieldset:Class:VCSLogJournalAutomation:automation">
                   <rank>10</rank>
                   <items>
-                    <item id="label">
+                    <item id="name">
                       <rank>10</rank>
                     </item>
                     <item id="provider">
@@ -1479,7 +1479,7 @@ your private key goes here
         </details>
         <default_search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -1489,7 +1489,7 @@ your private key goes here
         </default_search>
         <search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -1523,7 +1523,7 @@ your private key goes here
         <naming>
           <format>%1$s</format>
           <attributes>
-            <attribute id="label"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
         <display_template/>
@@ -1667,7 +1667,7 @@ your private key goes here
                 <item id="fieldset:Class:VCSLogAttributeAutomation:automation">
                   <rank>10</rank>
                   <items>
-                    <item id="label">
+                    <item id="name">
                       <rank>10</rank>
                     </item>
                     <item id="provider">
@@ -1720,7 +1720,7 @@ your private key goes here
         </details>
         <default_search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
@@ -1730,7 +1730,7 @@ your private key goes here
         </default_search>
         <search>
           <items>
-            <item id="label">
+            <item id="name">
               <rank>10</rank>
             </item>
             <item id="provider">
