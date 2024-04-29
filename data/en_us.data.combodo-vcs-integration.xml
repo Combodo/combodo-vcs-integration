@@ -34,6 +34,7 @@
 		<scope_var>commits</scope_var>
 		<object_class>Ticket</object_class>
 		<object_att_code>private_log</object_att_code>
+		<object_ref_att_code>ref</object_ref_att_code>
 		<ref_regex_pattern>(R-\d{6})</ref_regex_pattern>
 		<ref_regex_subject_data>message</ref_regex_subject_data>
 		<template><![CDATA[&lt;strong&gt;[[event]]&lt;/strong&gt; event form GitHub !

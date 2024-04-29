@@ -1570,7 +1570,7 @@ your private key goes here
         <!-- Object Ref Attribute -->
         <field id="object_ref_att_code" xsi:type="AttributeClassAttCodeSet">
           <class_field>object_class</class_field>
-          <sql>object_att_code</sql>
+          <sql>object_ref_att_code</sql>
           <is_null_allowed>false</is_null_allowed>
           <dependencies>
             <attribute id="object_class"></attribute>
