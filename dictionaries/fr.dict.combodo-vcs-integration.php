@@ -156,6 +156,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data+' => 'Donnée de la charge utile du webhook contenant la référence de l\'objet cible',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern' => 'Regex pour extraire la référence',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern+' => 'Expression régulière utilisée pour l\'extraction de la référence de l\'objet cible',
+	'Class:VCSLogAttributeAutomation/Attribute:object_ref_att_code' => 'Attribut où chercher la référence',
+	'Class:VCSLogAttributeAutomation/Attribute:object_ref_att_code+' => 'Attribut de l\'objet cible qui contient la référence recherchée',
 	'Class:VCSLogAttributeAutomation/Attribute:object_att_code' => 'Attribut où insérer le message',
 	'Class:VCSLogAttributeAutomation/Attribute:object_att_code+' => 'Attribut de l\'objet cible dans lequel insérer le message',
 	'Class:VCSLogAttributeAutomation/Attribute:object_class' => 'Classe de l\'objet',

@@ -156,6 +156,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data+' => 'Data in the webhook payload containing the target objet reference',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern' => 'Regex to retrieve reference',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern+' => 'Regex that will be used to retrieve the reference of the target object',
+	'Class:VCSLogAttributeAutomation/Attribute:object_ref_att_code' => 'Attribute where to search the reference',
+	'Class:VCSLogAttributeAutomation/Attribute:object_ref_att_code+' => 'Attribute of target objet where the reference must be searched',
 	'Class:VCSLogAttributeAutomation/Attribute:object_att_code' => 'Attribute where to append the message',
 	'Class:VCSLogAttributeAutomation/Attribute:object_att_code+' => 'Attribute of target objet where the message will be appended',
 	'Class:VCSLogAttributeAutomation/Attribute:object_class' => 'Object Class',
