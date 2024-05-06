@@ -111,8 +111,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVCSAutomationToVCSRepository/Attribute:repository_id+' => 'Dépôt de sources',
 
 	// CLASS VCSEvent
-	'Class:VCSEvent' => 'Evénement VCS',
-	'Class:VCSEvent+' => 'Evénement qu\'un système de gestion de versions peut déclencher sur l\'un de ses dépôts',
+	'Class:VCSEvent' => 'Evènement VCS',
+	'Class:VCSEvent+' => 'Evènement qu\'un système de gestion de versions peut déclencher sur l\'un de ses dépôts',
 	'Class:VCSEvent/Attribute:name+' => 'Nom de l\'évènement VCS - Il doit correspondre exactement à celui utilisé par le VCS',
 	'Class:VCSEvent/Attribute:provider' => 'Fournisseur',
 	'Class:VCSEvent/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
@@ -126,10 +126,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSAutomation/Attribute:provider' => 'Fournisseur',
 	'Class:VCSAutomation/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
 	'Class:VCSAutomation/Attribute:provider/Value:github' => 'GitHub',
-	'Class:VCSAutomation/Attribute:events_list' => 'Evénements',
+	'Class:VCSAutomation/Attribute:events_list' => 'Evènements',
 	'Class:VCSAutomation/Attribute:events_list+' => 'Liste des évènements déclenchant l\'automatisme',
 	'Class:VCSAutomation/Attribute:scope_var' => 'Périmètre',
-	'Class:VCSAutomation/Attribute:scope_var+' => 'Execute l\'automatisme pour chaque élément du tableau associé aux évènements (ex: chaque \'commit\' d\'un évènement push va activer l\'automatisme)',
+	'Class:VCSAutomation/Attribute:scope_var+' => 'Exécute l\'automatisme pour chaque élément du tableau associé aux évènements (ex: chaque \'commit\' d\'un évènement push va activer l\'automatisme)',
 	'Class:VCSAutomation/Attribute:name' => 'Nom',
 	'Class:VCSAutomation/Attribute:name+' => 'Nom décrivant l\'automatisme',
 	'Class:VCSAutomation/Attribute:repositories_list' => 'Dépôts',
