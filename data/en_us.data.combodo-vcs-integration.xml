@@ -30,9 +30,9 @@
 	</VCSEvent>
 	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="1">
 		<provider>github</provider>
-		<name>Commits into ticket</name>
+		<name>Commits into user request</name>
 		<scope_var>commits</scope_var>
-		<object_class>Ticket</object_class>
+		<object_class>UserRequest</object_class>
 		<object_att_code>private_log</object_att_code>
 		<object_ref_att_code>ref</object_ref_att_code>
 		<ref_regex_pattern>(R-\d{6})</ref_regex_pattern>
