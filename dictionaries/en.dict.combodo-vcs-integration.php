@@ -23,7 +23,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSConnector/Attribute:provider+' => 'Version control system provider',
 	'Class:VCSConnector/Attribute:provider/Value:github' => 'GitHub',
 	'Class:VCSConnector/Attribute:owner' => 'Resource owner',
-	'Class:VCSConnector/Attribute:owner+' => 'VCS owner could be a user or an organization. The name must exactly match with VCS\'s name or orgnization\'s name of VCS.',
+	'Class:VCSConnector/Attribute:owner+' => 'VCS owner could be a user or an organization. The name must exactly match with VCS\'s name or organization\'s name of VCS.',
 	'Class:VCSConnector/Attribute:mode' => 'Authentication Mode',
 	'Class:VCSConnector/Attribute:mode+' => 'Authentication Mode to access the VCS API',
 	'Class:VCSConnector/Attribute:mode/Value:personal' => 'Personal access token',
