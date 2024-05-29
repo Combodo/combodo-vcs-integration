@@ -8,7 +8,7 @@
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	// MENU elements
-	'Menu:ConfigurationTools:VCSManagement' => 'Gestion des VCS',
+	'Menu:ConfigurationTools:VCSManagement' => 'Configuration des VCS',
 	'Menu:VCSIntegration:General' => 'Général',
 	'Menu:VCSIntegration:Automation' => 'Automatisation',
 

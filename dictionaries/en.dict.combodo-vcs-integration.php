@@ -8,7 +8,7 @@
 
 Dict::Add('EN US', 'English', 'English', array(
 	// MENU elements
-	'Menu:ConfigurationTools:VCSManagement' => 'VCS management',
+	'Menu:ConfigurationTools:VCSManagement' => 'VCS configuration',
 	'Menu:VCSIntegration:General' => 'General',
 	'Menu:VCSIntegration:Automation' => 'Automation',
 

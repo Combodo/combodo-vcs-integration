@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension format="1.0">
   <extension_code>combodo-vcs-integration</extension_code>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <label><![CDATA[VCS Integration]]></label>
   <description><![CDATA[Synchronize your VCS repositories and execute built-in or custom automations when receiving events.]]></description>
   <mandatory>false</mandatory>
