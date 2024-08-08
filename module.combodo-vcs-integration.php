@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-vcs-integration/1.0.1',
+	'combodo-vcs-integration/1.0.2',
 	array(
 		// Identification
 		//
@@ -15,7 +15,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/3.1.1',
+			'itop-structure/3.1.1',
 		),
 		'mandatory' => false,
 		'visible' => true,
