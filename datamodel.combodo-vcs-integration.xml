@@ -1814,12 +1814,12 @@ your private key goes here
         </cells>
       </definition>
     </menu>
-    <menu id="Typology" xsi:type="DashboardMenuNode" _created_in="itop-config-mgmt" _delta="must_exist">
+    <menu id="Typology" xsi:type="DashboardMenuNode" _created_in="itop-config-mgmt" _delta="if_exists">
       <definition>
         <cells>
-          <cell id="0" _delta="must_exist">
+          <cell id="0">
             <dashlets>
-              <dashlet id="5.1" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="vcs-events-badge" xsi:type="DashletBadge" _delta="define">
                 <rank>5.1</rank>
                 <class>VCSEvent</class>
               </dashlet>
