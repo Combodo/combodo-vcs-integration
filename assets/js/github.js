@@ -49,7 +49,7 @@ const iTopGithubWorker = new function(){
             });
 
             // endpoint call
-            const response = await fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&repository_id=` + repository_reference);
             const data = await response.json();
 
             // check errors
@@ -79,7 +79,7 @@ const iTopGithubWorker = new function(){
         try{
 
             // endpoint call
-            const response = await fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_REPOSITORY_WEBHOOK}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_REPOSITORY_WEBHOOK}&repository_id=` + repository_reference);
             const data = await response.json();
 
             // check errors
@@ -112,7 +112,7 @@ const iTopGithubWorker = new function(){
         try{
 
             // endpoint call
-            const response = await fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_REPOSITORY_WEBHOOK_SYNCHRO}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch*(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_REPOSITORY_WEBHOOK_SYNCHRO}&repository_id=` + repository_reference);
             const data = await response.json();
 
             // check errors
