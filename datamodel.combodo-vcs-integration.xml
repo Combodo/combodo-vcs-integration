@@ -3,9 +3,9 @@
   <constants>
   </constants>
   <classes>
-
+    <!--
     /* VCS Connector *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="VCSConnector" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -257,9 +257,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* VCS Repository *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="VCSRepository" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -609,9 +609,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* Link Contact To VCS Repository *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="lnkContactToVCSRepository" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -705,9 +705,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* Link Document To VCS Repository *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="lnkDocumentToVCSRepository" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -801,9 +801,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* Link VCS Repository To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="lnkVCSAutomationToVCSRepository" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -995,9 +995,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* VCS Event *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="VCSEvent" _delta="define">
       <parent>Typology</parent>
       <properties>
@@ -1095,9 +1095,9 @@ your private key goes here
         </search>
       </presentation>
     </class>
-
+    <!--
     /* Link VCS Event To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="lnkVCSAutomationToVCSEvent" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -1209,9 +1209,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* Abstract VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="VCSAutomation" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
@@ -1378,9 +1378,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* VCS Log journal Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="VCSLogJournalAutomation" _delta="define">
       <parent>VCSAutomation</parent>
       <properties>
@@ -1528,9 +1528,9 @@ your private key goes here
         </list>
       </presentation>
     </class>
-
+    <!--
     /* VCS Log Attribute Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-
+    -->
     <class id="VCSLogAttributeAutomation" _delta="define">
       <parent>VCSAutomation</parent>
       <properties>
