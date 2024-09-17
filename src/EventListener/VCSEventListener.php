@@ -100,7 +100,7 @@ class VCSEventListener implements iEventServiceSetup
 			// if not synchro and synchro auto
 			if($oRepository->Get('synchro_mode') === 'auto'
 			&& $oRepository->Get('webhook_status') !== 'synchronized'){
-				if($this->oGitHubManager->SynchronizeRepository($oRepository)['github_data'] !== null){
+				if($this->oGitHubManager->SynchronizeRepository($oRepository)['data']['github_data'] !== null){
 					$this->oGitHubManager->UpdateExternalData($oRepository);
 				}
 			}

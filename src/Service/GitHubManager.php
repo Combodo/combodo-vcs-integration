@@ -127,6 +127,8 @@ class GitHubManager
 			$aEvents = ['push'];
 		}
 
+		sort($aEvents, SORT_STRING);
+
 		return $aEvents;
 	}
 
@@ -292,6 +294,9 @@ class GitHubManager
 				'date' => AttributeDateTime::GetFormat()->format(new DateTime('now'))
 			];
 			$oRepository->Set('webhook_configuration', json_encode($aWebhookConfigurationData, JSON_UNESCAPED_SLASHES));
+
+
+			$test = $aOperationResult['data']['github_data']['active'] ? 'active' : 'inactive';
 
 			// update webhook status
 			$oRepository->Set('webhook_status', $aOperationResult['data']['github_data']['active'] ? 'active' : 'inactive');
