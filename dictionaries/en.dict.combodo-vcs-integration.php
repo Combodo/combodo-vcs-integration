@@ -48,7 +48,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSRepository/Attribute:webhook_url+' => 'URL to configure in the version control system for the webhook repository configuration',
 	'Class:VCSRepository/Attribute:webhook_status' => 'Synchronization status',
 	'Class:VCSRepository/Attribute:webhook_status+' => 'Status of the synchronization with the version control system',
-	'Class:VCSRepository/Attribute:webhook_status/Value:unset' => 'Unset',
 	'Class:VCSRepository/Attribute:webhook_status/Value:unsynchronized' => 'Unsynchronized',
 	'Class:VCSRepository/Attribute:webhook_status/Value:active' => 'Active',
 	'Class:VCSRepository/Attribute:webhook_status/Value:inactive' => 'Inactive',

@@ -48,7 +48,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSRepository/Attribute:webhook_url+' => 'URL du webhook à définir dans le système de gestion de versions',
 	'Class:VCSRepository/Attribute:webhook_status' => 'Statut de la synchro',
 	'Class:VCSRepository/Attribute:webhook_status+' => 'Statut de la synchronisation avec le système de gestion de versions',
-	'Class:VCSRepository/Attribute:webhook_status/Value:unset' => 'Non défini',
 	'Class:VCSRepository/Attribute:webhook_status/Value:unsynchronized' => 'Non Synchronisé',
 	'Class:VCSRepository/Attribute:webhook_status/Value:active' => 'Actif',
 	'Class:VCSRepository/Attribute:webhook_status/Value:inactive' => 'Inactif',

@@ -31,7 +31,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 				if(get_class($param) ===  'VCSRepository')
 				{
-					if($param->Get('synchro_mode') !== 'none')
+					if($param->Get('connector_id') !== null)
 					{
 						// add separator
 						$oSeparator = new SeparatorPopupMenuItem();

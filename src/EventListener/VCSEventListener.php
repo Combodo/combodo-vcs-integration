@@ -79,42 +79,19 @@ class VCSEventListener implements iEventServiceSetup
 			// changes
 			$aChanges = $oEventData->GetEventData()['changes'];
 
+			// update web hook url (may have changed with module configuration)
+			$this->oGitHubManager->UpdateWebhookURL($oRepository);
+
+			// update synchro state
+			$this->oGitHubManager->UpdateWebhookStatus($oRepository);
+
 			// cannot detect change with UpdateWebhookStatus (secret isn't visible entirely)
 			if(array_key_exists('secret', $aChanges)){
 				$oRepository->Set('webhook_status', 'unsynchronized');
 			}
 
-			// if synchro mode change to none
-			if(array_key_exists('synchro_mode', $aChanges)){
-				if($oRepository->Get('synchro_mode') === 'none'){
-					try{
-						$this->oGitHubManager->DeleteWebhookSynchronization($oRepository);
-					}
-					catch(Exception $e){
-						// log exception
-						ExceptionLog::LogException($e);
-					}
-				}
-			}
-
-			// if not synchro and synchro auto
-			if($oRepository->Get('synchro_mode') === 'auto'
-			&& $oRepository->Get('webhook_status') !== 'synchronized'){
-				if($this->oGitHubManager->SynchronizeRepository($oRepository)['data']['github_data'] !== null){
-					$this->oGitHubManager->UpdateExternalData($oRepository);
-				}
-			}
-			else if($oRepository->Get('synchro_mode') === 'manual'
-			&& !empty($oRepository->Get('webhook_configuration') )){
-				$this->oGitHubManager->UpdateWebhookStatus($oRepository);
-			}
-
-			// update webhook url
-			$sOldUrl = $oRepository->Get('webhook_url');
-			$this->oGitHubManager->UpdateWebhookURL($oRepository);
-			if($sOldUrl !== $oRepository->Get('webhook_url')){
-				$oRepository->DBUpdate();
-			}
+			// auto synchronize
+			$this->oGitHubManager->PerformAutoSynchronization($oRepository);
 		}
 		catch(Exception $e){
 
@@ -145,11 +122,7 @@ class VCSEventListener implements iEventServiceSetup
 			$this->oGitHubManager->UpdateWebhookStatus($oRepository);
 
 			// auto synchronize
-			if($oRepository->Get('webhook_status') === 'unsynchronized'
-			&& $oRepository->Get('synchro_mode') === 'auto'){
-				$this->oGitHubManager->SynchronizeRepository($oRepository);
-				$oRepository->DBUpdate();
-			}
+			$this->oGitHubManager->PerformAutoSynchronization($oRepository);
 		}
 		catch(Exception $e){
 

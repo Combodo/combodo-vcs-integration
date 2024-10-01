@@ -220,6 +220,24 @@ class GitHubManager
 	}
 
 	/**
+	 * @param \DBObject $oRepository
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public function PerformAutoSynchronization(DBObject $oRepository) : void
+	{
+		if(in_array($oRepository->Get('webhook_status'), ['unsynchronized', 'error'])
+			&& $oRepository->Get('synchro_mode') === 'auto'){
+			$this->SynchronizeRepository($oRepository);
+			$oRepository->DBUpdate();
+		}
+	}
+
+	/**
 	 * Synchronize repository.
 	 *
 	 * @param \DBObject $oRepository
@@ -352,22 +370,24 @@ class GitHubManager
 			$bSynchro = null;
 			$aResult = null;
 
-			// only if synchro mode is enabled
-			if ($oRepository->Get('synchro_mode') !== 'none')
+			if ($oRepository->Get('connector_id') !== null)
 			{
 				// retrieve webhook configuration
 				$sWebhookConfigurationData = $oRepository->Get('webhook_configuration');
 				$aWebhookConfigurationData = json_decode($sWebhookConfigurationData, true);
 
-				// text webhook configuration exist on remote
-				$sWebhookId = $aWebhookConfigurationData['github']['id'];
-				$aResult = $this->oGitHubAPIService->RepositoryWebhookConfigurationExist($oRepository, $sWebhookId);
+				if($aWebhookConfigurationData !== null){
 
-				// webhook configuration exist
-				if ($aResult['webhook_configuration_exist'])
-				{
-					// check if webhook configuration is synchro
-					$bSynchro = $this->IsWebhookConfigurationEquals($oRepository, $aResult['github_data']);
+					// test webhook configuration exist on remote
+					$sWebhookId = $aWebhookConfigurationData['github']['id'];
+					$aResult = $this->oGitHubAPIService->RepositoryWebhookConfigurationExist($oRepository, $sWebhookId);
+
+					// webhook configuration exist
+					if ($aResult['webhook_configuration_exist'])
+					{
+						// check if webhook configuration is synchro
+						$bSynchro = $this->IsWebhookConfigurationEquals($oRepository, $aResult['github_data']);
+					}
 				}
 			}
 

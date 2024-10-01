@@ -302,10 +302,6 @@ your private key goes here
         <!-- synchro_mode -->
         <field id="synchro_mode" xsi:type="AttributeEnum">
           <values>
-            <value id="none">
-              <code>none</code>
-              <rank>1</rank>
-            </value>
             <value id="manual">
               <code>manual</code>
               <rank>2</rank>
@@ -346,9 +342,6 @@ your private key goes here
         <!-- webhook status -->
         <field id="webhook_status" xsi:type="AttributeEnum">
           <values>
-            <value id="unset">
-              <code>unset</code>
-            </value>
             <value id="error">
               <code>error</code>
               <style>
@@ -481,7 +474,7 @@ your private key goes here
           <code><![CDATA[
               public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
               {
-                  if($sAttCode === 'last_event_date' && $this->Get('event_count') == 0){
+                  if($sAttCode === 'last_event_date' && $this->Get('event_count') === 0){
                       return OPT_ATT_HIDDEN;
                   }
 
@@ -563,13 +556,13 @@ your private key goes here
             <item id="last_event_date">
               <rank>90</rank>
             </item>
-            <item id="contacts_list">
+            <item id="automations_list">
               <rank>100</rank>
             </item>
-            <item id="documents_list">
+            <item id="contacts_list">
               <rank>110</rank>
             </item>
-            <item id="automations_list">
+            <item id="documents_list">
               <rank>120</rank>
             </item>
           </items>

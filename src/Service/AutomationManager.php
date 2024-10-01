@@ -119,6 +119,6 @@ class AutomationManager
 		catch(Exception $e){
 			ExceptionLog::LogException($e);
 		}
-}
+	}
 
 }
