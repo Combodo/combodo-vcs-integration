@@ -65,11 +65,6 @@ class GitHubManager
 		if($this->oGitHubAPIService->RepositoryWebhookConfigurationExist($oRepository, $iExistingWebhookId)['webhook_configuration_exist']){
 			$this->oGitHubAPIService->DeleteRepositoryWebhook($oRepository, $iExistingWebhookId);
 		}
-
-		// set to unset
-		$oRepository->Set('webhook_status', 'unset');
-		$oRepository->Set('webhook_configuration',  '');
-		$oRepository->Set('external_data',  '');
 	}
 
 	/**
@@ -386,9 +381,6 @@ class GitHubManager
 		// Update repository and save
 		if($aOperationResult['has_error']){
 			$oRepository->Set('webhook_status', 'error');
-		}
-		else if($aOperationResult['data']['is_synchro'] === null){
-			$oRepository->Set('webhook_status', 'unset');
 		}
 		else if(!$aOperationResult['data']['is_synchro']){
 			$oRepository->Set('webhook_status', 'unsynchronized');

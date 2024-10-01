@@ -93,6 +93,7 @@ $sSenderLogin = $payload['sender']['login'];
 // increment events count and last date
 $oRepository->DBIncrement('event_count');
 $oRepository->Set('last_event_date', time());
+$oRepository->DBUpdate();
 
 // add event to case log
 $ormCaseLog = $oRepository->Get('events_log');
