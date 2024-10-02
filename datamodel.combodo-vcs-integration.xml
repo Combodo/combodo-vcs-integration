@@ -458,7 +458,7 @@ your private key goes here
           <code><![CDATA[
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
               {
-                  if (in_array($sAttCode, ['webhook_url', 'webhook_status', 'event_count', 'last_event_date', 'webhook_configuration'])) {
+                  if (in_array($sAttCode, ['webhook_url', 'webhook_status', 'event_count', 'last_event_date', 'webhook_configuration', 'synchro_mode'])) {
                       return OPT_ATT_HIDDEN;
                   }
                   return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
@@ -475,6 +475,10 @@ your private key goes here
               public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
               {
                   if($sAttCode === 'last_event_date' && $this->Get('event_count') === 0){
+                      return OPT_ATT_HIDDEN;
+                  }
+
+                  if($sAttCode === 'synchro_mode'){
                       return OPT_ATT_HIDDEN;
                   }
 
