@@ -233,6 +233,7 @@ class GitHubManager
 		if(in_array($oRepository->Get('webhook_status'), ['unsynchronized', 'error'])
 			&& $oRepository->Get('synchro_mode') === 'auto'){
 			$this->SynchronizeRepository($oRepository);
+			$this->UpdateExternalData($oRepository);
 			$oRepository->DBUpdate();
 		}
 	}
