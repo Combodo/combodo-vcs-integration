@@ -63,52 +63,6 @@ class ModuleHelper
 		return MetaModel::GetModuleSetting(Self::MODULE_NAME, $sProperty, $defaultValue);
 	}
 
-	/**
-	 * Render a template.
-	 *
-	 * @param string $sTemplate
-	 * @param array $aContext
-	 *
-	 * @return string
-	 */
-	static public function RenderTemplate(string $sTemplate, array $aContext = []) : string
-	{
-		try{
-			$oTwig = TwigHelper::GetTwigEnvironment(self::GetTemplatePath());
-			return $oTwig->render($sTemplate, $aContext);
-		}
-		catch(Exception $e){
-			ExceptionLog::LogException($e);
-			return 'template error';
-		}
-	}
-
-	/**
-	 * RenderGitHubInfoTemplate
-	 *
-	 * @param DBObject $oRepository The repository
-	 * @param array|null $aData The data containing repository information
-	 *
-	 * @return string the HTML template string for displaying repository information
-	 */
-	static public function RenderGitHubInfoTemplate(DBObject $oRepository, ?array $aData) : string
-	{
-		if(empty($aData)){
-			return '';
-		}
-
-		return self::RenderTemplate('github_info.html.twig', [
-			'url' => $aData['github']['clone_url'],
-			'watchers_count' => $aData['github']['watchers_count'],
-			'forks_count' => $aData['github']['forks'],
-			'issues_count' => $aData['github']['open_issues'],
-			'description' => $aData['github']['description'],
-			'date' => $aData['date'],
-			'owner_login' => $aData['github']['owner']['login'],
-			'owner_avatar' => $aData['github']['owner']['avatar_url'],
-		]);
-
-	}
 
 	/**
 	 * Log debug message.

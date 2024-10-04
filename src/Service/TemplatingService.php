@@ -6,6 +6,10 @@
 
 namespace Combodo\iTop\VCSManagement\Service;
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
+use DBObject;
+
 /**
  * Message templating service.
  *
@@ -248,5 +252,53 @@ class TemplatingService
 		return "<img style=\"width: {$sWidth}px;vertical-align: middle;\" alt=\"$sDataUrl\" src=\"$data\"/>";
 	}
 
+	/**
+	 * Render a template.
+	 *
+	 * @param string $sTemplate
+	 * @param array $aContext
+	 *
+	 * @return string
+	 */
+	public function RenderTemplate(string $sTemplate, array $aContext = []) : string
+	{
+		try{
+			$oTwig = TwigHelper::GetTwigEnvironment(ModuleHelper::GetTemplatePath());
+			return $oTwig->render($sTemplate, $aContext);
+		}
+		catch(Exception $e){
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'RenderTemplate in TemplatingService.php',
+				'error_msg' => $e->getMessage(),
+			]);
+			return 'template error';
+		}
+	}
 
+	/**
+	 * RenderGitHubInfoTemplate
+	 *
+	 * @param DBObject $oRepository The repository
+	 * @param array|null $aData The data containing repository information
+	 *
+	 * @return string the HTML template string for displaying repository information
+	 */
+	public function RenderGitHubInfoTemplate(DBObject $oRepository, ?array $aData) : string
+	{
+		if(empty($aData)){
+			return '';
+		}
+
+		return $this->RenderTemplate('github_info.html.twig', [
+			'url' => $aData['github']['clone_url'],
+			'watchers_count' => $aData['github']['watchers_count'],
+			'forks_count' => $aData['github']['forks'],
+			'issues_count' => $aData['github']['open_issues'],
+			'description' => $aData['github']['description'],
+			'date' => $aData['date'],
+			'owner_login' => $aData['github']['owner']['login'],
+			'owner_avatar' => $aData['github']['owner']['avatar_url'],
+		]);
+
+	}
 }

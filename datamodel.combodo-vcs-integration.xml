@@ -519,7 +519,7 @@ your private key goes here
                     $aExternalData = json_decode($this->Get('external_data'), true);
                     $oBlockRepositoryInfo = new \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock('github_info');
                     $oBlockRepositoryInfo->AddCSSClass('combodo-vcs-integration--repository-info-container');
-                    $sRenderedText = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderGitHubInfoTemplate($this, $aExternalData);
+                    $sRenderedText = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderGitHubInfoTemplate($this, $aExternalData);
                     $oBlockRepositoryInfo->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html($sRenderedText));
                     $oPage->AddUiBlock($oBlockRepositoryInfo);
                 }
@@ -1447,7 +1447,7 @@ your private key goes here
             	if($bEditMode) {
             		// add css
             		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
-            		$oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
+            		$oPage->add(\Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig'));
             	}
             }
               ]]></code>
@@ -1682,7 +1682,7 @@ your private key goes here
             	if($bEditMode) {
             		// add css
             		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
-            		$oPage->add(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::RenderTemplate('templating_help.html.twig'));
+            		$oPage->add(\Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig'));
             	}
             }
             ]]>

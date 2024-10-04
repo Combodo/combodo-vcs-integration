@@ -117,7 +117,10 @@ class AutomationManager
 			$oAutomation->HandleEvent($sType, $aPayload, $aContext);
 		}
 		catch(Exception $e){
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'LaunchAutomation in AutomationManager.php',
+				'error_msg' => $e->getMessage(),
+			]);
 		}
 	}
 

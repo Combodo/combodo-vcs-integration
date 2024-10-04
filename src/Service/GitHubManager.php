@@ -232,8 +232,10 @@ class GitHubManager
 	{
 		if(in_array($oRepository->Get('webhook_status'), ['unsynchronized', 'error'])
 			&& $oRepository->Get('synchro_mode') === 'auto'){
-			$this->SynchronizeRepository($oRepository);
-			$this->UpdateExternalData($oRepository);
+			$aOperationResult = $this->SynchronizeRepository($oRepository);
+			if(!$aOperationResult['has_error']){
+				$this->UpdateExternalData($oRepository);
+			}
 			$oRepository->DBUpdate();
 		}
 	}
@@ -252,7 +254,7 @@ class GitHubManager
 	public function SynchronizeRepository(DBObject $oRepository) : ?array
 	{
 		// execute VCS operation (handle exceptions)
-		$aOperationResult = $this->ExecuteVCSOperation(function() use ($oRepository){
+		$aOperationResult = $this->ExecuteVCSOperation('SynchronizeRepository', function() use ($oRepository){
 
 			// retrieve events (computed with active automations)
 			$aEvents = $this->GetRepositoryListeningEvents($oRepository);
@@ -309,9 +311,6 @@ class GitHubManager
 			];
 			$oRepository->Set('webhook_configuration', json_encode($aWebhookConfigurationData, JSON_UNESCAPED_SLASHES));
 
-
-			$test = $aOperationResult['data']['github_data']['active'] ? 'active' : 'inactive';
-
 			// update webhook status
 			$oRepository->Set('webhook_status', $aOperationResult['data']['github_data']['active'] ? 'active' : 'inactive');
 		}
@@ -332,7 +331,7 @@ class GitHubManager
 	public function UpdateExternalData(DBObject $oRepository) : array
 	{
 		// execute VCS operation (handle exceptions)
-		$aOperationResult = $this->ExecuteVCSOperation(function() use ($oRepository){
+		$aOperationResult = $this->ExecuteVCSOperation('UpdateExternalData', function() use ($oRepository){
 
 			$aGitHubData = $this->oGitHubAPIService->GetRepositoryInfo($oRepository);
 
@@ -365,7 +364,7 @@ class GitHubManager
 	public function UpdateWebhookStatus($oRepository) : array
 	{
 		// execute VCS operation (handle exceptions)
-		$aOperationResult = $this->ExecuteVCSOperation(function() use ($oRepository) {
+		$aOperationResult = $this->ExecuteVCSOperation('UpdateWebhookStatus', function() use ($oRepository) {
 
 			// variables
 			$bSynchro = null;
@@ -482,11 +481,12 @@ class GitHubManager
 	}
 
 	/**
+	 * @param string $sName
 	 * @param callable $oCallable
 	 *
 	 * @return array
 	 */
-	private function ExecuteVCSOperation(callable $oCallable) : array
+	private function ExecuteVCSOperation(string $sName, callable $oCallable) : array
 	{
 		// variables
 		$bError = false;
@@ -497,12 +497,18 @@ class GitHubManager
 			$aData = $oCallable();
 		}
 		catch(ClientException $e){
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => "ExecuteVCSOperation $sName in GitHubManager.php",
+				'error_msg' => $e->getMessage(),
+			]);
 			$bError = true;
 			$aErrors[] = self::GetAPICallErrorMessage($e);
 		}
 		catch(Exception $e){
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => "ExecuteVCSOperation $sName in GitHubManager.php",
+				'error_msg' => $e->getMessage(),
+			]);
 			$bError = true;
 			$aErrors[] = $e->getMessage();
 		} finally

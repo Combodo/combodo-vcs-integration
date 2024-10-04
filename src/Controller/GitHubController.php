@@ -7,8 +7,8 @@
 namespace Combodo\iTop\VCSManagement\Controller;
 
 use Combodo\iTop\Controller\AbstractController;
-use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use Combodo\iTop\VCSManagement\Service\GitHubManager;
+use Combodo\iTop\VCSManagement\Service\TemplatingService;
 use Exception;
 use ExceptionLog;
 use JsonPage;
@@ -38,6 +38,7 @@ class GitHubController extends AbstractController
 
 			// services injection
 			$oGitHubManager = GitHubManager::GetInstance();
+			$oTemplatingService = TemplatingService::GetInstance();
 
 			// retrieve repository
 			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
@@ -51,12 +52,15 @@ class GitHubController extends AbstractController
 
 			// get repository info template
 			$aExternalData = json_decode($oRepository->Get('external_data'), true);
-			$aData['template'] = ModuleHelper::RenderGitHubInfoTemplate($oRepository, $aExternalData);
+			$aData['template'] = $oTemplatingService->RenderGitHubInfoTemplate($oRepository, $aExternalData);
 		}
 		catch(Exception $e){
 
 			// error handling
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'OperationGetRepositoryInfo in GitHubController.php',
+				'error_msg' => $e->getMessage(),
+			]);
 			$aData['errors'][] = $e->getMessage();
 			$aData['fatal'] = true;
 		}
@@ -97,7 +101,10 @@ class GitHubController extends AbstractController
 		catch(Exception $e){
 
 			// error handling
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'OperationSynchronizeRepositoryWebhook in GitHubController.php',
+				'error_msg' => $e->getMessage(),
+			]);
 			$aData['errors'][] = $e->getMessage();
 			$aData['fatal'] = true;
 		}
@@ -137,7 +144,10 @@ class GitHubController extends AbstractController
 		}
 		catch(Exception  $e){
 
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'OperationCheckRepositoryWebhookSynchro in GitHubController.php',
+				'error_msg' => $e->getMessage(),
+			]);
 			$aData['errors'][] = $e->getMessage();
 			$aData['fatal'] = true;
 		}

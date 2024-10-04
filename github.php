@@ -29,19 +29,23 @@ try
 }
 catch (Exception $e)
 {
-	ExceptionLog::LogException($e);
-	die;
+	ExceptionLog::LogException($e, [
+		'happened_when' => 'receiving github webhook in GitHub.php',
+		'error_msg' => 'Repository not found',
+		'repository' => $_GET['repository'],
+	]);
+	throw $e;
 }
 
 // get repository hook secret
-$hookSecret = $oRepository->Get('secret');
+$sHookSecret = $oRepository->Get('secret');
 
-$rawPost = NULL;
+$sRawPost = NULL;
 
 $res = parse_url($_SERVER['REQUEST_URI']);
 echo json_encode($res);
 
-if ($hookSecret !== NULL) {
+if ($sHookSecret !== NULL) {
 	if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
 		throw new \Exception("HTTP header 'X-Hub-Signature' is missing.");
 	} elseif (!extension_loaded('hash')) {
@@ -51,11 +55,11 @@ if ($hookSecret !== NULL) {
 	if (!in_array($algo, hash_algos(), TRUE)) {
 		throw new \Exception("Hash algorithm '$algo' is not supported.");
 	}
-	$rawPost = file_get_contents('php://input');
-	if (!hash_equals($hash, hash_hmac($algo, $rawPost, $hookSecret))) {
+	$sRawPost = file_get_contents('php://input');
+	if (!hash_equals($hash, hash_hmac($algo, $sRawPost, $sHookSecret))) {
 		throw new \Exception('Hook secret does not match.');
 	}
-};
+}
 
 if (!isset($_SERVER['CONTENT_TYPE'])) {
 	throw new \Exception("Missing HTTP 'Content-Type' header.");
@@ -65,7 +69,7 @@ if (!isset($_SERVER['CONTENT_TYPE'])) {
 
 switch ($_SERVER['CONTENT_TYPE']) {
 	case 'application/json':
-		$json = $rawPost ?: file_get_contents('php://input');
+		$json = $sRawPost ?: file_get_contents('php://input');
 		break;
 	case 'application/x-www-form-urlencoded':
 		$json = $_POST['payload'];
@@ -76,19 +80,22 @@ switch ($_SERVER['CONTENT_TYPE']) {
 
 # Payload structure depends on triggered event
 # https://developer.github.com/v3/activity/events/types/
-$payload = json_decode($json, true);
+$aPayload = json_decode($json, true);
 
 $sType = strtolower($_SERVER['HTTP_X_GITHUB_EVENT']);
+
+$sDeliveryId = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
+$sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 
 
 // retrieve webhook user
 $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
 
 // handle webhook
-$iActionsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oRepository, $payload);
+$iActionsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oRepository, $aPayload);
 
 // get sender login
-$sSenderLogin = $payload['sender']['login'];
+$sSenderLogin = $aPayload['sender']['login'];
 
 // increment events count and last date
 $oRepository->DBIncrement('event_count');
@@ -98,13 +105,15 @@ $oRepository->DBUpdate();
 // add event to case log
 $ormCaseLog = $oRepository->Get('events_log');
 $oDateTimeFormat =  \AttributeDateTime::GetFormat();
-$sLogEntry = "Event <b>$sType</b> at " .  $oDateTimeFormat->Format(new DateTime('now')) . ' by ' . $sSenderLogin . '<br>' . $iActionsTriggeredCount . ' executed automation(s).';
+$sLogEntry = "Event <b>$sType</b> at " .  $oDateTimeFormat->Format(new DateTime('now')) . ' by ' . $sSenderLogin . "<br>Delivery: $sDeliveryId<br>UUID: $sUuid<br>" . $iActionsTriggeredCount . ' executed automation(s).';
 if($sWebhookUser !== null){
 	$ormCaseLog->AddLogEntry($sLogEntry, '', $sWebhookUser);
 }
 else{
 	$ormCaseLog->AddLogEntry($sLogEntry, 'github');
 }
+
+// on log en info
 
 $oRepository->Set('events_log', $ormCaseLog);
 $oRepository->DBUpdate();

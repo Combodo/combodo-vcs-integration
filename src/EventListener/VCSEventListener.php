@@ -96,7 +96,10 @@ class VCSEventListener implements iEventServiceSetup
 		catch(Exception $e){
 
 			// log
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'OnDBAfterWrite in VCSEventListener.php',
+				'error_msg' => $e->getMessage(),
+			]);
 		}
 	}
 
@@ -127,7 +130,10 @@ class VCSEventListener implements iEventServiceSetup
 		catch(Exception $e){
 
 			// log exception
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'OnDBLinksChanged in VCSEventListener.php',
+				'error_msg' => $e->getMessage(),
+			]);
 		}
 	}
 
@@ -151,7 +157,10 @@ class VCSEventListener implements iEventServiceSetup
 		catch(Exception $e){
 
 			// log exception
-			ExceptionLog::LogException($e);
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'OnDBAfterDelete in VCSEventListener.php',
+				'error_msg' => $e->getMessage(),
+			]);
 		}
 	}
 

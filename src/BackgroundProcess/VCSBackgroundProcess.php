@@ -89,7 +89,11 @@ class VCSBackgroundProcess implements iBackgroundProcess
 			catch(Exception $e){
 
 				// trace
-				ExceptionLog::LogException($e);
+				ExceptionLog::LogException($e, [
+					'happened_on' => 'Process in VCSBackgroundProcess.php',
+					'repository' => $oRepository->GetKey(),
+					'error_msg' => $e->getMessage(),
+				]);
 			}
 		}
 	}
