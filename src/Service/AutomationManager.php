@@ -87,8 +87,8 @@ class AutomationManager
 
 					foreach($aData as $aBatchData){
 						self::LaunchAutomation($oAutomation, $sType, $aBatchData, $aPayload);
-						$iAutomationTriggeredCount++;
 					}
+					$iAutomationTriggeredCount++;
 				}
 				else{
 					self::LaunchAutomation($oAutomation, $sType, $aPayload);
