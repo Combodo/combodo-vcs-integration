@@ -82,17 +82,16 @@ switch ($_SERVER['CONTENT_TYPE']) {
 # https://developer.github.com/v3/activity/events/types/
 $aPayload = json_decode($json, true);
 
+# retrieve event type & delivery id
 $sType = strtolower($_SERVER['HTTP_X_GITHUB_EVENT']);
-
 $sDeliveryId = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
 $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
-
 
 // retrieve webhook user
 $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
 
 // handle webhook
-$iActionsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oRepository, $aPayload);
+$iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oRepository, $aPayload);
 
 // get sender login
 $sSenderLogin = $aPayload['sender']['login'];
@@ -102,18 +101,10 @@ $oRepository->DBIncrement('event_count');
 $oRepository->Set('last_event_date', time());
 $oRepository->DBUpdate();
 
-// add event to case log
-$ormCaseLog = $oRepository->Get('events_log');
-$oDateTimeFormat =  \AttributeDateTime::GetFormat();
-$sLogEntry = "Event <b>$sType</b> at " .  $oDateTimeFormat->Format(new DateTime('now')) . ' by ' . $sSenderLogin . "<br>Delivery: $sDeliveryId<br>UUID: $sUuid<br>" . $iActionsTriggeredCount . ' executed automation(s).';
-if($sWebhookUser !== null){
-	$ormCaseLog->AddLogEntry($sLogEntry, '', $sWebhookUser);
-}
-else{
-	$ormCaseLog->AddLogEntry($sLogEntry, 'github');
-}
-
-// on log en info
-
-$oRepository->Set('events_log', $ormCaseLog);
-$oRepository->DBUpdate();
+// Log in log system
+$oDateTimeFormat =  AttributeDateTime::GetFormat();
+IssueLog::Info("GitHub Event $sType by " . $sSenderLogin, 'VCSIntegration', [
+	'delivery' => $sDeliveryId,
+	'uuid' => $sUuid,
+	'automations triggered' => $iAutomationsTriggeredCount,
+]);
