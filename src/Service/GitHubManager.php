@@ -23,7 +23,7 @@ use utils;
 class GitHubManager
 {
 	/** @var string regex for host replacement */
-	static private string $REGEX_HOST_REPLACEMENT = '#(https?)://([\.\w]+)/#';
+	static private string $REGEX_HOST_REPLACEMENT = '#(https?)://([\.\-\w]+)/#';
 
 	/** @var GitHubManager|null Singleton */
 	static private ?GitHubManager $oSingletonInstance = null;
@@ -82,12 +82,9 @@ class GitHubManager
 		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/exec.php?exec_module=combodo-vcs-integration&exec_page=github.php&repository=' . $sRepositoryReference;
 
 		$sHost = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_HOST_OVERLOAD);
+        $sScheme = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_SCHEME_OVERLOAD);
 		if($sHost !== null){
-			$sUrl = preg_replace(self::$REGEX_HOST_REPLACEMENT, '${1}://' . $sHost . '/', $sUrl);
-		}
-		$sScheme = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_SCHEME_OVERLOAD);
-		if($sScheme !== null){
-			$sUrl = str_replace('http', $sScheme, $sUrl);
+			$sUrl = preg_replace(self::$REGEX_HOST_REPLACEMENT, $sScheme.'://' . $sHost . '/', $sUrl);
 		}
 
 		return $sUrl;
