@@ -912,13 +912,15 @@ your private key goes here
                     // services
 		            $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
 
+                    \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo(json_encode($aPayload));
+
 		            // check condition
                     $sCondition = $this->Get('condition');
                     if(!\utils::IsNullOrEmptyString($sCondition)){
                         $aMatch = [];
                         $res = preg_match('/([\>\w-]+)=(.*)/', $sCondition, $aMatch);
                         if($res === 1){
-                            $val = $oTemplatingService->ExtractDataFromPayload($aPayload, $aPayload, $aMatch[1]);
+                            $val = $oTemplatingService->ExtractDataFromPayload($aPayload, $aMatch[1]);
                             if(!preg_match("#$aMatch[2]#", $val)){
                                 return false;
                             }
@@ -1293,10 +1295,37 @@ your private key goes here
           <type>Custom</type>
           <arguments>
             <argument>event</argument>
+            <argument>payload</argument>
+            <argument>scopeData</argument>
+            <argument>automationData</argument>
           </arguments>
           <code>
             <![CDATA[
-	            abstract public function HandleEvent($sEvent, $aPayload, $context = []);
+
+
+	            abstract public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []);
+
+
+            ]]>
+          </code>
+        </method>
+        <!-- HandleScopeEnd -->
+        <method id="HandleScopeEnd">
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <arguments>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>automationData</argument>
+          </arguments>
+          <code>
+            <![CDATA[
+
+	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
+
+	            }
+
             ]]>
           </code>
         </method>
@@ -1422,20 +1451,27 @@ your private key goes here
           <access>public</access>
           <type>Custom</type>
           <arguments>
-            <argument>$event</argument>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>scopeData</argument>
+            <argument>automationData</argument>
           </arguments>
           <code>
             <![CDATA[
 
-	            public function HandleEvent($sEvent, $aPayload, $context = []){
+
+
+	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     // parse template
                     $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
-		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $context);
+		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $aScopeData);
 
                     // log parsed template
                     IssueLog::Info($sText);
 	            }
+
+
 
             ]]>
           </code>
@@ -1611,11 +1647,16 @@ your private key goes here
           <access>public</access>
           <type>Custom</type>
           <arguments>
-            <argument>$event</argument>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>scopeData</argument>
+            <argument>automationData</argument>
           </arguments>
           <code>
             <![CDATA[
-	            public function HandleEvent($sEvent, $aPayload, $context = []){
+
+
+	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     // retrieve useful data
                     $sObjectClass = $this->Get('object_class');
@@ -1623,6 +1664,7 @@ your private key goes here
                     $sObjectAttCode = trim($this->Get('object_att_code'));
                     $sRefRegexPattern = $this->Get('ref_regex_pattern');
                     $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
+                    $sScopeVar = $this->Get('scope_var');
 
                     // get object value
                     $oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
@@ -1630,47 +1672,89 @@ your private key goes here
 		            $oObject = null;
                     if(!utils::IsNullOrEmptyString($sRefRegexPattern)){
                       $aMatch = [];
-                      preg_match("/$sRefRegexPattern/", $aPayload[$sRefRegexSubjectData], $aMatch);
+                      preg_match("/$sRefRegexPattern/", $aScopeData[$sRefRegexSubjectData], $aMatch);
                       if(!empty($aMatch)){
                           $sOQL = "SELECT $sObjectClass WHERE $sObjectRefAttCode=\"$aMatch[1]\"";
                           $oObject = MetaModel::GetObjectFromOQL($sOQL, [], true);
                       }
                     }
 
-                    // security
                     if($oObject === null){
-                        throw new Exception('HandleEvent error no object found');
+                        \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo('HandleEvent error no object found');
                     }
+                    else{
 
-                    // get value
-                    $oValue = $oObject->Get($sObjectAttCode);
-
-                    // parse template
-                    $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
-		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $context);
-
-                    // append text
-                    if($oValue instanceof ormCaseLog){
-
-                        // retrieve webhook user and log
-                        $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
-                        if($sWebhookUser !== null){
-                            $oValue->AddLogEntry($sText, '', $sWebhookUser);
-                        }
-                        else{
-                            $oValue->AddLogEntry($sText, 'github');
+                        if(!array_key_exists($oObject->GetKey(), $aAutomationData)){
+                            $aAutomationData[$oObject->GetKey()] = [
+                              'object' => $oObject,
+                              'att_code' => $sObjectAttCode,
+                              'att_def' => $oAttDef,
+                              'group_scope_data' => []
+                            ];
                         }
 
-                        // save
-                        $oObject->Set($sObjectAttCode, $oValue);
+                        $aAutomationData[$oObject->GetKey()]['group_scope_data'][] = $aScopeData;
                     }
-                    else {if($oAttDef instanceof AttributeText){
-                        $sep = $oAttDef->GetFormat() === 'html' ? '<br>' : '\n\r';
-                        $oObject->Set($sObjectAttCode, $oValue . $sep . nl2br($sText));
-                    }}
 
-                    // update object
-                    $oObject->DBUpdate();
+	            }
+
+
+            ]]>
+          </code>
+        </method>
+        <!-- HandleEvent -->
+        <method id="HandleEvent">
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <arguments>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>automationData</argument>
+          </arguments>
+          <code>
+            <![CDATA[
+	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
+
+                    foreach($aAutomationData as $aItem){
+
+                        $oObject = $aItem['object'];
+                        $sObjectAttCode = $aItem['att_code'];
+                        $oAttDef = $aItem['att_def'];
+                        $aGroupScopeData = $aItem['group_scope_data'];
+
+                        // get value
+                        $oValue = $oObject->Get($sObjectAttCode);
+
+                        // parse template
+                        $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
+                        $aPayload['context'] = $aGroupScopeData;
+                        	\Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo('DADA' . json_encode($aPayload));
+                        $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload);
+
+                        // append text
+                        if($oValue instanceof ormCaseLog){
+
+                            // retrieve webhook user and log
+                            $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
+                            if($sWebhookUser !== null){
+                                $oValue->AddLogEntry($sText, '', $sWebhookUser);
+                            }
+                            else{
+                                $oValue->AddLogEntry($sText, 'github');
+                            }
+
+                            // save
+                            $oObject->Set($sObjectAttCode, $oValue);
+                        }
+                        else {if($oAttDef instanceof AttributeText){
+                            $sep = $oAttDef->GetFormat() === 'html' ? '<br>' : '\n\r';
+                            $oObject->Set($sObjectAttCode, $oValue . $sep . nl2br($sText));
+                        }}
+
+                        // update object
+                        $oObject->DBUpdate();
+                    }
 	            }
             ]]>
           </code>

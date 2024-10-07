@@ -82,16 +82,18 @@ class AutomationManager
 
 					$aData = $aPayload[$sScopeVar];
 					if(!is_array($aData)){
-						throw new Exception($sScopeVar . ' is not an array');
+						throw new Exception('scope var ' . $sScopeVar . ' is not an array');
 					}
 
-					foreach($aData as $aBatchData){
-						self::LaunchAutomation($oAutomation, $sType, $aBatchData, $aPayload);
+					$AutomationGroupData = [];
+					foreach($aData as $ScopeData){
+						self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload, $ScopeData, $AutomationGroupData);
 					}
+					self::LaunchAutomationHandleScopeEnd($oAutomation, $sType, $aPayload, $AutomationGroupData);
 					$iAutomationTriggeredCount++;
 				}
 				else{
-					self::LaunchAutomation($oAutomation, $sType, $aPayload);
+					self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload);
 					$iAutomationTriggeredCount++;
 				}
 
@@ -102,26 +104,49 @@ class AutomationManager
 	}
 
 	/**
-	 * Launch automation.
+	 * Launch automation handle data.
 	 *
 	 * @param DBObject $oAutomation
 	 * @param string $sType
 	 * @param array $aPayload
-	 * @param array $aContext
+	 * @param array $aScopeData
+	 * @param array $AutomationData
 	 *
 	 * @return void
 	 */
-	private static function LaunchAutomation(DBObject $oAutomation, string $sType, array $aPayload, array $aContext = []) : void
+	private static function LaunchAutomationHandleEvent(DBObject $oAutomation, string $sType, array $aPayload, array $aScopeData = [], array &$AutomationData = []) : void
 	{
 		try{
-			$oAutomation->HandleEvent($sType, $aPayload, $aContext);
+			$oAutomation->HandleEvent($sType, $aPayload, $aScopeData, $AutomationData);
 		}
 		catch(Exception $e){
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'LaunchAutomation in AutomationManager.php',
+				'happened_on' => 'LaunchAutomationHandleEvent in AutomationManager.php',
 				'error_msg' => $e->getMessage(),
 			]);
 		}
 	}
 
+	/**
+	 * Launch automation handle scope end.
+	 *
+	 * @param DBObject $oAutomation
+	 * @param string $sType
+	 * @param array $aPayload
+	 * @param array $aAutomationData
+	 *
+	 * @return void
+	 */
+	private static function LaunchAutomationHandleScopeEnd(DBObject $oAutomation, string $sType, array $aPayload, array $aAutomationData = []) : void
+	{
+		try{
+			$oAutomation->HandleScopeEnd($sType, $aPayload, $aAutomationData);
+		}
+		catch(Exception $e){
+			ExceptionLog::LogException($e, [
+				'happened_on' => 'LaunchAutomationHandleScopeEnd in AutomationManager.php',
+				'error_msg' => $e->getMessage(),
+			]);
+		}
+	}
 }

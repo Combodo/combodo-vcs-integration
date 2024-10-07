@@ -49,12 +49,11 @@ class TemplatingService
 	 * @param string $sTemplate
 	 * @param string $sEvent
 	 * @param array $aPayload
-	 * @param array $aContext
 	 *
 	 * @return string
 	 * @noinspection PhpUnused
 	 */
-	public function ParseTemplate(string $sTemplate, string $sEvent, array $aPayload, array $aContext = []) : string
+	public function ParseTemplate(string $sTemplate, string $sEvent, array $aPayload) : string
 	{
 		// parse @event
 		$sTemplate = preg_replace_callback(
@@ -65,64 +64,56 @@ class TemplatingService
 		// parse @hyperlink
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_URL_STATEMENT,
-			fn ($matches) => $this->CallBackUrl($aPayload, $aContext, $matches),
+			fn ($matches) => $this->CallBackUrl($aPayload, $matches),
 			$sTemplate);
 
 		// parse @mailto
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_MAILTO_STATEMENT,
-			fn ($matches) => $this->CallBackMailTo($aPayload, $aContext, $matches),
+			fn ($matches) => $this->CallBackMailTo($aPayload, $matches),
 			$sTemplate);
 
 		// parse @image
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_IMAGE_STATEMENT,
-			fn ($matches) => $this->CallBackImage($aPayload, $aContext, $matches),
+			fn ($matches) => $this->CallBackImage($aPayload, $matches),
 			$sTemplate);
 
 		// parse @substring
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_SUBSTRING_STATEMENT,
-			fn ($matches) => $this->CallBackSubstring($aPayload, $aContext, $matches),
+			fn ($matches) => $this->CallBackSubstring($aPayload, $matches),
 			$sTemplate);
 
 		// parse @for
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_FOR_STATEMENT,
-			fn ($matches) => $this->CallBackFor($aPayload, $aContext, $matches),
+			fn ($matches) => $this->CallBackFor($aPayload, $matches),
 			$sTemplate);
 
 		// finally parse data
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_DATA,
-			fn ($matches) => $this->ExtractDataFromPayload($aPayload, $aContext, $matches[1]),
+			fn ($matches) => $this->ExtractDataFromPayload($aPayload, $matches[1]),
 			$sTemplate);
 
-		return nl2br($sTemplate);
+		return $sTemplate;
 	}
 
 	/**
 	 * Extract data form payload object.
 	 *
 	 * @param array $aPayload The payload object
-	 * @param array $aContext Optional context
 	 * @param string $sData Data to extract
 	 *
 	 * @return mixed
 	 */
-	public function ExtractDataFromPayload(array $aPayload, array $aContext, string $sData) : string
+	public function ExtractDataFromPayload(array $aPayload, string $sData) : mixed
 	{
 		// explode expression
 		$aElements = explode('->', $sData);
 
-		// start search by payload
-		if($aElements[0] === 'context'){
-			$aSearch = $aContext;
-			array_shift($aElements);
-		}
-		else{
-			$aSearch = $aPayload;
-		}
+		$aSearch = $aPayload;
 
 		// search expression data...
 		foreach ($aElements as $sElement){
@@ -145,12 +136,11 @@ class TemplatingService
 	 * Parse @for statement.
 	 *
 	 * @param array $aPayload
-	 * @param array $aContext
 	 * @param array $aMatch
 	 *
 	 * @return string
 	 */
-	private function CallBackFor(array $aPayload, array $aContext, array $aMatch) : string
+	private function CallBackFor(array $aPayload, array $aMatch) : string
 	{
 		// data
 		$data = $aMatch[1];
@@ -160,32 +150,32 @@ class TemplatingService
 		// prepare template
 		$template = ltrim($template);
 		$sLoopText = '';
-		$oData = $this->ExtractDataFromPayload($aPayload, $aContext, $data);
+
+		$oData = $this->ExtractDataFromPayload($aPayload, $data);
 		foreach($oData as $iIterator => $oElement){
 			$sLoopText .= str_replace('[[' . $as, '[['. $data . '->' . $iIterator, $template);
 		}
 
-		return $sLoopText;
+		return rtrim($sLoopText);
 	}
 
 	/**
 	 * Parse @url statement.
 	 *
 	 * @param array $aPayload
-	 * @param array $aContext
 	 * @param array $aMatch
 	 *
 	 * @return string
 	 */
-	private function CallBackUrl(array $aPayload, array $aContext, array $aMatch) : string
+	private function CallBackUrl(array $aPayload, array $aMatch) : string
 	{
 		// data
 		$sDataUrl = $aMatch[1];
 		$sUrlLabel = array_key_exists(3, $aMatch) ? $aMatch[3] : $sDataUrl;
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $aContext, $sDataUrl);
-		$dataLabel = $this->ExtractDataFromPayload($aPayload, $aContext, $sUrlLabel);
+		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
+		$dataLabel = $this->ExtractDataFromPayload($aPayload, $sUrlLabel);
 		return "<a href=\"$data\" target='\"_blank\"'>$dataLabel</a>";
 	}
 
@@ -193,20 +183,19 @@ class TemplatingService
 	 * Parse @mailto statement.
 	 *
 	 * @param array $aPayload
-	 * @param array $aContext
 	 * @param array $aMatch
 	 *
 	 * @return string
 	 */
-	private function CallBackMailTo(array $aPayload, array $aContext, array $aMatch) : string
+	private function CallBackMailTo(array $aPayload, array $aMatch) : string
 	{
 		// data
 		$sDataUrl = $aMatch[1];
 		$sUrlLabel = array_key_exists(3, $aMatch) ? $aMatch[3] : $sDataUrl;
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $aContext, $sDataUrl);
-		$dataLabel = $this->ExtractDataFromPayload($aPayload, $aContext, $sUrlLabel);
+		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
+		$dataLabel = $this->ExtractDataFromPayload($aPayload, $sUrlLabel);
 		return "<a href=\"mailto:$data\" target='\"_blank\"'>$dataLabel</a>";
 	}
 
@@ -214,12 +203,11 @@ class TemplatingService
 	 * Parse @substring statement.
 	 *
 	 * @param array $aPayload
-	 * @param array $aContext
 	 * @param array $aMatch
 	 *
 	 * @return string
 	 */
-	private function CallBackSubstring(array $aPayload, array $aContext, array $aMatch) : string
+	private function CallBackSubstring(array $aPayload, array $aMatch) : string
 	{
 		// data
 		$sDataUrl = $aMatch[1];
@@ -227,7 +215,7 @@ class TemplatingService
 		$iLength = intval($aMatch[3]);
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $aContext, $sDataUrl);
+		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
 
 		return substr($data, $iOffset, $iLength);
 	}
@@ -236,19 +224,18 @@ class TemplatingService
 	 * Parse @image statement.
 	 *
 	 * @param array $aPayload
-	 * @param array $aContext
 	 * @param array $aMatch
 	 *
 	 * @return string
 	 */
-	private function CallBackImage(array $aPayload, array $aContext, array $aMatch) : string
+	private function CallBackImage(array $aPayload, array $aMatch) : string
 	{
 		// data
 		$sDataUrl = $aMatch[1];
 		$sWidth = array_key_exists(3, $aMatch) ? $aMatch[3] : '';
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $aContext, $sDataUrl);
+		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
 		return "<img style=\"width: {$sWidth}px;vertical-align: middle;\" alt=\"$sDataUrl\" src=\"$data\"/>";
 	}
 
@@ -256,15 +243,15 @@ class TemplatingService
 	 * Render a template.
 	 *
 	 * @param string $sTemplate
-	 * @param array $aContext
+	 * @param array $aData
 	 *
 	 * @return string
 	 */
-	public function RenderTemplate(string $sTemplate, array $aContext = []) : string
+	public function RenderTemplate(string $sTemplate, array $aData = []) : string
 	{
 		try{
 			$oTwig = TwigHelper::GetTwigEnvironment(ModuleHelper::GetTemplatePath());
-			return $oTwig->render($sTemplate, $aContext);
+			return $oTwig->render($sTemplate, $aData);
 		}
 		catch(Exception $e){
 			ExceptionLog::LogException($e, [
