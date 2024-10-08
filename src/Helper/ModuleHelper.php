@@ -103,4 +103,36 @@ class ModuleHelper
 		ini_set('display_errors', $ini);
 		return $return;
 	}
+
+	/**
+	 * Extract data form an array.
+	 *
+	 * @param array $aArray The array
+	 * @param string $sData Data to extract (e.g. 'data->data->data')
+	 *
+	 * @return mixed
+	 */
+	public static function ExtractDataFromArray(array $aArray, string $sData) : mixed
+	{
+		// explode expression
+		$aElements = explode('->', $sData);
+
+		$aSearch = $aArray;
+
+		// search expression data...
+		foreach ($aElements as $sElement){
+			if(!array_key_exists($sElement, $aSearch)) return $sElement;
+			$aSearch =  $aSearch[$sElement];
+		}
+
+		// convert bool & null
+		if(is_bool($aSearch)){
+			$aSearch = $aSearch ? 'true' : 'false';
+		}
+		if($aSearch === null){
+			$aSearch = 'null';
+		}
+
+		return $aSearch;
+	}
 }

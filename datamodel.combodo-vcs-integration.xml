@@ -894,9 +894,19 @@ your private key goes here
           <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
         </field>
-        <!-- condition -->
-        <field id="condition" xsi:type="AttributeString">
-          <sql>condition</sql>
+        <!-- condition 1 -->
+        <field id="condition_1" xsi:type="AttributeString">
+          <sql>condition_1</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <!-- condition 2 -->
+        <field id="condition_2" xsi:type="AttributeString">
+          <sql>condition_2</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <!-- condition 3 -->
+        <field id="condition_3" xsi:type="AttributeString">
+          <sql>condition_3</sql>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -912,22 +922,11 @@ your private key goes here
                     // services
 		            $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
 
-                    \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo(json_encode($aPayload));
+                    $bIsCondition1Met = \Combodo\iTop\VCSManagement\Service\AutomationManager::GetInstance()->IsConditionUnsetOrMet($this, 1, $aPayload);
+                    $bIsCondition2Met = \Combodo\iTop\VCSManagement\Service\AutomationManager::GetInstance()->IsConditionUnsetOrMet($this, 2, $aPayload);
+                    $bIsCondition3Met = \Combodo\iTop\VCSManagement\Service\AutomationManager::GetInstance()->IsConditionUnsetOrMet($this, 3, $aPayload);
 
-		            // check condition
-                    $sCondition = $this->Get('condition');
-                    if(!\utils::IsNullOrEmptyString($sCondition)){
-                        $aMatch = [];
-                        $res = preg_match('/([\>\w-]+)=(.*)/', $sCondition, $aMatch);
-                        if($res === 1){
-                            $val = $oTemplatingService->ExtractDataFromPayload($aPayload, $aMatch[1]);
-                            if(!preg_match("#$aMatch[2]#", $val)){
-                                return false;
-                            }
-                        }
-                    }
-
-                    return true;
+                    return $bIsCondition1Met && $bIsCondition2Met && $bIsCondition3Met;
                 }
             ]]>
           </code>
@@ -945,8 +944,14 @@ your private key goes here
             <item id="status">
               <rank>30</rank>
             </item>
-            <item id="condition">
+            <item id="condition_1">
               <rank>40</rank>
+            </item>
+            <item id="condition_2">
+              <rank>41</rank>
+            </item>
+            <item id="condition_3">
+              <rank>42</rank>
             </item>
           </items>
         </details>
@@ -961,8 +966,14 @@ your private key goes here
             <item id="status">
               <rank>30</rank>
             </item>
-            <item id="condition">
+            <item id="condition_1">
               <rank>40</rank>
+            </item>
+            <item id="condition_2">
+              <rank>41</rank>
+            </item>
+            <item id="condition_3">
+              <rank>42</rank>
             </item>
           </items>
         </default_search>
@@ -977,8 +988,14 @@ your private key goes here
             <item id="status">
               <rank>30</rank>
             </item>
-            <item id="condition">
+            <item id="condition_1">
               <rank>40</rank>
+            </item>
+            <item id="condition_2">
+              <rank>41</rank>
+            </item>
+            <item id="condition_3">
+              <rank>42</rank>
             </item>
           </items>
         </search>
@@ -992,9 +1009,6 @@ your private key goes here
             </item>
             <item id="status">
               <rank>30</rank>
-            </item>
-            <item id="condition">
-              <rank>40</rank>
             </item>
           </items>
         </list>
@@ -1664,15 +1678,18 @@ your private key goes here
                     $sObjectAttCode = trim($this->Get('object_att_code'));
                     $sRefRegexPattern = $this->Get('ref_regex_pattern');
                     $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
-                    $sScopeVar = $this->Get('scope_var');
 
-                    // get object value
+                    // get object destination attribute
                     $oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
 
+                    // retrieve payload subject data value
+                    $sRefSubjectDataValue = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($aPayload, $sRefRegexSubjectData);
+
+                    // retrieve destination object
 		            $oObject = null;
                     if(!utils::IsNullOrEmptyString($sRefRegexPattern)){
                       $aMatch = [];
-                      preg_match("/$sRefRegexPattern/", $aScopeData[$sRefRegexSubjectData], $aMatch);
+                      preg_match("/$sRefRegexPattern/", $sRefSubjectDataValue, $aMatch);
                       if(!empty($aMatch)){
                           $sOQL = "SELECT $sObjectClass WHERE $sObjectRefAttCode=\"$aMatch[1]\"";
                           $oObject = MetaModel::GetObjectFromOQL($sOQL, [], true);
@@ -1680,24 +1697,34 @@ your private key goes here
                     }
 
                     if($oObject === null){
-                        \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo('HandleEvent error no object found');
+                        // output information (maybe normal)
+                        \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogDebug('HandleEvent error no object found');
                     }
                     else{
 
-                        if(!array_key_exists($oObject->GetKey(), $aAutomationData)){
-                            $aAutomationData[$oObject->GetKey()] = [
-                              'object' => $oObject,
-                              'att_code' => $sObjectAttCode,
-                              'att_def' => $oAttDef,
-                              'group_scope_data' => []
-                            ];
+                        if(empty($this->Get('scope_var'))){
+
+                            // log the message
+                            $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
+                        }
+                        else{
+
+                            // group scope data
+                            if(!array_key_exists($oObject->GetKey(), $aAutomationData)){
+                              $aAutomationData[$oObject->GetKey()] = [
+                                'object' => $oObject,
+                                'att_code' => $sObjectAttCode,
+                                'att_def' => $oAttDef,
+                                'group_scope_data' => []
+                              ];
+                            }
+                            $aAutomationData[$oObject->GetKey()]['group_scope_data'][] = $aScopeData;
+
                         }
 
-                        $aAutomationData[$oObject->GetKey()]['group_scope_data'][] = $aScopeData;
                     }
 
 	            }
-
 
             ]]>
           </code>
@@ -1721,15 +1748,36 @@ your private key goes here
                         $oObject = $aItem['object'];
                         $sObjectAttCode = $aItem['att_code'];
                         $oAttDef = $aItem['att_def'];
-                        $aGroupScopeData = $aItem['group_scope_data'];
+
+                        // add context to payload
+                        $aPayload['context'] = $aItem['group_scope_data'];
+
+                        // log the message
+                        $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
+                    }
+	            }
+            ]]>
+          </code>
+        </method>
+        <!-- LogMessage -->
+        <method id="LogMessage">
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <arguments>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>automationData</argument>
+          </arguments>
+          <code>
+            <![CDATA[
+	            public function LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef){
 
                         // get value
                         $oValue = $oObject->Get($sObjectAttCode);
 
                         // parse template
                         $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
-                        $aPayload['context'] = $aGroupScopeData;
-                        	\Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo('DADA' . json_encode($aPayload));
                         $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload);
 
                         // append text
@@ -1754,7 +1802,6 @@ your private key goes here
 
                         // update object
                         $oObject->DBUpdate();
-                    }
 	            }
             ]]>
           </code>

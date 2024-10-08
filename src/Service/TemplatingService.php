@@ -94,42 +94,10 @@ class TemplatingService
 		// finally parse data
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_DATA,
-			fn ($matches) => $this->ExtractDataFromPayload($aPayload, $matches[1]),
+			fn ($matches) => ModuleHelper::ExtractDataFromArray($aPayload, $matches[1]),
 			$sTemplate);
 
 		return $sTemplate;
-	}
-
-	/**
-	 * Extract data form payload object.
-	 *
-	 * @param array $aPayload The payload object
-	 * @param string $sData Data to extract
-	 *
-	 * @return mixed
-	 */
-	public function ExtractDataFromPayload(array $aPayload, string $sData) : mixed
-	{
-		// explode expression
-		$aElements = explode('->', $sData);
-
-		$aSearch = $aPayload;
-
-		// search expression data...
-		foreach ($aElements as $sElement){
-			if(!array_key_exists($sElement, $aSearch)) return $sElement;
-			$aSearch =  $aSearch[$sElement];
-		}
-
-		// convert bool & null
-		if(is_bool($aSearch)){
-			$aSearch = $aSearch ? 'true' : 'false';
-		}
-		if($aSearch === null){
-			$aSearch = 'null';
-		}
-
-		return $aSearch;
 	}
 
 	/**
@@ -151,7 +119,7 @@ class TemplatingService
 		$template = ltrim($template);
 		$sLoopText = '';
 
-		$oData = $this->ExtractDataFromPayload($aPayload, $data);
+		$oData = ModuleHelper::ExtractDataFromArray($aPayload, $data);
 		foreach($oData as $iIterator => $oElement){
 			$sLoopText .= str_replace('[[' . $as, '[['. $data . '->' . $iIterator, $template);
 		}
@@ -174,8 +142,8 @@ class TemplatingService
 		$sUrlLabel = array_key_exists(3, $aMatch) ? $aMatch[3] : $sDataUrl;
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
-		$dataLabel = $this->ExtractDataFromPayload($aPayload, $sUrlLabel);
+		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
+		$dataLabel = ModuleHelper::ExtractDataFromArray($aPayload, $sUrlLabel);
 		return "<a href=\"$data\" target='\"_blank\"'>$dataLabel</a>";
 	}
 
@@ -194,8 +162,8 @@ class TemplatingService
 		$sUrlLabel = array_key_exists(3, $aMatch) ? $aMatch[3] : $sDataUrl;
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
-		$dataLabel = $this->ExtractDataFromPayload($aPayload, $sUrlLabel);
+		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
+		$dataLabel = ModuleHelper::ExtractDataFromArray($aPayload, $sUrlLabel);
 		return "<a href=\"mailto:$data\" target='\"_blank\"'>$dataLabel</a>";
 	}
 
@@ -215,7 +183,7 @@ class TemplatingService
 		$iLength = intval($aMatch[3]);
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
+		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
 
 		return substr($data, $iOffset, $iLength);
 	}
@@ -235,7 +203,7 @@ class TemplatingService
 		$sWidth = array_key_exists(3, $aMatch) ? $aMatch[3] : '';
 
 		// prepare template
-		$data = $this->ExtractDataFromPayload($aPayload, $sDataUrl);
+		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
 		return "<img style=\"width: {$sWidth}px;vertical-align: middle;\" alt=\"$sDataUrl\" src=\"$data\"/>";
 	}
 

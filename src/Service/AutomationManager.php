@@ -6,6 +6,7 @@
 
 namespace Combodo\iTop\VCSManagement\Service;
 
+use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use DBObject;
 use Exception;
 use ExceptionLog;
@@ -148,5 +149,37 @@ class AutomationManager
 				'error_msg' => $e->getMessage(),
 			]);
 		}
+	}
+
+	/**
+	 * @param \DBObject $oLnkAutomationToRepository
+	 * @param int $iConditionNumber
+	 * @param array $aPayload
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, int $iConditionNumber, array $aPayload)
+	{
+		// check condition number
+		if($iConditionNumber <= 0 || $iConditionNumber > 3){
+			throw new Exception("Condition number `$iConditionNumber` is invalid");
+		}
+
+		// check condition
+		$sCondition = $oLnkAutomationToRepository->Get('condition_' . $iConditionNumber);
+		if(!utils::IsNullOrEmptyString($sCondition)){
+			$aMatch = [];
+			$res = preg_match('/([\>\w-]+)=(.*)/', $sCondition, $aMatch);
+			if($res === 1){
+				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
+				if(!preg_match("#$aMatch[2]#", $val)){
+					return false;
+				}
+			}
+		}
+
+		return true;
 	}
 }
