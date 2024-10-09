@@ -70,16 +70,16 @@ class GitHubManager
 	/**
 	 * GetWebhookUrl
 	 *
-	 * Constructs the webhook URL for a given repository reference.
+	 * Constructs the webhook URL for a given reference.
 	 *
-	 * @param string $sRepositoryReference The reference of the repository.
+	 * @param string $oWebhookReference The reference of the webhook.
 	 *
 	 * @return string The webhook URL.
 	 * @throws \Exception
 	 */
-	public function GetWebhookUrl(string $sRepositoryReference) : string
+	public function GetWebhookUrl(string $oWebhookReference) : string
 	{
-		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/exec.php?exec_module=combodo-vcs-integration&exec_page=github.php&webhook=' . $sRepositoryReference;
+		$sUrl = utils::GetAbsoluteUrlAppRoot() . 'pages/exec.php?exec_module=combodo-vcs-integration&exec_page=github.php&webhook=' . $oWebhookReference;
 
 		$sHost = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_HOST_OVERLOAD);
         $sScheme = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_SCHEME_OVERLOAD);
@@ -99,7 +99,7 @@ class GitHubManager
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryListeningEvents(DBObject $oWebhook) : array
+	public function GetWebhookListeningEvents(DBObject $oWebhook) : array
 	{
 		$aEvents = [];
 		foreach($oWebhook->Get('automations_list')->GetValues() as $sLinkRef){
@@ -143,7 +143,7 @@ class GitHubManager
 	}
 
 	/**
-	 * Test if repository webhook config is equals to the passed GitHub webhook configuration.
+	 * Test if webhook config is equals to the passed GitHub webhook configuration.
 	 *
 	 * @param $oWebhook
 	 * @param array $aGitHubWebhookConfiguration
@@ -159,7 +159,7 @@ class GitHubManager
 		}
 
 		// check events
-		$aListeningEvents = $this->GetRepositoryListeningEvents($oWebhook);
+		$aListeningEvents = $this->GetWebhookListeningEvents($oWebhook);
 		if($aGitHubWebhookConfiguration['events'] != $aListeningEvents){
 			return false;
 		}
@@ -225,10 +225,10 @@ class GitHubManager
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public function PerformAutoSynchronization(DBObject $oWebhook) : void
+	public function PerformWebhookAutoSynchronization(DBObject $oWebhook) : void
 	{
 		if(in_array($oWebhook->Get('status'), ['unsynchronized', 'error'])) {
-			$aOperationResult = $this->SynchronizeRepository($oWebhook);
+			$aOperationResult = $this->SynchronizeWebhook($oWebhook);
 			if(!$aOperationResult['has_error']){
 				$this->UpdateExternalData($oWebhook);
 			}
@@ -247,13 +247,13 @@ class GitHubManager
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function SynchronizeRepository(DBObject $oWebhook) : ?array
+	public function SynchronizeWebhook(DBObject $oWebhook) : ?array
 	{
 		// execute VCS operation (handle exceptions)
 		$aOperationResult = $this->ExecuteVCSOperation('SynchronizeWebhook', function() use ($oWebhook){
 
 			// retrieve events (computed with active automations)
-			$aEvents = $this->GetRepositoryListeningEvents($oWebhook);
+			$aEvents = $this->GetWebhookListeningEvents($oWebhook);
 
 			// webhook info
 			$sWebhookId = $oWebhook->Get('id');
@@ -414,7 +414,7 @@ class GitHubManager
 	 * @return \DBObject
 	 * @throws \Exception
 	 */
-	public function ExtractRepositoryFromRequestParam() : DBObject
+	public function ExtractWebhookFromRequestParam() : DBObject
 	{
 		$sWebhookRef = utils::ReadParam('webhook_id', '-1');
 

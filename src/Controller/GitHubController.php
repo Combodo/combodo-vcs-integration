@@ -41,7 +41,7 @@ class GitHubController extends AbstractController
 			$oTemplatingService = TemplatingService::GetInstance();
 
 			// retrieve webhook
-			$oWebhook = $oGitHubManager->ExtractRepositoryFromRequestParam();
+			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
 			// get webhook info
 			$aWebhookInfoResult = $oGitHubManager->UpdateExternalData($oWebhook);
@@ -74,7 +74,7 @@ class GitHubController extends AbstractController
 	 * @return JsonPage|null
 	 * @noinspection PhpUnused
 	 */
-	public function OperationSynchronizeRepositoryWebhook(): ?JsonPage
+	public function OperationSynchronizeWebhookConfiguration(): ?JsonPage
 	{
 		// variables
 		$oPage = new JsonPage();
@@ -86,10 +86,10 @@ class GitHubController extends AbstractController
 			$oGitHubManager = GitHubManager::GetInstance();
 
 			// retrieve webhook
-			$oWebhook = $oGitHubManager->ExtractRepositoryFromRequestParam();
+			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
 			// synchronize webhook
-			$aSynchronizationResult = $oGitHubManager->SynchronizeRepository($oWebhook);
+			$aSynchronizationResult = $oGitHubManager->SynchronizeWebhook($oWebhook);
 			foreach($aSynchronizationResult['errors'] as $sError){
 				$aData['errors'][] = $sError;
 			}
@@ -102,7 +102,7 @@ class GitHubController extends AbstractController
 
 			// error handling
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OperationSynchronizeRepositoryWebhook in GitHubController.php',
+				'happened_on' => 'OperationSynchronizeWebhookConfiguration in GitHubController.php',
 				'error_msg' => $e->getMessage(),
 			]);
 			$aData['errors'][] = $e->getMessage();
@@ -118,7 +118,7 @@ class GitHubController extends AbstractController
 	 * @return JsonPage|null
 	 * @noinspection PhpUnused
 	 */
-	public function OperationCheckRepositoryWebhookSynchro(): ?JsonPage
+	public function OperationCheckWebhookConfigurationSynchro(): ?JsonPage
 	{
 		// variables
 		$oPage = new JsonPage();
@@ -130,7 +130,7 @@ class GitHubController extends AbstractController
 			$oGitHubManager  = GitHubManager::GetInstance();
 
 			// retrieve webhook
-			$oWebhook = $oGitHubManager->ExtractRepositoryFromRequestParam();
+			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
 			// test GitHub webhook existence
 			$aCheckWebhookWebhookSynchroResult = $oGitHubManager->UpdateWebhookStatus($oWebhook);
@@ -145,7 +145,7 @@ class GitHubController extends AbstractController
 		catch(Exception  $e){
 
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OperationCheckRepositoryWebhookSynchro in GitHubController.php',
+				'happened_on' => 'OperationCheckWebhookConfigurationSynchro in GitHubController.php',
 				'error_msg' => $e->getMessage(),
 			]);
 			$aData['errors'][] = $e->getMessage();

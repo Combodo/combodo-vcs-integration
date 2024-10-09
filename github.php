@@ -21,7 +21,7 @@ set_exception_handler(function($e) {
 	die();
 });
 
-// retrieve VCS repository
+// retrieve VCS webhook
 try
 {
 	/** @var \VCSWebhook $oWebhook */
@@ -37,7 +37,7 @@ catch (Exception $e)
 	throw $e;
 }
 
-// get repository hook secret
+// get webhook secret
 $sHookSecret = $oWebhook->Get('secret');
 
 $sRawPost = NULL;
