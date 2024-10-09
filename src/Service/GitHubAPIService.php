@@ -121,20 +121,20 @@ class GitHubAPIService
 	/**
 	 * Create authorization request header.
 	 *
-	 * @param DBObject $oRepository VCS repository
+	 * @param DBObject $oWebhook VCS Webhook
 	 *
 	 * @return array header elements array
 	 * @throws \CoreException
 	 */
-	private function CreateAuthorizationHeader(DBObject $oRepository) : array
+	private function CreateAuthorizationHeader(DBObject $oWebhook) : array
 	{
-		$oConnector = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'));
+		$oConnector = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'));
 
 		// get authorization header
 		$sAuthorizationHeader = match ($oConnector->Get('mode'))
 		{
-			self::$AUTHENTICATION_MODE_PERSONAL_TOKEN => self::GetPersonalTokenAuthorizationHeader($oRepository),
-			self::$AUTHENTICATION_MODE_APP_INSTALLATION_TOKEN => self::GetAppInstallationAccessTokenAuthorizationHeader($oRepository),
+			self::$AUTHENTICATION_MODE_PERSONAL_TOKEN => self::GetPersonalTokenAuthorizationHeader($oWebhook),
+			self::$AUTHENTICATION_MODE_APP_INSTALLATION_TOKEN => self::GetAppInstallationAccessTokenAuthorizationHeader($oWebhook),
 			default => null,
 		};
 
@@ -148,15 +148,15 @@ class GitHubAPIService
 	/**
 	 * Get personal token authorization header.
 	 *
-	 * @param \DBObject $oRepository
+	 * @param \DBObject $oWebhook
 	 *
 	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	private function GetPersonalTokenAuthorizationHeader(DBObject $oRepository) : string
+	private function GetPersonalTokenAuthorizationHeader(DBObject $oWebhook) : string
 	{
-		$oConnector = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'));
+		$oConnector = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'));
 
 		return 'Bearer ' . $oConnector->Get('personal_access_token');
 	}
@@ -165,39 +165,39 @@ class GitHubAPIService
 	/**
 	 * Get app installation authorization header.
 	 *
-	 * @param DBObject $oRepository
+	 * @param DBObject $oWebhook
 	 *
 	 * @return string
 	 * @throws \CoreException
 	 */
-	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oRepository) : string
+	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oWebhook) : string
 	{
-		$sRepositoryName = $oRepository->Get('name');
+		$sWebhookName = $oWebhook->Get('name');
 
 		// no session token or expired
-		if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sRepositoryName)
-		|| SessionHelper::IsCurrentAppInstallationTokenExpired($sRepositoryName) ){
+		if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sWebhookName)
+		|| SessionHelper::IsCurrentAppInstallationTokenExpired($sWebhookName) ){
 
 			// app installation ID
-			$sInstallationId = SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sRepositoryName) ?
-				SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sRepositoryName) : $this->GetRepositoryAppInstallation($oRepository)['id'];
+			$sInstallationId = SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sWebhookName) ?
+				SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sWebhookName) : $this->GetRepositoryAppInstallation($oWebhook)['id'];
 
 			// create app installation access token
-			$aResponse = self::CreateApplicationInstallationAccessToken($oRepository, $sInstallationId);
+			$aResponse = self::CreateApplicationInstallationAccessToken($oWebhook, $sInstallationId);
 			$sAppInstallationAccessToken = $aResponse['token'];
 
 			// log
-			ModuleHelper::LogDebug('Create new application access token for repository ' . $sRepositoryName);
+			ModuleHelper::LogDebug('Create new application access token for Webhook ' . $sWebhookName);
 
 			// store it in session
-			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sRepositoryName, $sInstallationId);
-			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sRepositoryName, $sAppInstallationAccessToken);
-			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepositoryName, $aResponse['expires_at']);
+			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sWebhookName, $sInstallationId);
+			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sWebhookName, $sAppInstallationAccessToken);
+			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sWebhookName, $aResponse['expires_at']);
 		}
 		else{
 
 			// get session app installation access token
-			$sAppInstallationAccessToken = SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sRepositoryName);
+			$sAppInstallationAccessToken = SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sWebhookName);
 		}
 
 		return 'Bearer ' . $sAppInstallationAccessToken;
@@ -207,19 +207,19 @@ class GitHubAPIService
 	/**
 	 * Check if a webhook configuration with id exist.
 	 *
-	 * @param DBObject $oRepository The repository.
+	 * @param DBObject $oWebhook The Webhook.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 */
-	public function RepositoryWebhookConfigurationExist(DBObject $oRepository, string $sHookId) : array
+	public function RepositoryWebhookConfigurationExist(DBObject $oWebhook, string $sHookId) : array
 	{
 		try{
-			$data = $this->GetRepositoryWebhookConfiguration($oRepository, $sHookId);
+			$data = $this->GetRepositoryWebhookConfiguration($oWebhook, $sHookId);
 
 			return [
-				'webhook_configuration_exist' => true,
+				'configuration_exist' => true,
 				'github_data' => $data
 			];
 		}
@@ -228,7 +228,7 @@ class GitHubAPIService
 			// not found
 			if($e->getResponse()->getStatusCode() === 404){
 				return [
-					'webhook_configuration_exist' => false,
+					'configuration_exist' => false,
 					'github_data' => null
 				];
 			}
@@ -245,24 +245,24 @@ class GitHubAPIService
 	 * https://docs.github.com/fr/rest/repos/repos?apiVersion=2022-11-28#get-a-repository
 	 * GET /repos/{owner}/{repo}
 	 *
-	 * @param DBObject $oRepository The name of the repository.
+	 * @param DBObject $oWebhook. The Webhook
 	 *
 	 * @return array The repository information, including the number of watchers, forks,
 	 *               open issues, and clone URL.
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryInfo(DBObject $oRepository) : array
+	public function GetRepositoryInfo(DBObject $oWebhook) : array
 	{
 		// log
 		ModuleHelper::LogDebug('GetRepositoryInfo');
 
 		// retrieve useful settings
-		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
-		$sRepositoryName = $oRepository->Get('name');
+		$sOwner = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'))->Get('owner');
+		$sRepositoryName = $oWebhook->Get('name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName"), $this->CreateAuthorizationHeader($oRepository));
+		$request = new Request('GET',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName"), $this->CreateAuthorizationHeader($oWebhook));
 		$res = $client->sendAsync($request)->wait();
 		$object = json_decode($res->getBody(), true);
 
@@ -286,7 +286,7 @@ class GitHubAPIService
 	 * https://docs.github.com/fr/rest/repos/webhooks?apiVersion=2022-11-28#create-a-repository-webhook
 	 * POST /repos/{owner}/{repo}/hooks
 	 *
-	 * @param DBObject $oRepository The name of the repository.
+	 * @param DBObject $oWebhook The webhook.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sSecret The shared secret for the webhook.
 	 * @param array $aListeningEvents events to listen
@@ -294,14 +294,14 @@ class GitHubAPIService
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function CreateRepositoryWebhook(DBObject $oRepository, string $sUrl, string $sSecret, array $aListeningEvents) : array
+	public function CreateRepositoryWebhook(DBObject $oWebhook, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug('CreateRepositoryWebhook');
 
 		// retrieve useful settings
-		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
-		$sRepositoryName = $oRepository->Get('name');
+		$sOwner = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'))->Get('owner');
+        $sRepositoryName = $oWebhook->Get('name');
 
 		// request body
 		$aBody = [
@@ -318,7 +318,7 @@ class GitHubAPIService
 
 		// API call
 		$client = new Client();
-		$request = new Request('POST',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks"), $this->CreateAuthorizationHeader($oRepository), json_encode($aBody,JSON_UNESCAPED_SLASHES));
+		$request = new Request('POST',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks"), $this->CreateAuthorizationHeader($oWebhook), json_encode($aBody,JSON_UNESCAPED_SLASHES));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -330,7 +330,7 @@ class GitHubAPIService
 	 * https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#update-a-repository-webhook
 	 * PATCH /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oRepository The name of the repository.
+	 * @param DBObject $oWebhook The webhook.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sHookId The webhook configuration id.
 	 * @param string $sSecret The shared secret for the webhook.
@@ -339,14 +339,14 @@ class GitHubAPIService
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function UpdateRepositoryWebhook(DBObject $oRepository, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
+	public function UpdateRepositoryWebhook(DBObject $oWebhook, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug('UpdateRepositoryWebhook');
 
 		// retrieve useful settings
-		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
-		$sRepositoryName = $oRepository->Get('name');
+		$sOwner = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'))->Get('owner');
+        $sRepositoryName = $oWebhook->Get('name');
 
 		// request body
 		$aBody = [
@@ -359,7 +359,7 @@ class GitHubAPIService
 
 		// API call
 		$client = new Client();
-		$request = new Request('PATCH',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->CreateAuthorizationHeader($oRepository), json_encode($aBody,JSON_UNESCAPED_SLASHES));
+		$request = new Request('PATCH',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->CreateAuthorizationHeader($oWebhook), json_encode($aBody,JSON_UNESCAPED_SLASHES));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -371,29 +371,29 @@ class GitHubAPIService
 	 * https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#delete-a-repository-webhook
 	 * DELETE /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oRepository The repository.
+	 * @param DBObject $oWebhook The webhook.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
 	 * @throws \CoreException
 	 */
-	public function DeleteRepositoryWebhook(DBObject $oRepository, string $sHookId) : bool
+	public function DeleteRepositoryWebhook(DBObject $oWebhook, string $sHookId) : bool
 	{
 		// log
 		ModuleHelper::LogDebug('DeleteRepositoryWebhook');
 
 		// security
-		if($oRepository->Get('connector_id') === 0){
+		if($oWebhook->Get('connector_id') === 0){
 			return -1;
 		}
 
 		// retrieve useful settings
-		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
-		$sRepositoryName = $oRepository->Get('name');
+		$sOwner = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'))->Get('owner');
+        $sRepositoryName = $oWebhook->Get('name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('DELETE',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->CreateAuthorizationHeader($oRepository));
+		$request = new Request('DELETE',  self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->CreateAuthorizationHeader($oWebhook));
 		$res = $client->sendAsync($request)->wait();
 
 		return $res->getStatusCode() === 204;
@@ -406,24 +406,24 @@ class GitHubAPIService
 	 * https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#get-a-repository-webhook
 	 * GET /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oRepository The name of the repository.
+	 * @param DBObject $oWebhook The webhook.
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryWebhookConfiguration(DBObject $oRepository, string $sHookId) : array
+	public function GetRepositoryWebhookConfiguration(DBObject $oWebhook, string $sHookId) : array
 	{
 		// log
 		ModuleHelper::LogDebug('GetRepositoryWebhookConfiguration');
 
 		// retrieve useful settings
-		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
-		$sRepositoryName = $oRepository->Get('name');
+		$sOwner = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'))->Get('owner');
+        $sRepositoryName = $oWebhook->Get('name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET', self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->CreateAuthorizationHeader($oRepository));
+		$request = new Request('GET', self::GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->CreateAuthorizationHeader($oWebhook));
 		$res = $client->sendAsync($request)->wait();
 		return json_decode($res->getBody(), true);
 	}
@@ -434,20 +434,20 @@ class GitHubAPIService
 	 * https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#get-a-repository-installation-for-the-authenticated-app
 	 * GET /repos/{owner}/{repo}/installation
 	 *
-	 * @param DBObject $oRepository The repository
+	 * @param DBObject $oWebhook The webhook
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryAppInstallation(DBObject $oRepository) : array
+	public function GetRepositoryAppInstallation(DBObject $oWebhook) : array
 	{
 		// log
 		ModuleHelper::LogDebug('GetRepositoryAppInstallation');
 
 		// retrieve useful settings
-		$sOwner = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'))->Get('owner');
-		$sRepositoryName = $oRepository->Get('name');
-		$oConnector = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'));
+		$sOwner = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'))->Get('owner');
+        $sRepositoryName = $oWebhook->Get('name');
+		$oConnector = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'));
 
 		// API call
 		$client = new Client();
@@ -463,19 +463,19 @@ class GitHubAPIService
 	 * https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#create-an-installation-access-token-for-an-app
 	 * POST /app/installations/{installation_id}/access_tokens
 	 *
-	 * @param DBObject $oRepository
+	 * @param DBObject $oWebhook
 	 * @param string $InstallationId ID of the application installation.
 	 *
 	 * @return array Application installation access token.
 	 * @throws \CoreException
 	 */
-	public function CreateApplicationInstallationAccessToken(DBObject $oRepository, string $InstallationId) : array
+	public function CreateApplicationInstallationAccessToken(DBObject $oWebhook, string $InstallationId) : array
 	{
 		// log
 		ModuleHelper::LogDebug('CreateApplicationInstallationAccessToken');
 
 		// retrieve useful settings
-		$oConnector = MetaModel::GetObject('VCSConnector', $oRepository->Get('connector_id'));
+		$oConnector = MetaModel::GetObject('VCSConnector', $oWebhook->Get('connector_id'));
 
 		// API call
 		$client = new Client();

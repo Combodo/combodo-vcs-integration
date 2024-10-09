@@ -24,21 +24,21 @@ set_exception_handler(function($e) {
 // retrieve VCS repository
 try
 {
-	/** @var \VCSRepository $oRepository */
-	$oRepository = MetaModel::GetObject('VCSRepository', $_GET['repository']);
+	/** @var \VCSWebhook $oWebhook */
+	$oWebhook = MetaModel::GetObject('VCSWebhook', $_GET['webhook']);
 }
 catch (Exception $e)
 {
 	ExceptionLog::LogException($e, [
-		'happened_when' => 'receiving github webhook in GitHub.php',
-		'error_msg' => 'Repository not found',
-		'repository' => $_GET['repository'],
+		'happened_when' => 'Receiving github webhook in GitHub.php',
+		'error_msg' => 'Webhook not found',
+		'webhook' => $_GET['webhook'],
 	]);
 	throw $e;
 }
 
 // get repository hook secret
-$sHookSecret = $oRepository->Get('secret');
+$sHookSecret = $oWebhook->Get('secret');
 
 $sRawPost = NULL;
 
@@ -91,15 +91,15 @@ $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
 
 // handle webhook
-$iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oRepository, $aPayload);
+$iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oWebhook, $aPayload);
 
 // get sender login
 $sSenderLogin = $aPayload['sender']['login'];
 
 // increment events count and last date
-$oRepository->DBIncrement('event_count');
-$oRepository->Set('last_event_date', time());
-$oRepository->DBUpdate();
+$oWebhook->DBIncrement('event_count');
+$oWebhook->Set('last_event_date', time());
+$oWebhook->DBUpdate();
 
 // Log in log system
 $oDateTimeFormat =  AttributeDateTime::GetFormat();

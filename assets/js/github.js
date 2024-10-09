@@ -49,7 +49,7 @@ const iTopGithubWorker = new function(){
             });
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&webhook_id=` + repository_reference);
             const data = await response.json();
 
             // check errors
@@ -79,15 +79,15 @@ const iTopGithubWorker = new function(){
         try{
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_REPOSITORY_WEBHOOK}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_REPOSITORY_WEBHOOK}&webhook_id=` + repository_reference);
             const data = await response.json();
 
             // check errors
             if(CheckErrors('Unable to synchronize repository webhook', data)) {
 
-                // update webhook_status
-                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="webhook_status"] .ibo-field--value');
-                oGitHubInfo.innerHTML = data.data.webhook_status_field_html;
+                // update webhook status
+                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
+                oGitHubInfo.innerHTML = data.data.status_field_html;
             }
 
             return data.data.errors === undefined;
@@ -112,15 +112,15 @@ const iTopGithubWorker = new function(){
         try{
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_REPOSITORY_WEBHOOK_SYNCHRO}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_REPOSITORY_WEBHOOK_SYNCHRO}&webhook_id=` + repository_reference);
             const data = await response.json();
 
             // check errors
             if(CheckErrors('Check repository webhook synchro', data)) {
 
-                // update webhook_status
-                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="webhook_status"] .ibo-field--value');
-                oGitHubInfo.innerHTML = data.data.webhook_status_field_html;
+                // update webhook status
+                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
+                oGitHubInfo.innerHTML = data.data.status_field_html;
             }
 
             return data.data.errors === undefined;

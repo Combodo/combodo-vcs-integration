@@ -29,7 +29,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 
 
-				if(get_class($param) ===  'VCSRepository')
+				if(get_class($param) ===  'VCSWebhook')
 				{
 					if($param->Get('connector_id') !== null)
 					{
@@ -39,7 +39,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 						// synchronize repository webhook
 						$oItem = new JSPopupMenuItem('GitHubSynchronizeRepositoryWebhook',
-							Dict::S('Class:VCSRepository/UI:Button:synchronize_configuration'),
+							Dict::S('Class:VCSWebhook/UI:Button:synchronize_configuration'),
 							'iTopGithubWorker.SynchronizeRepository("'.$param->GetKey().'");',
 							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
@@ -47,7 +47,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 						// check webhook configuration
 						$oItem = new JSPopupMenuItem('GitHubCheckRepositoryWebhookSynchro',
-							Dict::S('Class:VCSRepository/UI:Button:check_configuration'),
+							Dict::S('Class:VCSWebhook/UI:Button:check_configuration'),
 							'iTopGithubWorker.CheckRepositoryWebhookSynchro("'.$param->GetKey().'");',
 							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
