@@ -517,4 +517,31 @@ class GitHubManager
 		}
 
 	}
+
+    /**
+     * Update webhook.
+     *
+     * @param \DBObject $oWebhook
+     *
+     * @return array
+     * @throws \CoreException
+     * @throws \CoreUnexpectedValue
+     * @throws \Exception
+     */
+    public function UpdateWebhook(DBObject $oWebhook, $bUpdateSecret = false): void
+    {
+        // update web hook url (may have changed with module configuration)
+        $this->UpdateWebhookURL($oWebhook);
+
+        // update synchro state
+        $this->UpdateWebhookStatus($oWebhook);
+
+        // cannot detect change with UpdateWebhookStatus (secret isn't visible entirely)
+        if($bUpdateSecret){
+            $oWebhook->Set('status', 'unsynchronized');
+        }
+
+        // auto synchronize
+        $this->PerformWebhookAutoSynchronization($oWebhook);
+    }
 }

@@ -20,7 +20,7 @@ use ExceptionLog;
  * - update synchronization status
  * - synchronize webhook
  */
-class VCSEventListener implements iEventServiceSetup
+class VCSWebhookEventListener implements iEventServiceSetup
 {
 	/** @var \Combodo\iTop\VCSManagement\Service\GitHubManager $oGitHubManager */
 	private GitHubManager $oGitHubManager;
@@ -59,8 +59,7 @@ class VCSEventListener implements iEventServiceSetup
 			[$this, 'OnDBAfterDelete'],
 			'VCSWebhook'
 		);
-
-	}
+    }
 
 	/**
 	 * OnDBAfterWrite.
@@ -80,24 +79,13 @@ class VCSEventListener implements iEventServiceSetup
 			$aChanges = $oEventData->GetEventData()['changes'];
 
 			// update web hook url (may have changed with module configuration)
-			$this->oGitHubManager->UpdateWebhookURL($oWebhook);
-
-			// update synchro state
-			$this->oGitHubManager->UpdateWebhookStatus($oWebhook);
-
-			// cannot detect change with UpdateWebhookStatus (secret isn't visible entirely)
-			if(array_key_exists('secret', $aChanges)){
-				$oWebhook->Set('status', 'unsynchronized');
-			}
-
-			// auto synchronize
-			$this->oGitHubManager->PerformAutoSynchronization($oWebhook);
+			$this->oGitHubManager->UpdateWebhook($oWebhook, array_key_exists('secret', $aChanges));
 		}
 		catch(Exception $e){
 
 			// log
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBAfterWrite in VCSEventListener.php',
+				'happened_on' => 'OnDBAfterWrite in VCSWebhookEventListener.php',
 				'error_msg' => $e->getMessage(),
 			]);
 		}
@@ -125,13 +113,13 @@ class VCSEventListener implements iEventServiceSetup
 			$this->oGitHubManager->UpdateWebhookStatus($oWebhook);
 
 			// auto synchronize
-			$this->oGitHubManager->PerformAutoSynchronization($oWebhook);
+			$this->oGitHubManager->PerformWebhookAutoSynchronization($oWebhook);
 		}
 		catch(Exception $e){
 
 			// log exception
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBLinksChanged in VCSEventListener.php',
+				'happened_on' => 'OnDBLinksChanged in VCSWebhookEventListener.php',
 				'error_msg' => $e->getMessage(),
 			]);
 		}
@@ -158,7 +146,7 @@ class VCSEventListener implements iEventServiceSetup
 
 			// log exception
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBAfterDelete in VCSEventListener.php',
+				'happened_on' => 'OnDBAfterDelete in VCSWebhookEventListener.php',
 				'error_msg' => $e->getMessage(),
 			]);
 		}
