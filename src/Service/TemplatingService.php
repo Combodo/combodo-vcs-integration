@@ -23,6 +23,7 @@ class TemplatingService
 	private static string $REGEX_MAILTO_STATEMENT = "/\[\[@mailto\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
 	private static string $REGEX_IMAGE_STATEMENT = "/\[\[@image\s+([\>\w-]+)(\s+(\d+))?\]\]/";
 	private static string $REGEX_SUBSTRING_STATEMENT = "/\[\[@substring\s+([\>\w-]+)\s+(\d+)\s+(\d+)\]\]/";
+	private static string $REGEX_COUNT_STATEMENT = "/\[\[@count\s+([\>\w-]+)\]\]/";
 	private static string $REGEX_DATA = "/\[\[([\>\w-]+)\]\]/";
 
 	/** @var TemplatingService|null Singleton */
@@ -83,6 +84,12 @@ class TemplatingService
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_SUBSTRING_STATEMENT,
 			fn ($matches) => $this->CallBackSubstring($aPayload, $matches),
+			$sTemplate);
+
+		// parse @count
+		$sTemplate = preg_replace_callback(
+			self::$REGEX_COUNT_STATEMENT,
+			fn ($matches) => $this->CallBackCount($aPayload, $matches),
 			$sTemplate);
 
 		// parse @for
@@ -186,6 +193,25 @@ class TemplatingService
 		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
 
 		return substr($data, $iOffset, $iLength);
+	}
+
+	/**
+	 * Parse @count statement.
+	 *
+	 * @param array $aPayload
+	 * @param array $aMatch
+	 *
+	 * @return string
+	 */
+	private function CallBackCount(array $aPayload, array $aMatch) : string
+	{
+		// data
+		$sDataUrl = $aMatch[1];
+
+		// prepare template
+		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
+
+		return count($data);
 	}
 
 	/**

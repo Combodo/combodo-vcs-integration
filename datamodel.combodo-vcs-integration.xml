@@ -479,7 +479,7 @@ your private key goes here
                       return (OPT_ATT_HIDDEN | $sFlagsFromParent);
                   }
 
-                  if (in_array($sAttCode, ['url', 'status', 'event_count', 'last_event_date'])) {
+                  if (in_array($sAttCode, ['status', 'last_event_date'])) {
                       return (OPT_ATT_READONLY | $sFlagsFromParent);
                   }
 
@@ -545,26 +545,20 @@ your private key goes here
             <item id="connector_provider">
               <rank>50</rank>
             </item>
-            <item id="url">
+            <item id="secret">
               <rank>60</rank>
             </item>
-            <item id="secret">
+            <item id="last_event_date">
               <rank>70</rank>
             </item>
-            <item id="event_count">
+            <item id="automations_list">
               <rank>80</rank>
             </item>
-            <item id="last_event_date">
+            <item id="contacts_list">
               <rank>90</rank>
             </item>
-            <item id="automations_list">
-              <rank>100</rank>
-            </item>
-            <item id="contacts_list">
-              <rank>110</rank>
-            </item>
             <item id="documents_list">
-              <rank>120</rank>
+              <rank>100</rank>
             </item>
           </items>
         </details>
@@ -1679,11 +1673,14 @@ your private key goes here
                     $sRefRegexPattern = $this->Get('ref_regex_pattern');
                     $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
 
+                    $bScopeData = !empty($this->Get('scope_var'));
+                    $bGroupMessages = true;
+
                     // get object destination attribute
                     $oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
 
                     // retrieve payload subject data value
-                    $sRefSubjectDataValue = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($aPayload, $sRefRegexSubjectData);
+                    $sRefSubjectDataValue = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($bScopeData ? $aScopeData : $aPayload, $sRefRegexSubjectData);
 
                     // retrieve destination object
 		            $oObject = null;
@@ -1697,17 +1694,13 @@ your private key goes here
                     }
 
                     if($oObject === null){
+
                         // output information (maybe normal)
                         \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogDebug('HandleEvent error no object found');
                     }
                     else{
 
-                        if(empty($this->Get('scope_var'))){
-
-                            // log the message
-                            $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
-                        }
-                        else{
+                        if($bScopeData && $bGroupMessages){
 
                             // group scope data
                             if(!array_key_exists($oObject->GetKey(), $aAutomationData)){
@@ -1719,6 +1712,12 @@ your private key goes here
                               ];
                             }
                             $aAutomationData[$oObject->GetKey()]['group_scope_data'][] = $aScopeData;
+
+                        }
+                        else{
+
+                            // log the message
+                            $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
 
                         }
 
@@ -1743,6 +1742,10 @@ your private key goes here
             <![CDATA[
 	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
 
+	                IssueLog::Error('HandleScopeEnd');
+	                IssueLog::Error(json_encode($aAutomationData));
+
+
                     foreach($aAutomationData as $aItem){
 
                         $oObject = $aItem['object'];
@@ -1751,6 +1754,8 @@ your private key goes here
 
                         // add context to payload
                         $aPayload['context'] = $aItem['group_scope_data'];
+
+IssueLog::Error('Item');
 
                         // log the message
                         $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
@@ -1775,6 +1780,8 @@ your private key goes here
 
                         // get value
                         $oValue = $oObject->Get($sObjectAttCode);
+
+                        IssueLog::Error('LogMessage');
 
                         // parse template
                         $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
