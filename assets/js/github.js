@@ -14,20 +14,21 @@ const iTopGithubWorker = new function(){
 
     // routes
     const ROUTE_GET_REPOSITORY_INFO = 'github.get_repository_info';
-    const ROUTE_SYNCHRONIZE_REPOSITORY_WEBHOOK = 'github.synchronize_repository_webhook';
-    const ROUTE_CHECK_REPOSITORY_WEBHOOK_SYNCHRO = 'github.check_repository_webhook_synchro';
+    const ROUTE_SYNCHRONIZE_WEBHOOK_CONFIGURATION = 'github.synchronize_webhook_configuration';
+    const ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO = 'github.check_webhook_configuration_synchro';
 
     /**
-     * Synchronize repository.
+     * Synchronize webhook
      *
-     * @param repository_reference
+     * @param webhook_reference
      */
-    function SynchronizeRepository(repository_reference){
-        iTopGithubWorker.SynchronizeRepositoryWebhook(repository_reference).then(function(res){
+    function SynchronizeWebhook(webhook_reference){
+        iTopGithubWorker.SynchronizeWebhookConfiguration(webhook_reference).then(function(res){
+            // @TODO N'aura plus de sens pour un webhook de type org
             if(res === true){
-                iTopGithubWorker.GetRepositoryInfo(repository_reference).then(function(res){
+                iTopGithubWorker.GetRepositoryInfo(webhook_reference).then(function(res){
                     if(CombodoToast !== undefined){
-                        CombodoToast.OpenSuccessToast('Repository synchronized successfully');
+                        CombodoToast.OpenSuccessToast('Webhook configuration synchronized successfully');
                     }
                 });
             }
@@ -49,7 +50,7 @@ const iTopGithubWorker = new function(){
             });
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&webhook_id=` + repository_reference);
             const data = await response.json();
 
             // check errors
@@ -70,24 +71,24 @@ const iTopGithubWorker = new function(){
     }
 
     /**
-     * Synchronize a repository webhook.
+     * Synchronize a webhook configuration.
      *
-     * @param repository_reference
+     * @param webhook_reference
      */
-    async function SynchronizeRepositoryWebhook(repository_reference){
+    async function SynchronizeWebhookConfiguration(webhook_reference){
 
         try{
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_REPOSITORY_WEBHOOK}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_WEBHOOK_CONFIGURATION}&webhook_id=` + webhook_reference);
             const data = await response.json();
 
             // check errors
-            if(CheckErrors('Unable to synchronize repository webhook', data)) {
+            if(CheckErrors('Unable to synchronize webhook configuration', data)) {
 
-                // update webhook_status
-                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="webhook_status"] .ibo-field--value');
-                oGitHubInfo.innerHTML = data.data.webhook_status_field_html;
+                // update webhook status
+                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
+                oGitHubInfo.innerHTML = data.data.status_field_html;
             }
 
             return data.data.errors === undefined;
@@ -103,24 +104,24 @@ const iTopGithubWorker = new function(){
     }
 
     /**
-     * Check a repository webhook synchronization.
+     * Check a webhook configuration synchronization.
      *
-     * @param repository_reference
+     * @param webhook_reference
      */
-    async function CheckRepositoryWebhookSynchro(repository_reference){
+    async function CheckWebhookConfigurationSynchro(webhook_reference){
 
         try{
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_REPOSITORY_WEBHOOK_SYNCHRO}&repository_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO}&webhook_id=` + webhook_reference);
             const data = await response.json();
 
             // check errors
-            if(CheckErrors('Check repository webhook synchro', data)) {
+            if(CheckErrors('Check webhook configuration synchro', data)) {
 
-                // update webhook_status
-                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="webhook_status"] .ibo-field--value');
-                oGitHubInfo.innerHTML = data.data.webhook_status_field_html;
+                // update webhook status
+                const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
+                oGitHubInfo.innerHTML = data.data.status_field_html;
             }
 
             return data.data.errors === undefined;
@@ -195,9 +196,9 @@ const iTopGithubWorker = new function(){
 
     return {
         GetRepositoryInfo,
-        SynchronizeRepositoryWebhook,
-        CheckRepositoryWebhookSynchro,
+        SynchronizeWebhookConfiguration,
+        CheckWebhookConfigurationSynchro,
         OpenUrl,
-        SynchronizeRepository,
+        SynchronizeWebhook,
     }
 };

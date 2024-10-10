@@ -14,7 +14,7 @@ use SeparatorPopupMenuItem;
 use utils;
 
 /**
- * VCS Repository menus.
+ * VCS Webhook menus.
  *
  */
 class VCSPopupMenu implements iPopupMenuExtension
@@ -29,7 +29,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 
 
-				if(get_class($param) ===  'VCSRepository')
+				if(get_class($param) ===  'VCSWebhook')
 				{
 					if($param->Get('connector_id') !== null)
 					{
@@ -37,18 +37,18 @@ class VCSPopupMenu implements iPopupMenuExtension
 						$oSeparator = new SeparatorPopupMenuItem();
 						$aResult[] = $oSeparator;
 
-						// synchronize repository webhook
-						$oItem = new JSPopupMenuItem('GitHubSynchronizeRepositoryWebhook',
-							Dict::S('Class:VCSRepository/UI:Button:synchronize_configuration'),
-							'iTopGithubWorker.SynchronizeRepository("'.$param->GetKey().'");',
+						// synchronize webhook
+						$oItem = new JSPopupMenuItem('GitHubSynchronizeWebhook',
+							Dict::S('Class:VCSWebhook/UI:Button:synchronize_configuration'),
+							'iTopGithubWorker.SynchronizeWebhook("'.$param->GetKey().'");',
 							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;
 
 						// check webhook configuration
-						$oItem = new JSPopupMenuItem('GitHubCheckRepositoryWebhookSynchro',
-							Dict::S('Class:VCSRepository/UI:Button:check_configuration'),
-							'iTopGithubWorker.CheckRepositoryWebhookSynchro("'.$param->GetKey().'");',
+						$oItem = new JSPopupMenuItem('GitHubCheckWebhookSynchro',
+							Dict::S('Class:VCSWebhook/UI:Button:check_configuration'),
+							'iTopGithubWorker.CheckWebhookConfigurationSynchro("'.$param->GetKey().'");',
 							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;

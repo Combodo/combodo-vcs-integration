@@ -11,7 +11,7 @@ use Exception;
 use ExceptionLog;
 use MetaModel;
 use utils;
-use VCSRepository;
+use VCSWebhook;
 
 /**
  * Automation manager;
@@ -40,21 +40,21 @@ class AutomationManager
 	 * Handle received webhook.
 	 *
 	 * @param string $sType
-	 * @param \VCSRepository $oRepository
+	 * @param \VCSWebhook $oWebhook
 	 * @param array $aPayload
 	 *
 	 * @throws \Exception
 	 *
 	 * @return int
 	 */
-	public function HandleWebhook(string $sType, VCSRepository $oRepository, array $aPayload) : int
+	public function HandleWebhook(string $sType, VCSWebhook $oWebhook, array $aPayload) : int
 	{
 		// variables
 		$iAutomationTriggeredCount = 0;
 		$aAutomationEvents = [];
 
 		// iterate through automations...
-		foreach($oRepository->Get('automations_list') as $oLnk){
+		foreach($oWebhook->Get('automations_list') as $oLnk){
 
 			// retrieve automation
 			$oAutomation = MetaModel::GetObject('VCSAutomation', $oLnk->Get('automation_id'));

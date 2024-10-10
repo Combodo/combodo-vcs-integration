@@ -40,19 +40,19 @@ class GitHubController extends AbstractController
 			$oGitHubManager = GitHubManager::GetInstance();
 			$oTemplatingService = TemplatingService::GetInstance();
 
-			// retrieve repository
-			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
+			// retrieve webhook - only webhook of type repository for the time being
+			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
-			// get repository info
-			$aRepositoryInfoResult = $oGitHubManager->UpdateExternalData($oRepository);
-			foreach($aRepositoryInfoResult['errors'] as $sError){
+			// get webhook info
+			$aWebhookInfoResult = $oGitHubManager->UpdateExternalData($oWebhook);
+			foreach($aWebhookInfoResult['errors'] as $sError){
 				$aData['errors'][] = $sError;
 			}
-			$oRepository->DBUpdate();
+			$oWebhook->DBUpdate();
 
-			// get repository info template
-			$aExternalData = json_decode($oRepository->Get('external_data'), true);
-			$aData['template'] = $oTemplatingService->RenderGitHubInfoTemplate($oRepository, $aExternalData);
+			// get webhook info template
+			$aExternalData = json_decode($oWebhook->Get('external_data'), true);
+			$aData['template'] = $oTemplatingService->RenderGitHubInfoTemplate($oWebhook, $aExternalData);
 		}
 		catch(Exception $e){
 
@@ -69,12 +69,12 @@ class GitHubController extends AbstractController
 	}
 
 	/**
-	 * Synchronize repository webhook configuration.
+	 * Synchronize webhook configuration.
 	 *
 	 * @return JsonPage|null
 	 * @noinspection PhpUnused
 	 */
-	public function OperationSynchronizeRepositoryWebhook(): ?JsonPage
+	public function OperationSynchronizeWebhookConfiguration(): ?JsonPage
 	{
 		// variables
 		$oPage = new JsonPage();
@@ -85,24 +85,24 @@ class GitHubController extends AbstractController
 			// services injection
 			$oGitHubManager = GitHubManager::GetInstance();
 
-			// retrieve repository
-			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
+			// retrieve webhook
+			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
-			// synchronize repository
-			$aSynchronizationResult = $oGitHubManager->SynchronizeRepository($oRepository);
+			// synchronize webhook
+			$aSynchronizationResult = $oGitHubManager->SynchronizeWebhook($oWebhook);
 			foreach($aSynchronizationResult['errors'] as $sError){
 				$aData['errors'][] = $sError;
 			}
-			$oRepository->DBUpdate();
+			$oWebhook->DBUpdate();
 
 			// append webhook status field html
-			$oGitHubManager->AppendWebhookStatusFieldHtml($oRepository, $aData);
+			$oGitHubManager->AppendWebhookStatusFieldHtml($oWebhook, $aData);
 		}
 		catch(Exception $e){
 
 			// error handling
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OperationSynchronizeRepositoryWebhook in GitHubController.php',
+				'happened_on' => 'OperationSynchronizeWebhookConfiguration in GitHubController.php',
 				'error_msg' => $e->getMessage(),
 			]);
 			$aData['errors'][] = $e->getMessage();
@@ -113,12 +113,12 @@ class GitHubController extends AbstractController
 	}
 
 	/**
-	 * Check repository webhook synchro state.
+	 * Check webhook synchro state.
 	 *
 	 * @return JsonPage|null
 	 * @noinspection PhpUnused
 	 */
-	public function OperationCheckRepositoryWebhookSynchro(): ?JsonPage
+	public function OperationCheckWebhookConfigurationSynchro(): ?JsonPage
 	{
 		// variables
 		$oPage = new JsonPage();
@@ -129,23 +129,23 @@ class GitHubController extends AbstractController
 			// services injection
 			$oGitHubManager  = GitHubManager::GetInstance();
 
-			// retrieve repository
-			$oRepository = $oGitHubManager->ExtractRepositoryFromRequestParam();
+			// retrieve webhook
+			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
-			// test GitHub repository existence
-			$aCheckRepositoryWebhookSynchroResult = $oGitHubManager->UpdateWebhookStatus($oRepository);
-			foreach($aCheckRepositoryWebhookSynchroResult['errors'] as $sError){
+			// test GitHub webhook existence
+			$aCheckWebhookWebhookSynchroResult = $oGitHubManager->UpdateWebhookStatus($oWebhook);
+			foreach($aCheckWebhookWebhookSynchroResult['errors'] as $sError){
 				$aData['errors'][] = $sError;
 			}
-			$oRepository->DBUpdate();
+			$oWebhook->DBUpdate();
 
 			// append webhook status field html
-			$oGitHubManager->AppendWebhookStatusFieldHtml($oRepository, $aData);
+			$oGitHubManager->AppendWebhookStatusFieldHtml($oWebhook, $aData);
 		}
 		catch(Exception  $e){
 
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OperationCheckRepositoryWebhookSynchro in GitHubController.php',
+				'happened_on' => 'OperationCheckWebhookConfigurationSynchro in GitHubController.php',
 				'error_msg' => $e->getMessage(),
 			]);
 			$aData['errors'][] = $e->getMessage();

@@ -18,9 +18,9 @@ use ExceptionLog;
  *
  * - update webhook url
  * - update synchronization status
- * - synchronize repository
+ * - synchronize webhook
  */
-class VCSEventListener implements iEventServiceSetup
+class VCSWebhookEventListener implements iEventServiceSetup
 {
 	/** @var \Combodo\iTop\VCSManagement\Service\GitHubManager $oGitHubManager */
 	private GitHubManager $oGitHubManager;
@@ -43,24 +43,23 @@ class VCSEventListener implements iEventServiceSetup
 		EventService::RegisterListener(
 			EVENT_DB_AFTER_WRITE,
 			[$this, 'OnDBAfterWrite'],
-			'VCSRepository'
+			'VCSWebhook'
 		);
 
 		// EVENT_DB_LINKS_CHANGED
 		EventService::RegisterListener(
 			EVENT_DB_LINKS_CHANGED,
 			[$this, 'OnDBLinksChanged'],
-			'VCSRepository'
+			'VCSWebhook'
 		);
 
 		// EVENT_DB_AFTER_DELETE
 		EventService::RegisterListener(
 			EVENT_DB_AFTER_DELETE,
 			[$this, 'OnDBAfterDelete'],
-			'VCSRepository'
+			'VCSWebhook'
 		);
-
-	}
+    }
 
 	/**
 	 * OnDBAfterWrite.
@@ -73,31 +72,20 @@ class VCSEventListener implements iEventServiceSetup
 	{
 		try{
 
-			// retrieve repository
-			$oRepository = $oEventData->GetEventData()['object'];
+			// retrieve webhook
+			$oWebhook = $oEventData->GetEventData()['object'];
 
 			// changes
 			$aChanges = $oEventData->GetEventData()['changes'];
 
 			// update web hook url (may have changed with module configuration)
-			$this->oGitHubManager->UpdateWebhookURL($oRepository);
-
-			// update synchro state
-			$this->oGitHubManager->UpdateWebhookStatus($oRepository);
-
-			// cannot detect change with UpdateWebhookStatus (secret isn't visible entirely)
-			if(array_key_exists('secret', $aChanges)){
-				$oRepository->Set('webhook_status', 'unsynchronized');
-			}
-
-			// auto synchronize
-			$this->oGitHubManager->PerformAutoSynchronization($oRepository);
+			$this->oGitHubManager->UpdateWebhook($oWebhook, array_key_exists('secret', $aChanges));
 		}
 		catch(Exception $e){
 
 			// log
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBAfterWrite in VCSEventListener.php',
+				'happened_on' => 'OnDBAfterWrite in VCSWebhookEventListener.php',
 				'error_msg' => $e->getMessage(),
 			]);
 		}
@@ -118,20 +106,20 @@ class VCSEventListener implements iEventServiceSetup
 	{
 		try{
 
-			// retrieve repository
-			$oRepository = $oEventData->GetEventData()['object'];
+			// retrieve webhook
+			$oWebhook = $oEventData->GetEventData()['object'];
 
 			// update synchro state
-			$this->oGitHubManager->UpdateWebhookStatus($oRepository);
+			$this->oGitHubManager->UpdateWebhookStatus($oWebhook);
 
 			// auto synchronize
-			$this->oGitHubManager->PerformAutoSynchronization($oRepository);
+			$this->oGitHubManager->PerformWebhookAutoSynchronization($oWebhook);
 		}
 		catch(Exception $e){
 
 			// log exception
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBLinksChanged in VCSEventListener.php',
+				'happened_on' => 'OnDBLinksChanged in VCSWebhookEventListener.php',
 				'error_msg' => $e->getMessage(),
 			]);
 		}
@@ -148,17 +136,17 @@ class VCSEventListener implements iEventServiceSetup
 	{
 		try{
 
-			// retrieve repository
-			$oRepository = $oEventData->GetEventData()['object'];
+			// retrieve webhook
+			$oWebhook = $oEventData->GetEventData()['object'];
 
 			// delete synchronization
-			$this->oGitHubManager->DeleteWebhookSynchronization($oRepository);
+			$this->oGitHubManager->DeleteWebhookSynchronization($oWebhook);
 		}
 		catch(Exception $e){
 
 			// log exception
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBAfterDelete in VCSEventListener.php',
+				'happened_on' => 'OnDBAfterDelete in VCSWebhookEventListener.php',
 				'error_msg' => $e->getMessage(),
 			]);
 		}

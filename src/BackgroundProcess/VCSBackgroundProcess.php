@@ -19,7 +19,7 @@ use iBackgroundProcess;
  * Background task for GitHub integration.
  *
  * - check synchronization state
- * - synchronize and get repository metrics if synchro auto
+ * - synchronize and get webhook metrics if synchro auto
  *
  */
 class VCSBackgroundProcess implements iBackgroundProcess
@@ -64,34 +64,34 @@ class VCSBackgroundProcess implements iBackgroundProcess
 		// log
 		ModuleHelper::LogDebug('Background task execution');
 
-		// search repositories
-		$oDbObjectSearch = DBSearch::FromOQL('SELECT VCSRepository');
+		// search webhooks
+		$oDbObjectSearch = DBSearch::FromOQL('SELECT VCSWebhook');
 		$oDbObjectSearch->SetShowObsoleteData(false);
 		$oDbObjectSet = new DBObjectSet($oDbObjectSearch);
 
-		// iterate throw repositories...
-		while ($oRepository = $oDbObjectSet->Fetch()) {
+		// iterate throw webhooks...
+		while ($oWebhook = $oDbObjectSet->Fetch()) {
 
 			try{
 
-				// ignore repository without connector
-				if($oRepository->Get('connector_id') === 0){
+				// ignore webhook without connector
+				if($oWebhook->Get('connector_id') === 0){
 					continue;
 				}
 
-				// check repository status
-				$this->oGitHubManager->UpdateWebhookStatus($oRepository);
-				$oRepository->DBUpdate();
+				// check webhook status
+				$this->oGitHubManager->UpdateWebhookStatus($oWebhook);
+				$oWebhook->DBUpdate();
 
 				// auto synchronize
-				$this->oGitHubManager->PerformAutoSynchronization($oRepository);
+				$this->oGitHubManager->PerformWebhookAutoSynchronization($oWebhook);
 			}
 			catch(Exception $e){
 
 				// trace
 				ExceptionLog::LogException($e, [
 					'happened_on' => 'Process in VCSBackgroundProcess.php',
-					'repository' => $oRepository->GetKey(),
+					'webhook' => $oWebhook->GetKey(),
 					'error_msg' => $e->getMessage(),
 				]);
 			}
