@@ -1474,9 +1474,6 @@ your private key goes here
                     // parse template
                     $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
 		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $aScopeData);
-
-                    // log parsed template
-                    IssueLog::Info($sText);
 	            }
 
 
@@ -1742,10 +1739,6 @@ your private key goes here
             <![CDATA[
 	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
 
-	                IssueLog::Error('HandleScopeEnd');
-	                IssueLog::Error(json_encode($aAutomationData));
-
-
                     foreach($aAutomationData as $aItem){
 
                         $oObject = $aItem['object'];
@@ -1754,8 +1747,6 @@ your private key goes here
 
                         // add context to payload
                         $aPayload['context'] = $aItem['group_scope_data'];
-
-IssueLog::Error('Item');
 
                         // log the message
                         $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
@@ -1780,8 +1771,6 @@ IssueLog::Error('Item');
 
                         // get value
                         $oValue = $oObject->Get($sObjectAttCode);
-
-                        IssueLog::Error('LogMessage');
 
                         // parse template
                         $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();

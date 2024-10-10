@@ -5,6 +5,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use Combodo\iTop\VCSManagement\Service\AutomationManager;
 
 require_once('../approot.inc.php');
@@ -88,7 +89,7 @@ $sDeliveryId = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
 $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 
 // retrieve webhook user
-$sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
+$sWebhookUser = ModuleHelper::GetModuleSetting('webhook_user_id', null);
 
 // handle webhook
 $iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oWebhook, $aPayload);
@@ -103,7 +104,7 @@ $oWebhook->DBUpdate();
 
 // Log in log system
 $oDateTimeFormat =  AttributeDateTime::GetFormat();
-IssueLog::Info("GitHub Event $sType by " . $sSenderLogin, 'VCSIntegration', [
+ModuleHelper::LogInfo("GitHub Event $sType by " . $sSenderLogin, [
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,
 	'automations triggered' => $iAutomationsTriggeredCount,
