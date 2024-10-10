@@ -17,13 +17,16 @@ use DBObject;
 class TemplatingService
 {
 	/** @var string regex */
-	private static string $REGEX_FOR_STATEMENT = "/\[\[@for\s+(\w+)\s+as\s+(\w+)\]\]([.\s\S]*)\[\[@endfor\]\]/";
+	private static string $REGEX_FOR_STATEMENT = "/\[\[@for\s+(\w+)\]\]([.\s\S]*)\[\[@endfor\]\]/";
 	private static string $REGEX_EVENT_STATEMENT = "/\[\[event\]\]/";
-	private static string $REGEX_URL_STATEMENT = "/\[\[@hyperlink\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
+	private static string $REGEX_HYPERLINK_STATEMENT = "/\[\[@hyperlink\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
 	private static string $REGEX_MAILTO_STATEMENT = "/\[\[@mailto\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
 	private static string $REGEX_IMAGE_STATEMENT = "/\[\[@image\s+([\>\w-]+)(\s+(\d+))?\]\]/";
 	private static string $REGEX_SUBSTRING_STATEMENT = "/\[\[@substring\s+([\>\w-]+)\s+(\d+)\s+(\d+)\]\]/";
 	private static string $REGEX_COUNT_STATEMENT = "/\[\[@count\s+([\>\w-]+)\]\]/";
+	private static string $REGEX_SEPARATOR_STATEMENT = "/\[\[@separator\s+(#\w+)\]\]/";
+	private static string $REGEX_TEXT_STATEMENT = "/\[\[@text\s+([\>\w-]+)\s+(#\w+)\]\]/";
+	private static string $REGEX_PLURALIZE_STATEMENT = "/\[\[@pluralize\s+([\>\w-]+)\s+(\w+)\s+(\w+)\]\]/";
 	private static string $REGEX_DATA = "/\[\[([\>\w-]+)\]\]/";
 
 	/** @var TemplatingService|null Singleton */
@@ -56,6 +59,12 @@ class TemplatingService
 	 */
 	public function ParseTemplate(string $sTemplate, string $sEvent, array $aPayload) : string
 	{
+		// parse @for
+		$sTemplate = preg_replace_callback(
+			self::$REGEX_FOR_STATEMENT,
+			fn ($matches) => $this->CallBackFor($aPayload, $sEvent, $matches),
+			$sTemplate);
+
 		// parse @event
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_EVENT_STATEMENT,
@@ -64,8 +73,8 @@ class TemplatingService
 
 		// parse @hyperlink
 		$sTemplate = preg_replace_callback(
-			self::$REGEX_URL_STATEMENT,
-			fn ($matches) => $this->CallBackUrl($aPayload, $matches),
+			self::$REGEX_HYPERLINK_STATEMENT,
+			fn ($matches) => $this->CallBackHyperlink($aPayload, $matches),
 			$sTemplate);
 
 		// parse @mailto
@@ -86,63 +95,73 @@ class TemplatingService
 			fn ($matches) => $this->CallBackSubstring($aPayload, $matches),
 			$sTemplate);
 
+		// parse @text
+		$sTemplate = preg_replace_callback(
+			self::$REGEX_TEXT_STATEMENT,
+			fn ($matches) => $this->CallBackText($aPayload, $matches),
+			$sTemplate);
+
+		// parse @separator
+		$sTemplate = preg_replace_callback(
+			self::$REGEX_SEPARATOR_STATEMENT,
+			fn ($matches) => $this->CallBackSeparator($aPayload, $matches),
+			$sTemplate);
+
 		// parse @count
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_COUNT_STATEMENT,
 			fn ($matches) => $this->CallBackCount($aPayload, $matches),
 			$sTemplate);
 
-		// parse @for
+		// parse @pluralize
 		$sTemplate = preg_replace_callback(
-			self::$REGEX_FOR_STATEMENT,
-			fn ($matches) => $this->CallBackFor($aPayload, $matches),
+			self::$REGEX_PLURALIZE_STATEMENT,
+			fn ($matches) => $this->CallBackPluralize($aPayload, $matches),
 			$sTemplate);
 
 		// finally parse data
-		$sTemplate = preg_replace_callback(
+		return preg_replace_callback(
 			self::$REGEX_DATA,
 			fn ($matches) => ModuleHelper::ExtractDataFromArray($aPayload, $matches[1]),
 			$sTemplate);
-
-		return $sTemplate;
 	}
 
 	/**
 	 * Parse @for statement.
 	 *
 	 * @param array $aPayload
+	 * @param string $sEvent
 	 * @param array $aMatch
 	 *
 	 * @return string
 	 */
-	private function CallBackFor(array $aPayload, array $aMatch) : string
+	private function CallBackFor(array $aPayload, string $sEvent, array $aMatch) : string
 	{
 		// data
 		$data = $aMatch[1];
-		$as = $aMatch[2];
-		$template = $aMatch[3];
+		$template = $aMatch[2];
 
 		// prepare template
 		$template = ltrim($template);
 		$sLoopText = '';
 
 		$oData = ModuleHelper::ExtractDataFromArray($aPayload, $data);
-		foreach($oData as $iIterator => $oElement){
-			$sLoopText .= str_replace('[[' . $as, '[['. $data . '->' . $iIterator, $template);
+		foreach($oData as $oElement){
+			$sLoopText .= $this->ParseTemplate($template, $sEvent, $oElement);
 		}
 
 		return rtrim($sLoopText);
 	}
 
 	/**
-	 * Parse @url statement.
+	 * Parse @hyperlink statement.
 	 *
 	 * @param array $aPayload
 	 * @param array $aMatch
 	 *
 	 * @return string
 	 */
-	private function CallBackUrl(array $aPayload, array $aMatch) : string
+	private function CallBackHyperlink(array $aPayload, array $aMatch) : string
 	{
 		// data
 		$sDataUrl = $aMatch[1];
@@ -196,6 +215,41 @@ class TemplatingService
 	}
 
 	/**
+	 * Parse @text statement.
+	 *
+	 * @param array $aPayload
+	 * @param array $aMatch
+	 *
+	 * @return string
+	 */
+	private function CallBackText(array $aPayload, array $aMatch) : string
+	{
+		// data
+		$sDataText = $aMatch[1];
+		$sTextColor = $aMatch[2];
+
+		// prepare template
+		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataText);
+
+		return "<span style=\"color:$sTextColor\">$data</span>";
+	}
+
+	/**
+	 * Parse @separator statement.
+	 *
+	 * @param array $aPayload
+	 * @param array $aMatch
+	 *
+	 * @return string
+	 */
+	private function CallBackSeparator(array $aPayload, array $aMatch) : string
+	{
+		$sColor = $aMatch[1];
+
+		return "<hr style=\"background-color:$sColor;height:1px;\">";
+	}
+
+	/**
 	 * Parse @count statement.
 	 *
 	 * @param array $aPayload
@@ -212,6 +266,27 @@ class TemplatingService
 		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
 
 		return count($data);
+	}
+
+	/**
+	 * Parse @pluralize statement.
+	 *
+	 * @param array $aPayload
+	 * @param array $aMatch
+	 *
+	 * @return string
+	 */
+	private function CallBackPluralize(array $aPayload, array $aMatch) : string
+	{
+		// data
+		$sDataUrl = $aMatch[1];
+		$sText = $aMatch[2];
+		$sTextPluralized = $aMatch[3];
+
+		// prepare template
+		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
+
+		return count($data) > 1 ? $sTextPluralized : $sText;
 	}
 
 	/**

@@ -1466,18 +1466,12 @@ your private key goes here
           </arguments>
           <code>
             <![CDATA[
-
-
-
 	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     // parse template
                     $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
 		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $aScopeData);
 	            }
-
-
-
             ]]>
           </code>
         </method>
