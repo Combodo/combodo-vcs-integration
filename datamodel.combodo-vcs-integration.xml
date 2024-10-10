@@ -1140,7 +1140,7 @@ your private key goes here
         </uniqueness_rules>
       </properties>
       <fields>
-        <!-- webhook -->
+        <!-- event -->
         <field id="event_id" xsi:type="AttributeExternalKey">
           <sql>event_id</sql>
           <target_class>VCSEvent</target_class>

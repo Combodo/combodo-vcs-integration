@@ -22,7 +22,7 @@ class GitHubController extends AbstractController
 	public const ROUTE_NAMESPACE = 'github';
 
 	/**
-	 * Get webhook information.
+	 * Get repository information.
 	 *
 	 * @return JsonPage|null
 	 * @noinspection PhpUnused
@@ -40,7 +40,7 @@ class GitHubController extends AbstractController
 			$oGitHubManager = GitHubManager::GetInstance();
 			$oTemplatingService = TemplatingService::GetInstance();
 
-			// retrieve webhook
+			// retrieve webhook - only webhook of type repository for the time being
 			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
 			// get webhook info
