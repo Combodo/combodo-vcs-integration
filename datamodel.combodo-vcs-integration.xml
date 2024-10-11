@@ -479,7 +479,7 @@ your private key goes here
                       return (OPT_ATT_HIDDEN | $sFlagsFromParent);
                   }
 
-                  if (in_array($sAttCode, ['url', 'status', 'event_count', 'last_event_date'])) {
+                  if (in_array($sAttCode, ['status', 'last_event_date'])) {
                       return (OPT_ATT_READONLY | $sFlagsFromParent);
                   }
 
@@ -545,26 +545,20 @@ your private key goes here
             <item id="connector_provider">
               <rank>50</rank>
             </item>
-            <item id="url">
+            <item id="secret">
               <rank>60</rank>
             </item>
-            <item id="secret">
+            <item id="last_event_date">
               <rank>70</rank>
             </item>
-            <item id="event_count">
+            <item id="automations_list">
               <rank>80</rank>
             </item>
-            <item id="last_event_date">
+            <item id="contacts_list">
               <rank>90</rank>
             </item>
-            <item id="automations_list">
-              <rank>100</rank>
-            </item>
-            <item id="contacts_list">
-              <rank>110</rank>
-            </item>
             <item id="documents_list">
-              <rank>120</rank>
+              <rank>100</rank>
             </item>
           </items>
         </details>
@@ -894,9 +888,19 @@ your private key goes here
           <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
         </field>
-        <!-- condition -->
-        <field id="condition" xsi:type="AttributeString">
-          <sql>condition</sql>
+        <!-- condition 1 -->
+        <field id="condition_1" xsi:type="AttributeString">
+          <sql>condition_1</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <!-- condition 2 -->
+        <field id="condition_2" xsi:type="AttributeString">
+          <sql>condition_2</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <!-- condition 3 -->
+        <field id="condition_3" xsi:type="AttributeString">
+          <sql>condition_3</sql>
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
@@ -912,20 +916,11 @@ your private key goes here
                     // services
 		            $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
 
-		            // check condition
-                    $sCondition = $this->Get('condition');
-                    if(!\utils::IsNullOrEmptyString($sCondition)){
-                        $aMatch = [];
-                        $res = preg_match('/([\>\w-]+)=(.*)/', $sCondition, $aMatch);
-                        if($res === 1){
-                            $val = $oTemplatingService->ExtractDataFromPayload($aPayload, $aPayload, $aMatch[1]);
-                            if(!preg_match("#$aMatch[2]#", $val)){
-                                return false;
-                            }
-                        }
-                    }
+                    $bIsCondition1Met = \Combodo\iTop\VCSManagement\Service\AutomationManager::GetInstance()->IsConditionUnsetOrMet($this, 1, $aPayload);
+                    $bIsCondition2Met = \Combodo\iTop\VCSManagement\Service\AutomationManager::GetInstance()->IsConditionUnsetOrMet($this, 2, $aPayload);
+                    $bIsCondition3Met = \Combodo\iTop\VCSManagement\Service\AutomationManager::GetInstance()->IsConditionUnsetOrMet($this, 3, $aPayload);
 
-                    return true;
+                    return $bIsCondition1Met && $bIsCondition2Met && $bIsCondition3Met;
                 }
             ]]>
           </code>
@@ -943,8 +938,14 @@ your private key goes here
             <item id="status">
               <rank>30</rank>
             </item>
-            <item id="condition">
+            <item id="condition_1">
               <rank>40</rank>
+            </item>
+            <item id="condition_2">
+              <rank>41</rank>
+            </item>
+            <item id="condition_3">
+              <rank>42</rank>
             </item>
           </items>
         </details>
@@ -959,8 +960,14 @@ your private key goes here
             <item id="status">
               <rank>30</rank>
             </item>
-            <item id="condition">
+            <item id="condition_1">
               <rank>40</rank>
+            </item>
+            <item id="condition_2">
+              <rank>41</rank>
+            </item>
+            <item id="condition_3">
+              <rank>42</rank>
             </item>
           </items>
         </default_search>
@@ -975,8 +982,14 @@ your private key goes here
             <item id="status">
               <rank>30</rank>
             </item>
-            <item id="condition">
+            <item id="condition_1">
               <rank>40</rank>
+            </item>
+            <item id="condition_2">
+              <rank>41</rank>
+            </item>
+            <item id="condition_3">
+              <rank>42</rank>
             </item>
           </items>
         </search>
@@ -990,9 +1003,6 @@ your private key goes here
             </item>
             <item id="status">
               <rank>30</rank>
-            </item>
-            <item id="condition">
-              <rank>40</rank>
             </item>
           </items>
         </list>
@@ -1293,10 +1303,37 @@ your private key goes here
           <type>Custom</type>
           <arguments>
             <argument>event</argument>
+            <argument>payload</argument>
+            <argument>scopeData</argument>
+            <argument>automationData</argument>
           </arguments>
           <code>
             <![CDATA[
-	            abstract public function HandleEvent($sEvent, $aPayload, $context = []);
+
+
+	            abstract public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []);
+
+
+            ]]>
+          </code>
+        </method>
+        <!-- HandleScopeEnd -->
+        <method id="HandleScopeEnd">
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <arguments>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>automationData</argument>
+          </arguments>
+          <code>
+            <![CDATA[
+
+	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
+
+	            }
+
             ]]>
           </code>
         </method>
@@ -1422,21 +1459,19 @@ your private key goes here
           <access>public</access>
           <type>Custom</type>
           <arguments>
-            <argument>$event</argument>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>scopeData</argument>
+            <argument>automationData</argument>
           </arguments>
           <code>
             <![CDATA[
-
-	            public function HandleEvent($sEvent, $aPayload, $context = []){
+	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     // parse template
                     $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
-		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $context);
-
-                    // log parsed template
-                    IssueLog::Info($sText);
+		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $aScopeData);
 	            }
-
             ]]>
           </code>
         </method>
@@ -1611,11 +1646,16 @@ your private key goes here
           <access>public</access>
           <type>Custom</type>
           <arguments>
-            <argument>$event</argument>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>scopeData</argument>
+            <argument>automationData</argument>
           </arguments>
           <code>
             <![CDATA[
-	            public function HandleEvent($sEvent, $aPayload, $context = []){
+
+
+	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     // retrieve useful data
                     $sObjectClass = $this->Get('object_class');
@@ -1624,53 +1664,134 @@ your private key goes here
                     $sRefRegexPattern = $this->Get('ref_regex_pattern');
                     $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
 
-                    // get object value
+                    $bScopeData = !empty($this->Get('scope_var'));
+                    $bGroupMessages = true;
+
+                    // get object destination attribute
                     $oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
 
+                    // retrieve payload subject data value
+                    $sRefSubjectDataValue = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($bScopeData ? $aScopeData : $aPayload, $sRefRegexSubjectData);
+
+                    // retrieve destination object
 		            $oObject = null;
                     if(!utils::IsNullOrEmptyString($sRefRegexPattern)){
                       $aMatch = [];
-                      preg_match("/$sRefRegexPattern/", $aPayload[$sRefRegexSubjectData], $aMatch);
+                      preg_match("/$sRefRegexPattern/", $sRefSubjectDataValue, $aMatch);
                       if(!empty($aMatch)){
                           $sOQL = "SELECT $sObjectClass WHERE $sObjectRefAttCode=\"$aMatch[1]\"";
                           $oObject = MetaModel::GetObjectFromOQL($sOQL, [], true);
                       }
                     }
 
-                    // security
                     if($oObject === null){
-                        throw new Exception('HandleEvent error no object found');
+
+                        // output information (maybe normal)
+                        \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogDebug('HandleEvent error no object found');
                     }
+                    else{
 
-                    // get value
-                    $oValue = $oObject->Get($sObjectAttCode);
+                        if($bScopeData && $bGroupMessages){
 
-                    // parse template
-                    $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
-		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $context);
+                            // group scope data
+                            if(!array_key_exists($oObject->GetKey(), $aAutomationData)){
+                              $aAutomationData[$oObject->GetKey()] = [
+                                'object' => $oObject,
+                                'att_code' => $sObjectAttCode,
+                                'att_def' => $oAttDef,
+                                'group_scope_data' => []
+                              ];
+                            }
+                            $aAutomationData[$oObject->GetKey()]['group_scope_data'][] = $aScopeData;
 
-                    // append text
-                    if($oValue instanceof ormCaseLog){
-
-                        // retrieve webhook user and log
-                        $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
-                        if($sWebhookUser !== null){
-                            $oValue->AddLogEntry($sText, '', $sWebhookUser);
                         }
                         else{
-                            $oValue->AddLogEntry($sText, 'github');
+
+                            // log the message
+                            $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
+
                         }
 
-                        // save
-                        $oObject->Set($sObjectAttCode, $oValue);
                     }
-                    else {if($oAttDef instanceof AttributeText){
-                        $sep = $oAttDef->GetFormat() === 'html' ? '<br>' : '\n\r';
-                        $oObject->Set($sObjectAttCode, $oValue . $sep . nl2br($sText));
-                    }}
 
-                    // update object
-                    $oObject->DBUpdate();
+	            }
+
+            ]]>
+          </code>
+        </method>
+        <!-- HandleEvent -->
+        <method id="HandleEvent">
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <arguments>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>automationData</argument>
+          </arguments>
+          <code>
+            <![CDATA[
+	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
+
+                    foreach($aAutomationData as $aItem){
+
+                        $oObject = $aItem['object'];
+                        $sObjectAttCode = $aItem['att_code'];
+                        $oAttDef = $aItem['att_def'];
+
+                        // add context to payload
+                        $aPayload['context'] = $aItem['group_scope_data'];
+
+                        // log the message
+                        $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
+                    }
+	            }
+            ]]>
+          </code>
+        </method>
+        <!-- LogMessage -->
+        <method id="LogMessage">
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <arguments>
+            <argument>event</argument>
+            <argument>payload</argument>
+            <argument>automationData</argument>
+          </arguments>
+          <code>
+            <![CDATA[
+	            public function LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef){
+
+                        // get value
+                        $oValue = $oObject->Get($sObjectAttCode);
+
+                        // parse template
+                        $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
+                        $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload);
+
+                        // append text
+                        if($oValue instanceof ormCaseLog){
+
+                            // retrieve webhook user and log
+                            $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
+                            if($sWebhookUser !== null){
+                                $oValue->AddLogEntry($sText, '', $sWebhookUser);
+                            }
+                            else{
+                                $oValue->AddLogEntry($sText, 'github');
+                            }
+
+                            // save
+                            $oObject->Set($sObjectAttCode, $oValue);
+                        }
+                        else {if($oAttDef instanceof AttributeText){
+                            $sep = $oAttDef->GetFormat() === 'html' ? '<br>' : '\n\r';
+                            $oObject->Set($sObjectAttCode, $oValue . $sep . nl2br($sText));
+                        }}
+
+                        // update object
+                        $oObject->DBUpdate();
 	            }
             ]]>
           </code>
