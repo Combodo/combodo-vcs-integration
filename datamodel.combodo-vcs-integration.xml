@@ -67,9 +67,17 @@
               <code>personal</code>
               <rank>1</rank>
             </value>
-            <value id="app">
-              <code>app</code>
+            <value id="app_repository">
+              <code>app_repository</code>
               <rank>2</rank>
+            </value>
+            <value id="app_user">
+              <code>app_user</code>
+              <rank>3</rank>
+            </value>
+            <value id="app_organization">
+              <code>app_organization</code>
+              <rank>4</rank>
             </value>
           </values>
           <sql>mode</sql>
@@ -189,27 +197,32 @@ your private key goes here
                 <item id="owner">
                   <rank>30</rank>
                 </item>
-              </items>
-            </item>
-            <item id="fieldset:Class:VCSConnector:authentication">
-              <rank>20</rank>
-              <items>
                 <item id="mode">
                   <rank>40</rank>
                 </item>
-                <item id="personal_access_token">
-                  <rank>50</rank>
+              </items>
+            </item>
+            <item id="fieldset:VCSConnector:personal_access_token">
+              <rank>20</rank>
+              <items>
+                <item id="personal_access_token" _delta="define">
+                  <rank>10</rank>
                 </item>
+              </items>
+            </item>
+            <item id="fieldset:VCSConnector:application">
+              <rank>30</rank>
+              <items>
                 <item id="app_id">
-                  <rank>60</rank>
+                  <rank>10</rank>
                 </item>
                 <item id="app_private_key">
-                  <rank>70</rank>
+                  <rank>20</rank>
                 </item>
               </items>
             </item>
             <item id="webhooks_list">
-              <rank>30</rank>
+              <rank>40</rank>
             </item>
           </items>
         </details>
@@ -300,9 +313,9 @@ your private key goes here
             <value id="repository">
               <code>repository</code>
             </value>
-            <!--value id="organization">
+            <value id="organization">
               <code>organization</code>
-            </value-->
+            </value>
           </values>
           <sql>type</sql>
           <default_value>repository</default_value>
@@ -525,6 +538,17 @@ your private key goes here
             }
             ]]>
           </code>
+        </method>
+        <!-- GetConnector -->
+        <method id="GetConnector">
+          <static>false</static>
+          <type>Custom</type>
+          <code><![CDATA[
+    public function GetConnector()
+    {
+        return MetaModel::GetObject(VCSConnector::class, $this->Get('connector_id'));
+    }
+            ]]></code>
         </method>
       </methods>
       <presentation>
