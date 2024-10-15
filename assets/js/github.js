@@ -23,16 +23,7 @@ const iTopGithubWorker = new function(){
      * @param webhook_reference
      */
     function SynchronizeWebhook(webhook_reference){
-        iTopGithubWorker.SynchronizeWebhookConfiguration(webhook_reference).then(function(res){
-            // @TODO N'aura plus de sens pour un webhook de type org
-            if(res === true){
-                iTopGithubWorker.GetRepositoryInfo(webhook_reference).then(function(res){
-                    if(CombodoToast !== undefined){
-                        CombodoToast.OpenSuccessToast('Webhook configuration synchronized successfully');
-                    }
-                });
-            }
-        });
+        iTopGithubWorker.SynchronizeWebhookConfiguration(webhook_reference);
     }
 
     /**
@@ -89,6 +80,8 @@ const iTopGithubWorker = new function(){
                 // update webhook status
                 const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
                 oGitHubInfo.innerHTML = data.data.status_field_html;
+
+                CombodoToast.OpenSuccessToast('Webhook configuration synchronized successfully');
             }
 
             return data.data.errors === undefined;
@@ -117,11 +110,13 @@ const iTopGithubWorker = new function(){
             const data = await response.json();
 
             // check errors
-            if(CheckErrors('Check webhook configuration synchro', data)) {
+            if(CheckErrors('Unable to synchronize webhook configuration', data)) {
 
                 // update webhook status
                 const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
                 oGitHubInfo.innerHTML = data.data.status_field_html;
+
+                CombodoToast.OpenSuccessToast('Webhook configuration Checked successfully');
             }
 
             return data.data.errors === undefined;

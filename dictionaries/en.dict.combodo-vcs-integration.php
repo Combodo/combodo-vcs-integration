@@ -162,6 +162,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSLogAttributeAutomation/Attribute:object_class+' => 'Class of the target object',
 	'Class:VCSLogAttributeAutomation/Attribute:template' => 'Template',
 	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Template used to create the message, in plain text or html, in accordance with the events and scope',
+	'Class:VCSLogAttributeAutomation/Attribute:group_messages' => 'Group target messages',
+	'Class:VCSLogAttributeAutomation/Attribute:group_messages+' => 'Group messages for the same target object',
 
 	// CLASS VCSLogJournalAutomation
 	'Class:VCSLogJournalAutomation' => 'Append to iTop Log',

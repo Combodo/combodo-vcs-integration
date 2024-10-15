@@ -569,20 +569,23 @@ your private key goes here
             <item id="connector_provider">
               <rank>50</rank>
             </item>
-            <item id="secret">
+            <item id="url">
               <rank>60</rank>
             </item>
-            <item id="last_event_date">
+            <item id="secret">
               <rank>70</rank>
             </item>
-            <item id="automations_list">
+            <item id="last_event_date">
               <rank>80</rank>
             </item>
-            <item id="contacts_list">
+            <item id="automations_list">
               <rank>90</rank>
             </item>
-            <item id="documents_list">
+            <item id="contacts_list">
               <rank>100</rank>
+            </item>
+            <item id="documents_list">
+              <rank>110</rank>
             </item>
           </items>
         </details>
@@ -1041,7 +1044,7 @@ your private key goes here
         <category>bizmodel,searchable,configmgmt</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>vcsevent</db_table>
+        <db_table>vcs_event</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
@@ -1662,6 +1665,11 @@ your private key goes here
           <max_items>1</max_items>
           <attribute_definition_list>AttributeString</attribute_definition_list>
         </field>
+        <!-- Group  -->
+        <field id="group_messages" xsi:type="AttributeBoolean">
+          <sql>group_messages</sql>
+          <default_value>1</default_value>
+        </field>
       </fields>
       <methods>
         <!-- HandleEvent -->
@@ -1687,9 +1695,9 @@ your private key goes here
                     $sObjectAttCode = trim($this->Get('object_att_code'));
                     $sRefRegexPattern = $this->Get('ref_regex_pattern');
                     $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
+                    $bGroupMessages = $this->Get('group_messages');
 
                     $bScopeData = !empty($this->Get('scope_var'));
-                    $bGroupMessages = true;
 
                     // get object destination attribute
                     $oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
@@ -1880,6 +1888,9 @@ your private key goes here
                     </item>
                     <item id="ref_regex_pattern">
                       <rank>50</rank>
+                    </item>
+                    <item id="group_messages">
+                      <rank>60</rank>
                     </item>
                   </items>
                 </item>

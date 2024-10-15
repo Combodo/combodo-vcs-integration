@@ -162,6 +162,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSLogAttributeAutomation/Attribute:object_class+' => 'Classe de l\'objet cible',
 	'Class:VCSLogAttributeAutomation/Attribute:template' => 'Modèle',
 	'Class:VCSLogAttributeAutomation/Attribute:template+' => 'Modèle utilisé pour générer le message, en texte brut ou html, en cohérence avec les évènements et le périmètre',
+	'Class:VCSLogAttributeAutomation/Attribute:group_messages' => 'Grouper les  messages',
+	'Class:VCSLogAttributeAutomation/Attribute:group_messages+' => 'Grouper les messages concernant le même objet cible',
 
 	// CLASS VCSLogJournalAutomation
 	'Class:VCSLogJournalAutomation' => 'Insère dans le log iTop',

@@ -8,7 +8,6 @@
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use Combodo\iTop\VCSManagement\Service\AutomationManager;
 
-require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -105,6 +104,7 @@ $oWebhook->DBUpdate();
 // Log in log system
 $oDateTimeFormat =  AttributeDateTime::GetFormat();
 ModuleHelper::LogInfo("GitHub Event $sType by " . $sSenderLogin, [
+	'webhook' => $_GET['webhook'],
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,
 	'automations triggered' => $iAutomationsTriggeredCount,
