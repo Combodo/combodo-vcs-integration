@@ -17,6 +17,9 @@ use Exception;
  */
 class TemplatingService
 {
+	private static string $DEFAULT_SEPARATOR_COLOR = '#91618e42';
+	private static string $DEFAULT_TEXT_COLOR = '#b83280';
+
 	/** @var string regex */
 	private static string $REGEX_FOR_STATEMENT = "/\[\[@for\s+(\w+)\]\]([.\s\S]*)\[\[@endfor\]\]/";
 	private static string $REGEX_EVENT_STATEMENT = "/\[\[event\]\]/";
@@ -25,8 +28,8 @@ class TemplatingService
 	private static string $REGEX_IMAGE_STATEMENT = "/\[\[@image\s+([\>\w-]+)(\s+(\d+))?\]\]/";
 	private static string $REGEX_SUBSTRING_STATEMENT = "/\[\[@substring\s+([\>\w-]+)\s+(\d+)\s+(\d+)\]\]/";
 	private static string $REGEX_COUNT_STATEMENT = "/\[\[@count\s+([\>\w-]+)\]\]/";
-	private static string $REGEX_SEPARATOR_STATEMENT = "/\[\[@separator\s+(#\w+)\]\]/";
-	private static string $REGEX_TEXT_STATEMENT = "/\[\[@text\s+([\>\w-]+)\s+(#\w+)\]\]/";
+	private static string $REGEX_SEPARATOR_STATEMENT = "/\[\[@separator(\s+([#|\w]+))?\]\]/";
+	private static string $REGEX_TEXT_STATEMENT = "/\[\[@text\s+([\>\w-]+)(\s+([#|\w]+))?\]\]/";
 	private static string $REGEX_PLURALIZE_STATEMENT = "/\[\[@pluralize\s+([\>\w-]+)\s+(\w+)\s+(\w+)\]\]/";
 	private static string $REGEX_DATA = "/\[\[([\>\w-]+)\]\]/";
 
@@ -227,7 +230,7 @@ class TemplatingService
 	{
 		// data
 		$sDataText = $aMatch[1];
-		$sTextColor = $aMatch[2];
+		$sTextColor = array_key_exists(3, $aMatch) ? $aMatch[3] : self::$DEFAULT_TEXT_COLOR;
 
 		// prepare template
 		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataText);
@@ -245,7 +248,7 @@ class TemplatingService
 	 */
 	private function CallBackSeparator(array $aPayload, array $aMatch) : string
 	{
-		$sColor = $aMatch[1];
+		$sColor = array_key_exists(2, $aMatch) ? $aMatch[2] : self::$DEFAULT_SEPARATOR_COLOR;
 
 		return "<hr style=\"background-color:$sColor;height:1px;\">";
 	}
