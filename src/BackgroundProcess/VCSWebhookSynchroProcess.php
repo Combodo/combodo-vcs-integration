@@ -22,7 +22,7 @@ use iBackgroundProcess;
  * - synchronize and get webhook metrics if synchro auto
  *
  */
-class VCSBackgroundProcess implements iBackgroundProcess
+class VCSWebhookSynchroProcess implements iBackgroundProcess
 {
 	// task periodicity
 	private static int $iPERIODICITY = 60 * 60 * 24;
@@ -70,7 +70,7 @@ class VCSBackgroundProcess implements iBackgroundProcess
 		$oDbObjectSet = new DBObjectSet($oDbObjectSearch);
 
 		// iterate throw webhooks...
-		while ($oWebhook = $oDbObjectSet->Fetch()) {
+		while ((time() < $iUnixTimeLimit) && ($oWebhook = $oDbObjectSet->Fetch())) {
 
 			try{
 
