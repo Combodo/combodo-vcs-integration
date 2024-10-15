@@ -564,8 +564,8 @@ class GitHubManager
 		$sType = $oWebhook->Get('type');
 
 		return match($sType){
-			'repository' => $this->oGitHubAPIService->CreateRepositoryWebhook($oWebhook, $sUrl, $sSecret, $aEvents),
-			'organization' => $this->oGitHubAPIService->CreateOrganizationWebhook($oWebhook, $sUrl, $sSecret, $aEvents),
+			'repository' => $this->oGitHubAPIService->CreateRepositoryWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'),  $sUrl, $sSecret, $aEvents),
+			'organization' => $this->oGitHubAPIService->CreateOrganizationWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sUrl, $sSecret, $aEvents),
 		};
 	}
 
@@ -585,8 +585,8 @@ class GitHubManager
 		$sType = $oWebhook->Get('type');
 
 		return match($sType){
-			'repository' => $this->oGitHubAPIService->UpdateRepositoryWebhook($oWebhook, $sHookId, $sUrl, $sSecret, $aEvents),
-			'organization' => $this->oGitHubAPIService->UpdateOrganizationWebhook($oWebhook, $sHookId, $sUrl, $sSecret, $aEvents),
+			'repository' => $this->oGitHubAPIService->UpdateRepositoryWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'), $sHookId, $sUrl, $sSecret, $aEvents),
+			'organization' => $this->oGitHubAPIService->UpdateOrganizationWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sHookId, $sUrl, $sSecret, $aEvents),
 		};
 	}
 
@@ -604,8 +604,8 @@ class GitHubManager
 			$sType = $oWebhook->Get('type');
 
 			$data = match($sType){
-				'repository' => $this->oGitHubAPIService->DeleteRepositoryWebhook($oWebhook, $sHookId),
-				'organization' => $this->oGitHubAPIService->DeleteOrganizationWebhook($oWebhook, $sHookId),
+				'repository' => $this->oGitHubAPIService->DeleteRepositoryWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'), $sHookId),
+				'organization' => $this->oGitHubAPIService->DeleteOrganizationWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sHookId),
 			};
 
 			return [
@@ -642,8 +642,8 @@ class GitHubManager
 			$sType = $oWebhook->Get('type');
 
 			$data = match($sType){
-				'repository' => $this->oGitHubAPIService->GetRepositoryWebhookConfiguration($oWebhook, $sHookId),
-				'organization' => $this->oGitHubAPIService->GetOrganizationWebhookConfiguration($oWebhook, $sHookId),
+				'repository' => $this->oGitHubAPIService->GetRepositoryWebhookConfiguration($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'), $sHookId),
+				'organization' => $this->oGitHubAPIService->GetOrganizationWebhookConfiguration($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sHookId),
 			};
 
 			return [

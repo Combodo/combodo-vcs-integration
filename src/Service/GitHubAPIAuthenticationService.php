@@ -228,8 +228,8 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		ModuleHelper::LogDebug(__FUNCTION__);
 
 		// retrieve useful settings
-		$sOwner = $oConnector->Get('owner');
-        $sRepositoryName = $oWebhook->Get('name');
+		$sRepositoryName = $oConnector->Get('app_repository_name');
+		$sOwner = $oConnector->Get('app_repository_owner');
 
 		// API call
 		$client = new Client();
@@ -256,11 +256,11 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		ModuleHelper::LogDebug(__FUNCTION__);
 
 		// retrieve useful settings
-		$sOwner = $oConnector->Get('owner');
+		$sUser = $oConnector->Get('app_user_name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET',  $this->GetAPIUri("/repos/$sOwner/installation"), $this->CreateAppAuthorizationHeader($oConnector));
+		$request = new Request('GET',  $this->GetAPIUri("/repos/$sUser/installation"), $this->CreateAppAuthorizationHeader($oConnector));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -283,11 +283,11 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		ModuleHelper::LogDebug(__FUNCTION__);
 
 		// retrieve useful settings
-		$sOwner = $oConnector->Get('owner');
+		$sOrganization = $oConnector->Get('app_organization_name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET',  $this->GetAPIUri("/orgs/$sOwner/installation"), $this->CreateAppAuthorizationHeader($oConnector));
+		$request = new Request('GET',  $this->GetAPIUri("/orgs/$sOrganization/installation"), $this->CreateAppAuthorizationHeader($oConnector));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);

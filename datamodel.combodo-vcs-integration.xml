@@ -23,8 +23,6 @@
           </attributes>
           <complementary_attributes>
             <attribute id="provider"/>
-            <attribute id="owner"/>
-            <attribute id="mode"/>
           </complementary_attributes>
         </naming>
         <display_template/>
@@ -55,11 +53,6 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>list</display_style>
         </field>
-        <!-- owner -->
-        <field id="owner" xsi:type="AttributeString">
-          <sql>owner</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
         <!-- mode -->
         <field id="mode" xsi:type="AttributeEnum">
           <values>
@@ -81,18 +74,37 @@
             </value>
           </values>
           <sql>mode</sql>
-          <default_value>personal</default_value>
+          <default_value>app_organization</default_value>
           <is_null_allowed>false</is_null_allowed>
           <sort_type>rank</sort_type>
           <display_style>list</display_style>
         </field>
-        <!-- personal access token -->
+        <!-- mode personal access token -->
         <field id="personal_access_token" xsi:type="AttributeString">
           <sql>personal_access_token</sql>
           <is_null_allowed>true</is_null_allowed>
           <dependencies>
             <attribute id="mode"/>
           </dependencies>
+        </field>
+        <!-- mode organization -->
+        <field id="app_organization_name" xsi:type="AttributeString">
+          <sql>app_organization_name</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <!-- mode user -->
+        <field id="app_user_name" xsi:type="AttributeString">
+          <sql>app_user_name</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <!-- mode repository -->
+        <field id="app_repository_name" xsi:type="AttributeString">
+          <sql>app_repository_name</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="app_repository_owner" xsi:type="AttributeString">
+          <sql>app_repository_owner</sql>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <!-- app id -->
         <field id="app_id" xsi:type="AttributeString">
@@ -194,23 +206,28 @@ your private key goes here
                 <item id="provider">
                   <rank>20</rank>
                 </item>
-                <item id="owner">
-                  <rank>30</rank>
-                </item>
-                <item id="mode">
-                  <rank>40</rank>
-                </item>
+<!--                <item id="mode">-->
+<!--                  <rank>40</rank>-->
+<!--                </item>-->
               </items>
             </item>
-            <item id="fieldset:VCSConnector:personal_access_token">
+            <item id="fieldset:Class:VCSConnector:app_organization">
               <rank>20</rank>
               <items>
-                <item id="personal_access_token" _delta="define">
+                <item id="app_organization_name">
                   <rank>10</rank>
                 </item>
               </items>
             </item>
-            <item id="fieldset:VCSConnector:application">
+<!--            <item id="fieldset:VCSConnector:personal_access_token">-->
+<!--              <rank>20</rank>-->
+<!--              <items>-->
+<!--                <item id="personal_access_token" _delta="define">-->
+<!--                  <rank>10</rank>-->
+<!--                </item>-->
+<!--              </items>-->
+<!--            </item>-->
+            <item id="fieldset:Class:VCSConnector:application">
               <rank>30</rank>
               <items>
                 <item id="app_id">
@@ -234,9 +251,6 @@ your private key goes here
             <item id="provider">
               <rank>20</rank>
             </item>
-            <item id="owner">
-              <rank>30</rank>
-            </item>
           </items>
         </default_search>
         <search>
@@ -247,9 +261,6 @@ your private key goes here
             <item id="provider">
               <rank>20</rank>
             </item>
-            <item id="owner">
-              <rank>30</rank>
-            </item>
           </items>
         </search>
         <list>
@@ -259,12 +270,6 @@ your private key goes here
             </item>
             <item id="provider">
               <rank>20</rank>
-            </item>
-            <item id="owner">
-              <rank>30</rank>
-            </item>
-            <item id="mode">
-              <rank>40</rank>
             </item>
           </items>
         </list>
@@ -318,7 +323,7 @@ your private key goes here
             </value>
           </values>
           <sql>type</sql>
-          <default_value>repository</default_value>
+          <default_value>organization</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
@@ -554,10 +559,10 @@ your private key goes here
       <presentation>
         <details>
           <items>
+            <!--            <item id="type">-->
+            <!--              <rank>10</rank>-->
+            <!--            </item>-->
             <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="type">
               <rank>20</rank>
             </item>
             <item id="status">

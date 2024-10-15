@@ -65,7 +65,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 		ModuleHelper::LogDebug(__FUNCTION__);
 
 		// retrieve useful settings
-		$sOwner = MetaModel::GetObject(VCSConnector::class, $oWebhook->Get('connector_id'))->Get('owner');
+		$sOwner = $oWebhook->Get('owner');
 		$sRepositoryName = $oWebhook->Get('name');
 
 		// API call
@@ -95,6 +95,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * POST /repos/{owner}/{repo}/hooks
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOwner The owner of the repository.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sSecret The shared secret for the webhook.
 	 * @param array $aListeningEvents events to listen
@@ -102,7 +103,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function CreateRepositoryWebhook(DBObject $oWebhook, string $sUrl, string $sSecret, array $aListeningEvents) : array
+	public function CreateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
@@ -111,7 +112,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 		$oConnector = $oWebhook->GetConnector();
 
 		// retrieve useful settings
-		$sOwner = $oConnector->Get('owner');
         $sRepositoryName = $oWebhook->Get('name');
 
 		// request body
@@ -142,6 +142,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * POST /orgs/{org}/hooks
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOrganization Organization name.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sSecret The shared secret for the webhook.
 	 * @param array $aListeningEvents events to listen
@@ -149,16 +150,13 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function CreateOrganizationWebhook(DBObject $oWebhook, string $sUrl, string $sSecret, array $aListeningEvents) : array
+	public function CreateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
 
 		// retrieve connector
 		$oConnector = $oWebhook->GetConnector();
-
-		// retrieve useful settings
-		$sOrganization = $oConnector->Get('owner');
 
 		// request body
 		$aBody = [
@@ -188,6 +186,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * PATCH /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOwner The owner of the repository.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sHookId The webhook configuration id.
 	 * @param string $sSecret The shared secret for the webhook.
@@ -196,7 +195,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function UpdateRepositoryWebhook(DBObject $oWebhook, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
+	public function UpdateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
@@ -205,7 +204,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 		$oConnector = $oWebhook->GetConnector();
 
 		// retrieve useful settings
-		$sOwner = $oConnector->Get('owner');
         $sRepositoryName = $oWebhook->Get('name');
 
 		// request body
@@ -232,6 +230,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * PATCH /orgs/{org}/hooks/{hook_id}
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOrganization Organization name.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sHookId The webhook configuration id.
 	 * @param string $sSecret The shared secret for the webhook.
@@ -240,16 +239,10 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function UpdateOrganizationWebhook(DBObject $oWebhook, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
+	public function UpdateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
-
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
-
-		// retrieve useful settings
-		$sOrganization = $oConnector->Get('owner');
 
 		// request body
 		$aBody = [
@@ -275,12 +268,13 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * DELETE /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOwner The owner of the repository.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
 	 * @throws \CoreException
 	 */
-	public function DeleteRepositoryWebhook(DBObject $oWebhook, string $sHookId) : bool
+	public function DeleteRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sHookId) : bool
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
@@ -289,7 +283,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 		$oConnector = $oWebhook->GetConnector();
 
 		// retrieve useful settings
-		$sOwner = $oConnector->Get('owner');
         $sRepositoryName = $oWebhook->Get('name');
 
 		// API call
@@ -307,21 +300,16 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * DELETE /orgs/{org}/hooks/{hook_id}
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOrganization Organization name.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
 	 * @throws \CoreException
 	 */
-	public function DeleteOrganizationWebhook(DBObject $oWebhook, string $sHookId) : bool
+	public function DeleteOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sHookId) : bool
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
-
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
-
-		// retrieve useful settings
-		$sOrganization = $oConnector->Get('owner');
 
 		// API call
 		$client = new Client();
@@ -338,21 +326,18 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * GET /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOwner The owner of the repository.
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryWebhookConfiguration(DBObject $oWebhook, string $sHookId) : array
+	public function GetRepositoryWebhookConfiguration(DBObject $oWebhook, string $sOwner, string $sHookId) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
 
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
-
 		// retrieve useful settings
-		$sOwner = $oConnector->Get('owner');
         $sRepositoryName = $oWebhook->Get('name');
 
 		// API call
@@ -369,21 +354,16 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * GET /orgs/{org}/hooks/{hook_id}
 	 *
 	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOrganization Organization name.
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
 	 * @throws \CoreException
 	 */
-	public function GetOrganizationWebhookConfiguration(DBObject $oWebhook, string $sHookId) : array
+	public function GetOrganizationWebhookConfiguration(DBObject $oWebhook, string $sOrganization, string $sHookId) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
-
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
-
-		// retrieve useful settings
-		$sOrganization = $oConnector->Get('owner');
 
 		// API call
 		$client = new Client();
