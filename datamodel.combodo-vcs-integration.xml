@@ -1811,7 +1811,7 @@ your private key goes here
                         if($oValue instanceof ormCaseLog){
 
                             // retrieve webhook user and log
-                            $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting('webhook_user_id', null);
+                            $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::$PARAM_WEBHOOK_USER_ID, null);
                             if($sWebhookUser !== null){
                                 $oValue->AddLogEntry($sText, '', $sWebhookUser);
                             }

@@ -157,10 +157,9 @@ class AutomationManager
 	 * @param array $aPayload
 	 *
 	 * @return bool
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @throws \Exception
 	 */
-	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, int $iConditionNumber, array $aPayload)
+	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, int $iConditionNumber, array $aPayload) : bool
 	{
 		// check condition number
 		if($iConditionNumber <= 0 || $iConditionNumber > 3){
@@ -171,7 +170,7 @@ class AutomationManager
 		$sCondition = $oLnkAutomationToRepository->Get('condition_' . $iConditionNumber);
 		if(!utils::IsNullOrEmptyString($sCondition)){
 			$aMatch = [];
-			$res = preg_match('/([\>\w-]+)=(.*)/', $sCondition, $aMatch);
+			$res = preg_match('/([>\w-]+)=(.*)/', $sCondition, $aMatch);
 			if($res === 1){
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
 				if(!preg_match("#$aMatch[2]#", $val)){

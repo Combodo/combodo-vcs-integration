@@ -9,6 +9,7 @@ namespace Combodo\iTop\VCSManagement\Service;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use DBObject;
+use Exception;
 
 /**
  * Message templating service.

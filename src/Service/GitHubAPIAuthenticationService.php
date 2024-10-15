@@ -51,7 +51,6 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * Create authorization request header.
 	 *
 	 * @param DBObject $oWebhook VCS Webhook
-	 * @param string $sType Authentication type
 	 *
 	 * @return array header elements array
 	 * @throws \CoreException
@@ -200,6 +199,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @param string $sType Authentication type
 	 *
 	 * @return array
+	 * @throws \CoreException
 	 */
 	private function GetAppInstallation(DBObject $oConnector, DBObject $oWebhook, string $sType) : array
 	{

@@ -10,8 +10,6 @@ use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use DBObject;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
-use MetaModel;
-use VCSConnector;
 
 /**
  * Service responsible for the GitHub API requests.
@@ -108,9 +106,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
 
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
-
 		// retrieve useful settings
         $sRepositoryName = $oWebhook->Get('name');
 
@@ -155,9 +150,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
 
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
-
 		// request body
 		$aBody = [
 			"name" => "web",
@@ -199,9 +191,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
-
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
 
 		// retrieve useful settings
         $sRepositoryName = $oWebhook->Get('name');
@@ -278,9 +267,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__);
-
-		// retrieve connector
-		$oConnector = $oWebhook->GetConnector();
 
 		// retrieve useful settings
         $sRepositoryName = $oWebhook->Get('name');

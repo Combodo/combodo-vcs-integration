@@ -559,7 +559,7 @@ class GitHubManager
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function CreateWebhook(DBObject $oWebhook, string $sUrl, string $sSecret, array $aEvents)
+	public function CreateWebhook(DBObject $oWebhook, string $sUrl, string $sSecret, array $aEvents) : array
 	{
 		$sType = $oWebhook->Get('type');
 
@@ -580,7 +580,7 @@ class GitHubManager
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function UpdateWebhook(DBObject $oWebhook, string $sHookId, string $sUrl, string $sSecret, array $aEvents)
+	public function UpdateWebhook(DBObject $oWebhook, string $sHookId, string $sUrl, string $sSecret, array $aEvents) : array
 	{
 		$sType = $oWebhook->Get('type');
 
@@ -598,7 +598,7 @@ class GitHubManager
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DeleteWebhook(DBObject $oWebhook, string $sHookId)
+	public function DeleteWebhook(DBObject $oWebhook, string $sHookId) : array
 	{
 		try{
 			$sType = $oWebhook->Get('type');

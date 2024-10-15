@@ -97,10 +97,6 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	 * @param \Combodo\iTop\Service\Events\EventData $oEventData
 	 *
 	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
 	 */
 	public function OnDBLinksChanged(EventData $oEventData): void
 	{

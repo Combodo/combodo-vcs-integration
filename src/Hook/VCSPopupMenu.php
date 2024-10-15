@@ -8,6 +8,7 @@
 namespace Combodo\iTop\VCSManagement\Hook;
 
 use Dict;
+use Exception;
 use iPopupMenuExtension;
 use JSPopupMenuItem;
 use SeparatorPopupMenuItem;
@@ -28,10 +29,22 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 
-
 				if(get_class($param) ===  'VCSWebhook')
 				{
-					if($param->Get('connector_id') !== null)
+					$sConnectorId = null;
+					try{
+						$sConnectorId = $param->Get('connector_id');
+					}
+					catch(Exception $e)
+					{
+						// log
+						ExceptionLog::LogException($e, [
+							'happened_on' => 'EnumItems in VCSPopupMenu.php',
+							'error_msg' => $e->getMessage(),
+						]);
+					}
+
+					if($sConnectorId !== null)
 					{
 						// add separator
 						$oSeparator = new SeparatorPopupMenuItem();
