@@ -3,8 +3,6 @@
 // iTop module definition file
 //
 
-use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
-
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
 	'combodo-vcs-integration/0.1.0',
@@ -51,7 +49,7 @@ SetupWebPage::AddModule(
 		// Default settings
 		//
 		'settings' => array(
-			ModuleHelper::$PARAM_WEBHOOK_USER_ID => null
+			'webhook_user_id' => null
 		),
 	)
 );

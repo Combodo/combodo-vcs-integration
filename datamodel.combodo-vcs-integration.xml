@@ -1033,9 +1033,6 @@ your private key goes here
             <item id="vcswebhook_id">
               <rank>20</rank>
             </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
           </items>
         </list>
       </presentation>
@@ -1443,9 +1440,6 @@ your private key goes here
         </search>
         <list>
           <items>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
           </items>
         </list>
       </presentation>
