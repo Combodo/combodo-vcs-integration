@@ -174,6 +174,13 @@ class AutomationManager
 			if($res === 1){
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
 				if(!preg_match("#$aMatch[2]#", $val)){
+
+					ModuleHelper::LogDebug("Unmet condition for automation", [
+						'Condition number' => $iConditionNumber,
+						'Condition' => $sCondition,
+						'Value' => $val
+			        ]);
+
 					return false;
 				}
 			}
