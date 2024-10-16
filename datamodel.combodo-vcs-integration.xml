@@ -514,36 +514,6 @@ your private key goes here
             ]]>
           </code>
         </method>
-        <!-- DisplayBareRelations -->
-        <method id="DisplayBareRelations">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-            public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
-            {
-                if ($this->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
-
-                    // add css
-                    $oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
-
-                    // separator
-                    $oPage->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html('<hr>'));
-
-                    // webhook information
-                    $aExternalData = json_decode($this->Get('external_data'), true);
-                    $oBlockWebhookInfo = new \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock('github_info');
-                    $oBlockWebhookInfo->AddCSSClass('combodo-vcs-integration--webhook-info-container');
-                    $sRenderedText = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderGitHubInfoTemplate($this, $aExternalData);
-                    $oBlockWebhookInfo->AddSubBlock(new \Combodo\iTop\Application\UI\Base\Component\Html\Html($sRenderedText));
-                    $oPage->AddUiBlock($oBlockWebhookInfo);
-                }
-
-                 parent::DisplayBareRelations($oPage, $bEditMode);
-            }
-            ]]>
-          </code>
-        </method>
         <!-- GetConnector -->
         <method id="GetConnector">
           <static>false</static>
@@ -1511,11 +1481,15 @@ your private key goes here
             {
             	parent::DisplayBareRelations($oPage, $bEditMode);
 
-            	if($bEditMode) {
-            		// add css
-            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
-            		$oPage->add(\Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig'));
-            	}
+	            if($bEditMode) {
+		            // add css
+		            $oPage->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/css/global.scss');
+		            $sRenderedText = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig');
+		            $oPage->add_ready_script(<<<JS
+    $('[data-attribute-label="Template"]').after(`$sRenderedText`);
+JS
+		            );
+	            }
             }
               ]]></code>
         </method>
@@ -1837,11 +1811,15 @@ your private key goes here
             {
             	parent::DisplayBareRelations($oPage, $bEditMode);
 
-            	if($bEditMode) {
-            		// add css
-            		$oPage->add_saas('env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/css/global.scss');
-            		$oPage->add(\Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig'));
-            	}
+	            if($bEditMode) {
+		            // add css
+		            $oPage->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/css/global.scss');
+		            $sRenderedText = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig');
+		            $oPage->add_ready_script(<<<JS
+    $('[data-attribute-label="Template"]').after(`$sRenderedText`);
+JS
+		            );
+	            }
             }
             ]]>
           </code>
@@ -1876,20 +1854,25 @@ your private key goes here
                     <item id="object_class">
                       <rank>10</rank>
                     </item>
-                    <item id="object_ref_att_code">
-                      <rank>20</rank>
-                    </item>
                     <item id="object_att_code">
                       <rank>30</rank>
                     </item>
-                    <item id="ref_regex_subject_data">
-                      <rank>40</rank>
-                    </item>
-                    <item id="ref_regex_pattern">
-                      <rank>50</rank>
-                    </item>
                     <item id="group_messages">
                       <rank>60</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:VCSLogAttributeAutomation:reference">
+                  <rank>30</rank>
+                  <items>
+                    <item id="object_ref_att_code">
+                      <rank>10</rank>
+                    </item>
+                    <item id="ref_regex_subject_data">
+                      <rank>20</rank>
+                    </item>
+                    <item id="ref_regex_pattern">
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>
@@ -1919,6 +1902,7 @@ your private key goes here
               <rank>10</rank>
             </item>
             <item id="provider">
+              <rank>20</rank>
               <rank>20</rank>
             </item>
           </items>
