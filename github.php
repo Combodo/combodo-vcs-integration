@@ -90,6 +90,12 @@ $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 // retrieve webhook user
 $sWebhookUser = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_USER_ID, null);
 
+// trace
+ModuleHelper::LogDebug("GitHub Receiving event $sType", [
+	'type' => $sType,
+	'delivery id' => $sDeliveryId
+]);
+
 // handle webhook
 $iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oWebhook, $aPayload);
 

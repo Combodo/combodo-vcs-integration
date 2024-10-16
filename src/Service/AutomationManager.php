@@ -12,6 +12,7 @@ use Exception;
 use ExceptionLog;
 use MetaModel;
 use utils;
+use VCSAutomation;
 use VCSWebhook;
 
 /**
@@ -52,7 +53,6 @@ class AutomationManager
 	{
 		// variables
 		$iAutomationTriggeredCount = 0;
-		$aAutomationEvents = [];
 
 		// iterate through automations...
 		foreach($oWebhook->Get('automations_list') as $oLnk){
@@ -61,6 +61,7 @@ class AutomationManager
 			$oAutomation = MetaModel::GetObject('VCSAutomation', $oLnk->Get('automation_id'));
 
 			// handle event
+			$aAutomationEvents = [];
 			$oLnkAutomationToEventSet = $oAutomation->Get('events_list');
 			while ($oLnkAutomationToEvent = $oLnkAutomationToEventSet->Fetch()) {
 				$aAutomationEvents[] = $oLnkAutomationToEvent->Get('event_name');
@@ -175,11 +176,15 @@ class AutomationManager
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
 				if(!preg_match("#$aMatch[2]#", $val)){
 
+					$sAutomationRef = $oLnkAutomationToRepository->Get('automation_id');
+					$oAutomation = MetaModel::GetObject(VCSAutomation::class, $sAutomationRef);
+
 					ModuleHelper::LogDebug("Unmet condition for automation", [
+						'automation' => $oAutomation->Get('name'),
 						'Condition number' => $iConditionNumber,
 						'Condition' => $sCondition,
 						'Value' => $val
-			        ]);
+					]);
 
 					return false;
 				}
