@@ -7,6 +7,7 @@
 namespace Combodo\iTop\VCSManagement\Controller;
 
 use Combodo\iTop\Controller\AbstractController;
+use Combodo\iTop\VCSManagement\Service\GitHubAPIAuthenticationService;
 use Combodo\iTop\VCSManagement\Service\GitHubManager;
 use Combodo\iTop\VCSManagement\Service\TemplatingService;
 use Exception;
@@ -151,6 +152,40 @@ class GitHubController extends AbstractController
 			$aData['errors'][] = $e->getMessage();
 			$aData['fatal'] = true;
 		}
+
+		return $oPage->SetData($aData);
+	}
+
+	/**
+	 * Regenerate an access token.
+	 *
+	 * @return JsonPage|null
+	 * @noinspection PhpUnused
+	 */
+	public function OperationRegenerateAccessToken(): ?JsonPage
+	{
+		// variables
+		$oPage = new JsonPage();
+		$aData = [];
+
+		try{
+
+			// services injection
+			$oGitHubManager  = GitHubManager::GetInstance();
+			$oGitHubApiAuthenticationService = GitHubAPIAuthenticationService::GetInstance();
+
+			// retrieve webhook
+			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
+			$oConnector = $oWebhook->GetConnector();
+
+			// revoke token
+			$oGitHubApiAuthenticationService->RegenerateAccessToken($oConnector);
+		}
+		catch(Exception $e){
+
+			$aData['errors'][] = $e->getMessage();
+		}
+
 
 		return $oPage->SetData($aData);
 	}

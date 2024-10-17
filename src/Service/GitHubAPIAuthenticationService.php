@@ -8,6 +8,8 @@ namespace Combodo\iTop\VCSManagement\Service;
 
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use Combodo\iTop\VCSManagement\Helper\SessionHelper;
+use DateTime;
+use DateTimeZone;
 use DBObject;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
@@ -150,6 +152,11 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		return 'Bearer ' . $oConnector->Get('personal_access_token');
 	}
 
+	private function GetSessionConnectorName(DBObject $oConnector)
+	{
+		return 'connectors_' . $oConnector->GetKey();
+	}
+
 	/**
 	 * Get app installation authorization header.
 	 *
@@ -162,11 +169,11 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 */
 	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oConnector, DBObject $oWebhook, string $sType) : string
 	{
-		$sName = 'connector_' . $oConnector->GetKey();
+		$sName = $this->GetSessionConnectorName($oConnector);
 
 		// no session token or expired
 		if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName)
-		|| SessionHelper::IsCurrentAppInstallationTokenExpired($sName) ){
+		|| self::IsCurrentAppInstallationTokenExpired($sName) ){
 
 			// app installation ID
 			$sInstallationId = SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sName) ?
@@ -191,6 +198,21 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		}
 
 		return 'Bearer ' . $sAppInstallationAccessToken;
+	}
+
+	/**
+	 * Regenerate an access token.
+	 *
+	 * @param \DBObject $oConnector
+	 *
+	 * @return void
+	 */
+	public function RegenerateAccessToken(DBObject $oConnector) : void
+	{
+		$sName = $this->GetSessionConnectorName($oConnector);
+		SessionHelper::UnsetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sName);
+		SessionHelper::UnsetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName);
+		SessionHelper::UnsetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sName);
 	}
 
 	/**
@@ -315,5 +337,32 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		$request = new Request('POST', $this->GetAPIUri("/app/installations/$InstallationId/access_tokens"), $this->CreateAppAuthorizationHeader($oConnector));
 		$res = $client->sendAsync($request)->wait();
 		return json_decode($res->getBody(), true);
+	}
+
+	/**
+	 * Check if current app installation access token is expired.
+	 *
+	 * @param string $sRepository
+	 *
+	 * @return bool
+	 */
+	static public function IsCurrentAppInstallationTokenExpired(string $sRepository): bool
+	{
+		try{
+			// no session var
+			if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository))
+				return true;
+
+			// compute dates
+			$oDateNow = new DateTime('now',  new DateTimeZone('Z'));
+			$oDateExpiration = new DateTime(SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository));
+
+			// now > expiration_date
+			return $oDateNow->getTimestamp() > $oDateExpiration->getTimestamp();
+		}
+		catch(Exception){
+
+			return true;
+		}
 	}
 }

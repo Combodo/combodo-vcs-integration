@@ -78,30 +78,18 @@ class SessionHelper
 		return Session::IsSet($sVarName);
 	}
 
+
 	/**
-	 * Check if current app installation access token is expired.
+	 * Unset a session var.
 	 *
+	 * @param string $sSessionVar
 	 * @param string $sRepository
 	 *
-	 * @return bool
+	 * @return void
 	 */
-	static public function IsCurrentAppInstallationTokenExpired(string $sRepository): bool
+	static public function UnsetVar(string $sSessionVar, string $sRepository) : void
 	{
-		try{
-			// no session var
-			if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository))
-				return true;
-
-			// compute dates
-			$oDateNow = new DateTime('now',  new DateTimeZone('Z'));
-			$oDateExpiration = new DateTime(SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository));
-
-			// now > expiration_date
-			return $oDateNow->getTimestamp() > $oDateExpiration->getTimestamp();
-		}
-		catch(Exception){
-
-			return true;
-		}
+		$sVarName = self::GetVarName($sSessionVar, $sRepository);
+		Session::Unset($sVarName);
 	}
 }

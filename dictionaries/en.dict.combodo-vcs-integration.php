@@ -76,6 +76,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSWebhook/UI:Button:synchronize_configuration' => 'Synchronize',
 	'Class:VCSWebhook/UI:Button:check_configuration' => 'Check synchronization',
 	'Class:VCSWebhook/UI:Button:open' => 'Open on GitHub',
+	'Class:VCSWebhook/UI:Button:revoke_token' => 'Regenerate access token',
 
 	// CLASS lnkContactToVCSWebhook
 	'Class:lnkContactToVCSWebhook' => 'Link Contact To VCS Webhook',
