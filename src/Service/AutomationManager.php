@@ -89,6 +89,7 @@ class AutomationManager
 
 					$AutomationGroupData = [];
 					foreach($aData as $ScopeData){
+						$ScopeData['context'] = $aPayload;
 						self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload, $ScopeData, $AutomationGroupData);
 					}
 					self::LaunchAutomationHandleScopeEnd($oAutomation, $sType, $aPayload, $AutomationGroupData);

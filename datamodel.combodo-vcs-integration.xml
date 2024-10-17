@@ -940,14 +940,19 @@ your private key goes here
             <item id="status">
               <rank>30</rank>
             </item>
-            <item id="condition_1">
+            <item id="fieldset:Class:lnkVCSAutomationToVCSWebhook:condition">
               <rank>40</rank>
-            </item>
-            <item id="condition_2">
-              <rank>41</rank>
-            </item>
-            <item id="condition_3">
-              <rank>42</rank>
+              <items>
+                <item id="condition_1">
+                  <rank>10</rank>
+                </item>
+                <item id="condition_2">
+                  <rank>20</rank>
+                </item>
+                <item id="condition_3">
+                  <rank>30</rank>
+                </item>
+              </items>
             </item>
           </items>
         </details>
@@ -1464,9 +1469,11 @@ your private key goes here
             <![CDATA[
 	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
+                    $bScopeData = !empty($this->Get('scope_var'));
+
                     // parse template
                     $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
-		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $aPayload, $aScopeData);
+		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $bScopeData ? $aScopeData : $aPayload, $aScopeData);
 	            }
             ]]>
           </code>
@@ -1713,7 +1720,7 @@ JS
                         else{
 
                             // log the message
-                            $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
+                            $this->LogMessage($sEvent, $bScopeData ? $aScopeData : $aPayload, $oObject, $sObjectAttCode, $oAttDef);
 
                         }
 
@@ -1745,7 +1752,7 @@ JS
                         $oAttDef = $aItem['att_def'];
 
                         // add context to payload
-                        $aPayload['context'] = $aItem['group_scope_data'];
+                        $aPayload[$this->Get('scope_var')] = $aItem['group_scope_data'];
 
                         // log the message
                         $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
