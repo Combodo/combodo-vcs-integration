@@ -6,10 +6,7 @@
 
 namespace Combodo\iTop\VCSManagement\Helper;
 
-use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use DBObject;
 use Exception;
-use ExceptionLog;
 use IssueLog;
 use MetaModel;
 use utils;
@@ -95,7 +92,7 @@ class ModuleHelper
 	 *
 	 * @return mixed
 	 */
-	static public function CallFunctionWithoutDisplayingPHPErrors(callable $oFunction)
+	static public function CallFunctionWithoutDisplayingPHPErrors(callable $oFunction) : mixed
 	{
 		$ini = ini_get('display_errors');
 		ini_set('display_errors', 0);

@@ -12,6 +12,7 @@ use Exception;
 use ExceptionLog;
 use MetaModel;
 use utils;
+use VCSAutomation;
 use VCSWebhook;
 
 /**
@@ -52,7 +53,6 @@ class AutomationManager
 	{
 		// variables
 		$iAutomationTriggeredCount = 0;
-		$aAutomationEvents = [];
 
 		// iterate through automations...
 		foreach($oWebhook->Get('automations_list') as $oLnk){
@@ -61,6 +61,7 @@ class AutomationManager
 			$oAutomation = MetaModel::GetObject('VCSAutomation', $oLnk->Get('automation_id'));
 
 			// handle event
+			$aAutomationEvents = [];
 			$oLnkAutomationToEventSet = $oAutomation->Get('events_list');
 			while ($oLnkAutomationToEvent = $oLnkAutomationToEventSet->Fetch()) {
 				$aAutomationEvents[] = $oLnkAutomationToEvent->Get('event_name');
@@ -88,6 +89,7 @@ class AutomationManager
 
 					$AutomationGroupData = [];
 					foreach($aData as $ScopeData){
+						$ScopeData['context'] = $aPayload;
 						self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload, $ScopeData, $AutomationGroupData);
 					}
 					self::LaunchAutomationHandleScopeEnd($oAutomation, $sType, $aPayload, $AutomationGroupData);
@@ -157,10 +159,9 @@ class AutomationManager
 	 * @param array $aPayload
 	 *
 	 * @return bool
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @throws \Exception
 	 */
-	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, int $iConditionNumber, array $aPayload)
+	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, int $iConditionNumber, array $aPayload) : bool
 	{
 		// check condition number
 		if($iConditionNumber <= 0 || $iConditionNumber > 3){
@@ -171,10 +172,21 @@ class AutomationManager
 		$sCondition = $oLnkAutomationToRepository->Get('condition_' . $iConditionNumber);
 		if(!utils::IsNullOrEmptyString($sCondition)){
 			$aMatch = [];
-			$res = preg_match('/([\>\w-]+)=(.*)/', $sCondition, $aMatch);
+			$res = preg_match('/([>\w-]+)=(.*)/', $sCondition, $aMatch);
 			if($res === 1){
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
 				if(!preg_match("#$aMatch[2]#", $val)){
+
+					$sAutomationRef = $oLnkAutomationToRepository->Get('automation_id');
+					$oAutomation = MetaModel::GetObject(VCSAutomation::class, $sAutomationRef);
+
+					ModuleHelper::LogDebug("Unmet condition for automation", [
+						'automation' => $oAutomation->Get('name'),
+						'Condition number' => $iConditionNumber,
+						'Condition' => $sCondition,
+						'Value' => $val
+					]);
+
 					return false;
 				}
 			}

@@ -8,7 +8,6 @@
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use Combodo\iTop\VCSManagement\Service\AutomationManager;
 
-require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -89,7 +88,13 @@ $sDeliveryId = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
 $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 
 // retrieve webhook user
-$sWebhookUser = ModuleHelper::GetModuleSetting('webhook_user_id', null);
+$sWebhookUser = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_USER_ID);
+
+// trace
+ModuleHelper::LogDebug("GitHub Receiving event $sType", [
+	'type' => $sType,
+	'delivery id' => $sDeliveryId
+]);
 
 // handle webhook
 $iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oWebhook, $aPayload);
@@ -105,6 +110,7 @@ $oWebhook->DBUpdate();
 // Log in log system
 $oDateTimeFormat =  AttributeDateTime::GetFormat();
 ModuleHelper::LogInfo("GitHub Event $sType by " . $sSenderLogin, [
+	'webhook' => $_GET['webhook'],
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,
 	'automations triggered' => $iAutomationsTriggeredCount,

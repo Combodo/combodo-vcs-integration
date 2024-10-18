@@ -10,11 +10,13 @@ use AttributeDateTime;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use DateTime;
 use DBObject;
+use Error;
 use Exception;
 use ExceptionLog;
 use GuzzleHttp\Exception\ClientException;
 use MetaModel;
 use utils;
+use VCSWebhook;
 
 /**
  * GitHub manager service.
@@ -51,7 +53,7 @@ class GitHubManager
 
 
 	/**
-	 * @param \DBObject $oWebhook
+	 * @param DBObject $oWebhook
 	 *
 	 * @return void
 	 * @throws \CoreCannotSaveObjectException
@@ -62,8 +64,8 @@ class GitHubManager
 	{
 		// delete github webhook
 		$iExistingWebhookId = $this->GetGithubWebhookConfigurationId($oWebhook);
-		if($this->oGitHubAPIService->RepositoryWebhookConfigurationExist($oWebhook, $iExistingWebhookId)['configuration_exist']){
-			$this->oGitHubAPIService->DeleteRepositoryWebhook($oWebhook, $iExistingWebhookId);
+		if($this->WebhookConfigurationExist($oWebhook, $iExistingWebhookId)['configuration_exist']){
+			$this->DeleteWebhook($oWebhook, $iExistingWebhookId);
 		}
 	}
 
@@ -170,7 +172,7 @@ class GitHubManager
 	/**
 	 * Update webhook url.
 	 *
-	 * @param \DBObject $oWebhook
+	 * @param DBObject $oWebhook
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
@@ -217,7 +219,7 @@ class GitHubManager
 	}
 
 	/**
-	 * @param \DBObject $oWebhook
+	 * @param DBObject $oWebhook
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
@@ -229,7 +231,8 @@ class GitHubManager
 	{
 		if(in_array($oWebhook->Get('status'), ['unsynchronized', 'error'])) {
 			$aOperationResult = $this->SynchronizeWebhook($oWebhook);
-			if(!$aOperationResult['has_error']){
+			if($oWebhook->Get('type') !== 'organization'
+			&& !$aOperationResult['has_error']){
 				$this->UpdateExternalData($oWebhook);
 			}
 			$oWebhook->DBUpdate();
@@ -239,7 +242,7 @@ class GitHubManager
 	/**
 	 * Synchronize webhook.
 	 *
-	 * @param \DBObject $oWebhook
+	 * @param DBObject $oWebhook
 	 *
 	 * @return array|null
 	 * @throws \ArchivedObjectException
@@ -264,10 +267,10 @@ class GitHubManager
 			$iWebhookId = $this->GetGithubWebhookConfigurationId($oWebhook);
 
 			// webhook configuration doesn't exist
-			if($iWebhookId === false || !$this->oGitHubAPIService->RepositoryWebhookConfigurationExist($oWebhook, $iWebhookId)['configuration_exist']){
+			if($iWebhookId === false || !$this->WebhookConfigurationExist($oWebhook, $iWebhookId)['configuration_exist']){
 
 				// API: create new webhook configuration
-				$aGitHubData = $this->oGitHubAPIService->CreateRepositoryWebhook(
+				$aGitHubData = $this->CreateWebhook(
 					$oWebhook,
 					$sWebhookUrl,
 					$sWebhookSecret,
@@ -278,7 +281,7 @@ class GitHubManager
 			else{ // exist
 
 				// API: update webhook configuration
-				$aGitHubData = $this->oGitHubAPIService->UpdateRepositoryWebhook(
+				$aGitHubData = $this->UpdateWebhook(
 					$oWebhook,
 					$sWebhookUrl,
 					$iWebhookId,
@@ -317,7 +320,7 @@ class GitHubManager
 	/**
 	 * Update external data from GitHub.
 	 *
-	 * @param \DBObject $oWebhook
+	 * @param DBObject $oWebhook
 	 *
 	 * @return array
 	 * @throws \CoreException
@@ -376,7 +379,7 @@ class GitHubManager
 
 					// test webhook configuration exist on remote
 					$sWebhookId = $aWebhookConfigurationData['github']['id'];
-					$aResult = $this->oGitHubAPIService->RepositoryWebhookConfigurationExist($oWebhook, $sWebhookId);
+					$aResult = $this->WebhookConfigurationExist($oWebhook, $sWebhookId);
 
 					// webhook configuration exist
 					if ($aResult['configuration_exist'])
@@ -422,7 +425,7 @@ class GitHubManager
 			throw new Exception('Missing `webhook_id` query parameter');
 		}
 
-		return MetaModel::GetObject('VCSWebhook', $sWebhookRef);
+		return MetaModel::GetObject(VCSWebhook::class, $sWebhookRef);
 	}
 
 	/**
@@ -437,7 +440,7 @@ class GitHubManager
 	public function AppendWebhookStatusFieldHtml(DBObject $oWebhook, array &$aData) : void
 	{
 		/** @var \AttributeEnumSet $oAttributeSet */
-		$oAttributeEnumSet = MetaModel::GetAttributeDef('VCSWebhook', 'status');
+		$oAttributeEnumSet = MetaModel::GetAttributeDef(VCSWebhook::class, 'status');
 		$aData['status_field_html'] = $oAttributeEnumSet->GetAsHTML($oWebhook->Get('status'));
 		$aData['status'] = $oWebhook->Get('status');
 	}
@@ -507,8 +510,12 @@ class GitHubManager
 			]);
 			$bError = true;
 			$aErrors[] = $e->getMessage();
-		} finally
-		{
+		}
+		catch(Error $e){
+			$bError = true;
+			$aErrors[] = $e->getMessage();
+		}
+		finally{
 			return [
 				'data' => $aData,
 				'has_error' => $bError,
@@ -518,17 +525,19 @@ class GitHubManager
 
 	}
 
-    /**
-     * Update webhook.
-     *
-     * @param \DBObject $oWebhook
-     *
-     * @return array
-     * @throws \CoreException
-     * @throws \CoreUnexpectedValue
-     * @throws \Exception
-     */
-    public function UpdateWebhook(DBObject $oWebhook, $bUpdateSecret = false): void
+	/**
+	 * Update webhook.
+	 *
+	 * @param DBObject $oWebhook
+	 * @param bool $bUpdateSecret
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+    public function UpdateVCSWebhook(DBObject $oWebhook, bool $bUpdateSecret = false): void
     {
         // update web hook url (may have changed with module configuration)
         $this->UpdateWebhookURL($oWebhook);
@@ -544,4 +553,122 @@ class GitHubManager
         // auto synchronize
         $this->PerformWebhookAutoSynchronization($oWebhook);
     }
+
+	/**
+	 * @param VCSWebhook $oWebhook
+	 * @param string $sUrl
+	 * @param string $sSecret
+	 * @param array $aEvents
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function CreateWebhook(DBObject $oWebhook, string $sUrl, string $sSecret, array $aEvents) : array
+	{
+		$sType = $oWebhook->Get('type');
+
+		return match($sType){
+			'repository' => $this->oGitHubAPIService->CreateRepositoryWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'),  $sUrl, $sSecret, $aEvents),
+			'organization' => $this->oGitHubAPIService->CreateOrganizationWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sUrl, $sSecret, $aEvents),
+		};
+	}
+
+	/**
+	 * @param VCSWebhook $oWebhook
+	 * @param string $sHookId
+	 * @param string $sUrl
+	 * @param string $sSecret
+	 * @param array $aEvents
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function UpdateWebhook(DBObject $oWebhook, string $sHookId, string $sUrl, string $sSecret, array $aEvents) : array
+	{
+		$sType = $oWebhook->Get('type');
+
+		return match($sType){
+			'repository' => $this->oGitHubAPIService->UpdateRepositoryWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'), $sHookId, $sUrl, $sSecret, $aEvents),
+			'organization' => $this->oGitHubAPIService->UpdateOrganizationWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sHookId, $sUrl, $sSecret, $aEvents),
+		};
+	}
+
+	/**
+	 * @param VCSWebhook $oWebhook
+	 * @param string $sHookId
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function DeleteWebhook(DBObject $oWebhook, string $sHookId) : array
+	{
+		try{
+			$sType = $oWebhook->Get('type');
+
+			$data = match($sType){
+				'repository' => $this->oGitHubAPIService->DeleteRepositoryWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'), $sHookId),
+				'organization' => $this->oGitHubAPIService->DeleteOrganizationWebhook($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sHookId),
+			};
+
+			return [
+				'configuration_exist' => true,
+				'github_data' => $data
+			];
+		}
+		catch(ClientException $e){
+
+			// not found
+			if($e->getResponse()->getStatusCode() === 404){
+				return [
+					'configuration_exist' => false,
+					'github_data' => null
+				];
+			}
+
+			throw $e;
+		}
+	}
+
+	/**
+	 * Check if a webhook configuration with id exist.
+	 *
+	 * @param VCSWebhook $oWebhook The Webhook.
+	 * @param string $sHookId The webhook configuration id.
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	public function WebhookConfigurationExist(DBObject $oWebhook, string $sHookId) : array
+	{
+		try{
+			$sType = $oWebhook->Get('type');
+
+			$data = match($sType){
+				'repository' => $this->oGitHubAPIService->GetRepositoryWebhookConfiguration($oWebhook, $oWebhook->GetConnector()->Get('app_repository_owner'), $sHookId),
+				'organization' => $this->oGitHubAPIService->GetOrganizationWebhookConfiguration($oWebhook, $oWebhook->GetConnector()->Get('app_organization_name'), $sHookId),
+			};
+
+			return [
+				'configuration_exist' => true,
+				'github_data' => $data
+			];
+		}
+		catch(ClientException $e){
+
+			// not found
+			if($e->getResponse()->getStatusCode() === 404){
+				return [
+					'configuration_exist' => false,
+					'github_data' => null
+				];
+			}
+
+			throw $e;
+		}
+	}
+
+
 }

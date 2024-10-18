@@ -79,7 +79,7 @@ class VCSWebhookEventListener implements iEventServiceSetup
 			$aChanges = $oEventData->GetEventData()['changes'];
 
 			// update web hook url (may have changed with module configuration)
-			$this->oGitHubManager->UpdateWebhook($oWebhook, array_key_exists('secret', $aChanges));
+			$this->oGitHubManager->UpdateVCSWebhook($oWebhook, array_key_exists('secret', $aChanges));
 		}
 		catch(Exception $e){
 
@@ -97,10 +97,6 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	 * @param \Combodo\iTop\Service\Events\EventData $oEventData
 	 *
 	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
 	 */
 	public function OnDBLinksChanged(EventData $oEventData): void
 	{
