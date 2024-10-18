@@ -10,6 +10,7 @@ use AttributeDateTime;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use DateTime;
 use DBObject;
+use Error;
 use Exception;
 use ExceptionLog;
 use GuzzleHttp\Exception\ClientException;
@@ -509,8 +510,12 @@ class GitHubManager
 			]);
 			$bError = true;
 			$aErrors[] = $e->getMessage();
-		} finally
-		{
+		}
+		catch(Error $e){
+			$bError = true;
+			$aErrors[] = $e->getMessage();
+		}
+		finally{
 			return [
 				'data' => $aData,
 				'has_error' => $bError,
@@ -550,7 +555,7 @@ class GitHubManager
     }
 
 	/**
-	 * @param \DBObject $oWebhook
+	 * @param VCSWebhook $oWebhook
 	 * @param string $sUrl
 	 * @param string $sSecret
 	 * @param array $aEvents
@@ -570,7 +575,7 @@ class GitHubManager
 	}
 
 	/**
-	 * @param \DBObject $oWebhook
+	 * @param VCSWebhook $oWebhook
 	 * @param string $sHookId
 	 * @param string $sUrl
 	 * @param string $sSecret
@@ -591,7 +596,7 @@ class GitHubManager
 	}
 
 	/**
-	 * @param \DBObject $oWebhook
+	 * @param VCSWebhook $oWebhook
 	 * @param string $sHookId
 	 *
 	 * @return array
@@ -630,7 +635,7 @@ class GitHubManager
 	/**
 	 * Check if a webhook configuration with id exist.
 	 *
-	 * @param DBObject $oWebhook The Webhook.
+	 * @param VCSWebhook $oWebhook The Webhook.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return array

@@ -7,9 +7,6 @@
 namespace Combodo\iTop\VCSManagement\Helper;
 
 use Combodo\iTop\Application\Helper\Session;
-use DateTime;
-use DateTimeZone;
-use Exception;
 
 /**
  * Session helper.

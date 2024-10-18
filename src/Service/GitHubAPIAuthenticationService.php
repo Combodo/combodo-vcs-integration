@@ -52,7 +52,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	/**
 	 * Create authorization request header.
 	 *
-	 * @param DBObject $oWebhook VCS Webhook
+	 * @param \VCSWebhook $oWebhook VCS Webhook
 	 *
 	 * @return array header elements array
 	 * @throws \CoreException
@@ -152,7 +152,14 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		return 'Bearer ' . $oConnector->Get('personal_access_token');
 	}
 
-	private function GetSessionConnectorName(DBObject $oConnector)
+	/**
+	 * Get the connector session name.
+	 *
+	 * @param \DBObject $oConnector
+	 *
+	 * @return string
+	 */
+	private function GetConnectorSessionName(DBObject $oConnector) : string
 	{
 		return 'connectors_' . $oConnector->GetKey();
 	}
@@ -169,7 +176,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 */
 	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oConnector, DBObject $oWebhook, string $sType) : string
 	{
-		$sName = $this->GetSessionConnectorName($oConnector);
+		$sName = $this->GetConnectorSessionName($oConnector);
 
 		// no session token or expired
 		if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName)
@@ -209,7 +216,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 */
 	public function RegenerateAccessToken(DBObject $oConnector) : void
 	{
-		$sName = $this->GetSessionConnectorName($oConnector);
+		$sName = $this->GetConnectorSessionName($oConnector);
 		SessionHelper::UnsetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sName);
 		SessionHelper::UnsetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName);
 		SessionHelper::UnsetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sName);

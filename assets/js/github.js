@@ -80,7 +80,7 @@ const iTopGithubWorker = new function(){
 
                 // update webhook status
                 const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
-                oGitHubInfo.innerHTML = data.data.status_field_html;
+                oGitHubInfo.innerHTML = data.data['status_field_html'];
 
                 CombodoToast.OpenSuccessToast('Webhook configuration synchronized successfully');
             }

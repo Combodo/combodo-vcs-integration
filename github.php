@@ -88,7 +88,7 @@ $sDeliveryId = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
 $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 
 // retrieve webhook user
-$sWebhookUser = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_USER_ID, null);
+$sWebhookUser = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_USER_ID);
 
 // trace
 ModuleHelper::LogDebug("GitHub Receiving event $sType", [

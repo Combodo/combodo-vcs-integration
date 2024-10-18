@@ -30,6 +30,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 
+				// allowed profiles for github actions
 				$bAllowedProfile = UserRights::HasProfile('Administrator') || UserRights::HasProfile('VCS Manager');
 
 				if(get_class($param) ===  'VCSWebhook' && $bAllowedProfile)

@@ -175,6 +175,7 @@ class GitHubController extends AbstractController
 			$oGitHubApiAuthenticationService = GitHubAPIAuthenticationService::GetInstance();
 
 			// retrieve webhook
+			/** @var \VCSWebhook $oWebhook */
 			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 			$oConnector = $oWebhook->GetConnector();
 
