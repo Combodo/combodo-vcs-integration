@@ -15,6 +15,7 @@ use Exception;
 use ExceptionLog;
 use iBackgroundProcess;
 use MetaModel;
+use VCSWebhook;
 
 /**
  * Asynchronous handing of webhook payloads
@@ -60,9 +61,9 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
         foreach ($aDbObjectSet as $iKey => $oWebhookPayload) {
             try {
                 if ($oWebhookPayload->Get('provider') == 'github') {
-                    /** @var \VCSWebhook $oWebhook */
+                    /** @var VCSWebhook $oWebhook */
                     $oWebhook = MetaModel::GetObject('VCSWebhook', $oWebhookPayload->Get('webhook_id'));
-                    $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, $oWebhookPayload->Get('payload'));
+                    $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
                     $oWebhookPayload->DBDelete();
                 }
             } catch (Exception $e) {
