@@ -11,6 +11,14 @@ require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
+// Temporary workaround to make sure mandatory parameters are provided
+if (!array_key_exists('transaction_id', $_REQUEST)) {
+    $_REQUEST['transaction_id'] = utils::GetNewTransactionId();
+}
+if (!array_key_exists('HTTP_REFERER', $_SERVER)) {
+    $_SERVER['HTTP_REFERER'] = 'https://github.com/';
+}
+
 set_error_handler(function($severity, $message, $file, $line) {
 	throw new \ErrorException($message, 0, $severity, $file, $line);
 });
