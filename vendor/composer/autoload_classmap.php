@@ -6,9 +6,11 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSBackgroundProcess' => $baseDir . '/src/BackgroundProcess/VCSBackgroundProcess.php',
+    'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => $baseDir . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
+    'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => $baseDir . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
     'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => $baseDir . '/src/Controller/GitHubController.php',
-    'Combodo\\iTop\\VCSManagement\\EventListener\\VCSEventListener' => $baseDir . '/src/EventListener/VCSEventListener.php',
+    'Combodo\\iTop\\VCSManagement\\EventListener\\VCSAutomationEventListener' => $baseDir . '/src/EventListener/VCSAutomationEventListener.php',
+    'Combodo\\iTop\\VCSManagement\\EventListener\\VCSWebhookEventListener' => $baseDir . '/src/EventListener/VCSWebhookEventListener.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => $baseDir . '/src/Helper/ModuleHelper.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => $baseDir . '/src/Helper/SessionHelper.php',
     'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => $baseDir . '/src/Hook/VCSPopupMenu.php',
