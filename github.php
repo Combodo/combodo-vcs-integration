@@ -78,10 +78,6 @@ switch ($_SERVER['CONTENT_TYPE']) {
 		throw new \Exception("Unsupported content type: $_SERVER[CONTENT_TYPE]");
 }
 
-# Payload structure depends on triggered event
-# https://developer.github.com/v3/activity/events/types/
-$aPayload = json_decode($json, true);
-
 # retrieve event type & delivery id
 $sType = strtolower($_SERVER['HTTP_X_GITHUB_EVENT']);
 $sDeliveryId = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
@@ -98,6 +94,10 @@ $oWebhookPayload->Set('type', $sType);
 $oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
 $oWebhookPayload->Set('payload', $json);
 $oWebhookPayload->DBInsert();
+
+# Payload structure depends on triggered event
+# https://developer.github.com/v3/activity/events/types/
+$aPayload = json_decode($json, true);
 
 // get sender login
 $sSenderLogin = $aPayload['sender']['login'];
