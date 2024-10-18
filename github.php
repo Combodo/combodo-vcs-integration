@@ -110,13 +110,7 @@ $aPayload = json_decode($json, true);
 // get sender login
 $sSenderLogin = $aPayload['sender']['login'];
 
-// increment events count and last date
-$oWebhook->DBIncrement('event_count');
-$oWebhook->Set('last_event_date', time());
-$oWebhook->DBUpdate();
-
 // Log in log system
-$oDateTimeFormat =  AttributeDateTime::GetFormat();
 ModuleHelper::LogInfo("GitHub Event $sType by " . $sSenderLogin, [
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,

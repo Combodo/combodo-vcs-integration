@@ -66,6 +66,10 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
                     $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
                     $oWebhookPayload->DBDelete();
                 }
+                // increment events count and last date
+                $oWebhook->DBIncrement('event_count');
+                $oWebhook->Set('last_event_date', time());
+                $oWebhook->DBUpdate();
             } catch (Exception $e) {
 				// trace
 				ExceptionLog::LogException($e, [
