@@ -607,6 +607,132 @@ your private key goes here
       </presentation>
     </class>
     <!--
+    /* VCS WebhookPayload *///////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+    <class id="VCSWebhookPayload" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>vcs_webhookpayload</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <obsolescence>
+        </obsolescence>
+        <naming>
+          <format>%1$s - %2$s - %3$s</format>
+          <attributes>
+            <attribute id="provider"/>
+            <attribute id="type"/>
+            <attribute id="webhook_name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <style>
+          <icon>assets/img/icons8-repository-code-fork.svg</icon>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <!-- provider -->
+        <field id="provider" xsi:type="AttributeEnum">
+          <values>
+            <value id="github">
+              <code>github</code>
+            </value>
+          </values>
+          <sql>provider</sql>
+          <default_value>github</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <!-- type -->
+        <field id="type" xsi:type="AttributeString">
+          <sql>type</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <!-- webhook -->
+        <field id="webhook_id" xsi:type="AttributeExternalKey">
+          <sql>webhook_id</sql>
+          <target_class>VCSWebhook</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="webhook_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>webhook_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <!-- configuration -->
+        <field id="payload" xsi:type="AttributeLongText">
+          <sql>payload</sql>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="webhook_id">
+              <rank>30</rank>
+            </item>
+            <item id="payload">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="webhook_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="webhook_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="webhook_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <!--
     /* Link Contact To VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
     -->
     <class id="lnkContactToVCSWebhook" _delta="define">

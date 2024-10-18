@@ -6,7 +6,6 @@
  */
 
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
-use Combodo\iTop\VCSManagement\Service\AutomationManager;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -25,7 +24,7 @@ set_exception_handler(function($e) {
 // retrieve VCS webhook
 try
 {
-	/** @var \VCSWebhook $oWebhook */
+	/** @var VCSWebhook $oWebhook */
 	$oWebhook = MetaModel::GetObject('VCSWebhook', $_GET['webhook']);
 }
 catch (Exception $e)
@@ -92,7 +91,13 @@ $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 $sWebhookUser = ModuleHelper::GetModuleSetting('webhook_user_id', null);
 
 // handle webhook
-$iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oWebhook, $aPayload);
+/** @var VCSWebhookPayload $oWebhookPayload */
+$oWebhookPayload = MetaModel::NewObject('VCSWebhookPayload');
+$oWebhookPayload->Set('provider', 'github');
+$oWebhookPayload->Set('type', $sType);
+$oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
+$oWebhookPayload->Set('payload', $json);
+$oWebhookPayload->DBInsert();
 
 // get sender login
 $sSenderLogin = $aPayload['sender']['login'];
@@ -107,5 +112,4 @@ $oDateTimeFormat =  AttributeDateTime::GetFormat();
 ModuleHelper::LogInfo("GitHub Event $sType by " . $sSenderLogin, [
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,
-	'automations triggered' => $iAutomationsTriggeredCount,
 ]);
