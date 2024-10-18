@@ -27,7 +27,7 @@ class TemplatingService
 	private static string $REGEX_BUTTON_STATEMENT = "/\[\[@button\s+([\>\w-]+)\s+as\s+([\>\w\s-]+)\]\]/";
 	private static string $REGEX_MAILTO_STATEMENT = "/\[\[@mailto\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
 	private static string $REGEX_IMAGE_STATEMENT = "/\[\[@image\s+([\>\w-]+)(\s+(\d+))?\]\]/";
-	private static string $REGEX_SUBSTRING_STATEMENT = "/\[\[@substring\s+([\>\w-]+)\s+(\d+)\s+(\d+)\]\]/";
+    private static string $REGEX_SUBSTRING_STATEMENT = "/\[\[@substring\s+([\>\w-]+)\s+(\d+)(\s+(\d+))?\]\]/";
 	private static string $REGEX_COUNT_STATEMENT = "/\[\[@count\s+([\>\w-]+)\s+(\w+)\s+(\w+)\]\]/";
 	private static string $REGEX_SEPARATOR_STATEMENT = "/\[\[@separator(\s+([#|\w]+))?\]\]/";
 	private static string $REGEX_TEXT_STATEMENT = "/\[\[@text\s+([\>\w-]+)(\s+([#|\w]+))?\]\]/";
@@ -236,7 +236,10 @@ class TemplatingService
 		// data
 		$sDataUrl = $aMatch[1];
 		$iOffset = intval($aMatch[2]);
-		$iLength = intval($aMatch[3]);
+        $iLength = null;
+        if(array_key_exists(3, $aMatch)) {
+            $iLength = intval($aMatch[3]);
+        }
 
 		// prepare template
 		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataUrl);
