@@ -6,7 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSBackgroundProcess' => $baseDir . '/src/BackgroundProcess/VCSBackgroundProcess.php',
+    'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => $baseDir . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
+    'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => $baseDir . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
     'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => $baseDir . '/src/Controller/GitHubController.php',
     'Combodo\\iTop\\VCSManagement\\EventListener\\VCSAutomationEventListener' => $baseDir . '/src/EventListener/VCSAutomationEventListener.php',
     'Combodo\\iTop\\VCSManagement\\EventListener\\VCSWebhookEventListener' => $baseDir . '/src/EventListener/VCSWebhookEventListener.php',

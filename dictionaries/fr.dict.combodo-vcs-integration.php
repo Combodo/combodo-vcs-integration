@@ -112,7 +112,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVCSAutomationToVCSWebhook/Attribute:webhook_id' => 'Webhook',
 	'Class:lnkVCSAutomationToVCSWebhook/Attribute:webhook_id+' => '',
 
-	// CLASS VCSEvent
+    // CLASS VCSWebhookPayload
+    'Class:VCSWebhookPayload' => 'Charge utile',
+    'Class:VCSWebhookPayload+' => 'Charge utile reçue d\'un Webhook',
+    'Class:VCSWebhookPayload/name' => '%1$s - %2$s - %3$s',
+    'Class:VCSWebhookPayload/Attribute:provider' => 'Fournisseur',
+    'Class:VCSWebhookPayload/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
+    'Class:VCSWebhookPayload/Attribute:provider/Value:github' => 'GitHub',
+    'Class:VCSWebhookPayload/Attribute:type' => 'Type',
+    'Class:VCSWebhookPayload/Attribute:type+' => '',
+    'Class:VCSWebhookPayload/Attribute:webhook_id' => 'Webhook',
+    'Class:VCSWebhookPayload/Attribute:webhook_id+' => '',
+    'Class:VCSWebhookPayload/Attribute:webhook_name' => 'Nom du webhook',
+    'Class:VCSWebhookPayload/Attribute:webhook_name+' => '',
+    'Class:VCSWebhookPayload/Attribute:payload' => 'Charge utile',
+    'Class:VCSWebhookPayload/Attribute:payload+' => '',
+
+    // CLASS VCSEvent
 	'Class:VCSEvent' => 'Evènement VCS',
 	'Class:VCSEvent+' => 'Evènement qu\'un système de gestion de versions peut déclencher sur l\'un de ses dépôts',
 	'Class:VCSEvent/Attribute:name+' => 'Nom de l\'évènement VCS - Il doit correspondre exactement à celui utilisé par le VCS',

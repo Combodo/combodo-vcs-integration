@@ -6,10 +6,17 @@
  */
 
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
-use Combodo\iTop\VCSManagement\Service\AutomationManager;
 
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
+
+// Temporary workaround to make sure mandatory parameters are provided
+if (!array_key_exists('transaction_id', $_REQUEST)) {
+    $_REQUEST['transaction_id'] = utils::GetNewTransactionId();
+}
+if (!array_key_exists('HTTP_REFERER', $_SERVER)) {
+    $_SERVER['HTTP_REFERER'] = 'https://github.com/';
+}
 
 set_error_handler(function($severity, $message, $file, $line) {
 	throw new \ErrorException($message, 0, $severity, $file, $line);
@@ -24,7 +31,7 @@ set_exception_handler(function($e) {
 // retrieve VCS webhook
 try
 {
-	/** @var \VCSWebhook $oWebhook */
+	/** @var VCSWebhook $oWebhook */
 	$oWebhook = MetaModel::GetObject('VCSWebhook', $_GET['webhook']);
 }
 catch (Exception $e)
@@ -78,10 +85,6 @@ switch ($_SERVER['CONTENT_TYPE']) {
 		throw new \Exception("Unsupported content type: $_SERVER[CONTENT_TYPE]");
 }
 
-# Payload structure depends on triggered event
-# https://developer.github.com/v3/activity/events/types/
-$aPayload = json_decode($json, true);
-
 # retrieve event type & delivery id
 $sType = strtolower($_SERVER['HTTP_X_GITHUB_EVENT']);
 $sDeliveryId = $_SERVER['HTTP_X_GITHUB_DELIVERY'];
@@ -97,21 +100,24 @@ ModuleHelper::LogDebug("GitHub Receiving event $sType", [
 ]);
 
 // handle webhook
-$iAutomationsTriggeredCount = AutomationManager::GetInstance()->HandleWebhook($sType, $oWebhook, $aPayload);
+/** @var VCSWebhookPayload $oWebhookPayload */
+$oWebhookPayload = MetaModel::NewObject('VCSWebhookPayload');
+$oWebhookPayload->Set('provider', 'github');
+$oWebhookPayload->Set('type', $sType);
+$oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
+$oWebhookPayload->Set('payload', $json);
+$oWebhookPayload->DBInsert();
+
+# Payload structure depends on triggered event
+# https://developer.github.com/v3/activity/events/types/
+$aPayload = json_decode($json, true);
 
 // get sender login
 $sSenderLogin = $aPayload['sender']['login'];
 
-// increment events count and last date
-$oWebhook->DBIncrement('event_count');
-$oWebhook->Set('last_event_date', time());
-$oWebhook->DBUpdate();
-
 // Log in log system
-$oDateTimeFormat =  AttributeDateTime::GetFormat();
 ModuleHelper::LogInfo("GitHub Event $sType by " . $sSenderLogin, [
 	'webhook' => $_GET['webhook'],
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,
-	'automations triggered' => $iAutomationsTriggeredCount,
 ]);

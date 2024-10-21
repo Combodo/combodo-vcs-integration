@@ -21,7 +21,8 @@ class ComposerStaticInit4f86a4499d29b29a3d2615dbbd39e1d0
     );
 
     public static $classMap = array (
-        'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSBackgroundProcess' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSBackgroundProcess.php',
+        'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
+        'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
         'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => __DIR__ . '/../..' . '/src/Controller/GitHubController.php',
         'Combodo\\iTop\\VCSManagement\\EventListener\\VCSAutomationEventListener' => __DIR__ . '/../..' . '/src/EventListener/VCSAutomationEventListener.php',
         'Combodo\\iTop\\VCSManagement\\EventListener\\VCSWebhookEventListener' => __DIR__ . '/../..' . '/src/EventListener/VCSWebhookEventListener.php',
