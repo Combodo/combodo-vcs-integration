@@ -1600,6 +1600,9 @@ your private key goes here
                     // parse template
                     $oTemplatingService = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance();
 		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $bScopeData ? $aScopeData : $aPayload, $aScopeData);
+
+                    // log parsed template
+                   ModuleHelper::LogInfo($sText);
 	            }
             ]]>
           </code>
