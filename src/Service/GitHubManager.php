@@ -452,7 +452,6 @@ class GitHubManager
 	 */
 	public function GetAPICallErrorMessage(ClientException $oException) : string
 	{
-
 		// get error array
 		$aExceptionError = json_decode($oException->getResponse()->getBody()->getContents(), true);
 
@@ -469,8 +468,8 @@ class GitHubManager
 		// compute help message
 		return match ($aExceptionError['message'])
 		{
-			'Not Found' => "$sMessage<br><i>Verify webhook name and connector owner</i>",
-			'Bad credentials' => "$sMessage<br><i>️️Verify connector authentication</i>",
+			'Not Found' => "$sMessage<br><i>Verify connector organization and check that app is installed on GitHub organization</i>",
+			'Bad credentials' => "$sMessage<br><i>️️Verify connector authentication, regenerate token in object menu if the error persist</i>",
 			'Validation Failed' => "$sMessage<br><i>️️Refer to the above message(s)</i>",
 			'Integration not found' => "$sMessage<br><i>️️Verify connector app id</i>",
 			'A JSON web token could not be decoded' => "$sMessage<br><i>️️Verify connector app private key</i>",
@@ -497,16 +496,16 @@ class GitHubManager
 		}
 		catch(ClientException $e){
 			ExceptionLog::LogException($e, [
-				'happened_on' => "ExecuteVCSOperation $sName in GitHubManager.php",
-				'error_msg' => $e->getMessage(),
+				'happened on' => "ExecuteVCSOperation $sName in GitHubManager.php",
+				'error message' => $e->getMessage(),
 			]);
 			$bError = true;
 			$aErrors[] = self::GetAPICallErrorMessage($e);
 		}
 		catch(Exception $e){
 			ExceptionLog::LogException($e, [
-				'happened_on' => "ExecuteVCSOperation $sName in GitHubManager.php",
-				'error_msg' => $e->getMessage(),
+				'happened on' => "ExecuteVCSOperation $sName in GitHubManager.php",
+				'error message' => $e->getMessage(),
 			]);
 			$bError = true;
 			$aErrors[] = $e->getMessage();
@@ -555,7 +554,7 @@ class GitHubManager
     }
 
 	/**
-	 * @param VCSWebhook $oWebhook
+	 * @param DBObject $oWebhook
 	 * @param string $sUrl
 	 * @param string $sSecret
 	 * @param array $aEvents
@@ -596,7 +595,7 @@ class GitHubManager
 	}
 
 	/**
-	 * @param VCSWebhook $oWebhook
+	 * @param DBObject $oWebhook
 	 * @param string $sHookId
 	 *
 	 * @return array
@@ -635,7 +634,7 @@ class GitHubManager
 	/**
 	 * Check if a webhook configuration with id exist.
 	 *
-	 * @param VCSWebhook $oWebhook The Webhook.
+	 * @param DBObject $oWebhook The Webhook.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return array

@@ -338,8 +338,8 @@ class TemplatingService
 		}
 		catch(Exception $e){
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'RenderTemplate in TemplatingService.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'RenderTemplate in TemplatingService.php',
+				'error message' => $e->getMessage(),
 			]);
 			return 'template error';
 		}

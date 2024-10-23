@@ -59,9 +59,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 */
 	public function GetRepositoryInfo(DBObject $oWebhook) : array
 	{
-		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
-
 		// retrieve useful settings
 		$sOwner = $oWebhook->Get('owner');
 		$sRepositoryName = $oWebhook->Get('name');
@@ -104,7 +101,12 @@ class GitHubAPIService extends AbstractGitHubAPI
 	public function CreateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
+		ModuleHelper::LogDebug(__FUNCTION__, [
+			'VCSWebhook' => $oWebhook->GetKey(),
+			'owner' => $sOwner,
+			'url' => $sUrl,
+			'events' => json_encode($aListeningEvents)
+		]);
 
 		// retrieve useful settings
         $sRepositoryName = $oWebhook->Get('name');
@@ -148,7 +150,12 @@ class GitHubAPIService extends AbstractGitHubAPI
 	public function CreateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
+		ModuleHelper::LogDebug(__FUNCTION__, [
+			'VCSWebhook' => $oWebhook->GetKey(),
+			'organization' => $sOrganization,
+			'url' => $sUrl,
+			'events' => json_encode($aListeningEvents)
+		]);
 
 		// request body
 		$aBody = [
@@ -190,7 +197,12 @@ class GitHubAPIService extends AbstractGitHubAPI
 	public function UpdateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
+		ModuleHelper::LogDebug(__FUNCTION__, [
+			'VCSWebhook' => $oWebhook->GetKey(),
+			'owner' => $sOwner,
+			'url' => $sUrl,
+			'events' => json_encode($aListeningEvents)
+		]);
 
 		// retrieve useful settings
         $sRepositoryName = $oWebhook->Get('name');
@@ -231,7 +243,12 @@ class GitHubAPIService extends AbstractGitHubAPI
 	public function UpdateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
+		ModuleHelper::LogDebug(__FUNCTION__, [
+			'VCSWebhook' => $oWebhook->GetKey(),
+			'organization' => $sOrganization,
+			'url' => $sUrl,
+			'events' => json_encode($aListeningEvents)
+		]);
 
 		// request body
 		$aBody = [
@@ -266,7 +283,11 @@ class GitHubAPIService extends AbstractGitHubAPI
 	public function DeleteRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sHookId) : bool
 	{
 		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
+		ModuleHelper::LogDebug(__FUNCTION__, [
+			'VCSWebhook' => $oWebhook->GetKey(),
+			'owner' => $sOwner,
+			'hook id' => $sHookId
+		]);
 
 		// retrieve useful settings
         $sRepositoryName = $oWebhook->Get('name');
@@ -295,7 +316,11 @@ class GitHubAPIService extends AbstractGitHubAPI
 	public function DeleteOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sHookId) : bool
 	{
 		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
+		ModuleHelper::LogDebug(__FUNCTION__, [
+			'VCSWebhook' => $oWebhook->GetKey(),
+			'organization' => $sOrganization,
+			'hook id' => $sHookId
+		]);
 
 		// API call
 		$client = new Client();
@@ -320,9 +345,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 */
 	public function GetRepositoryWebhookConfiguration(DBObject $oWebhook, string $sOwner, string $sHookId) : array
 	{
-		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
-
 		// retrieve useful settings
         $sRepositoryName = $oWebhook->Get('name');
 
@@ -348,9 +370,6 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 */
 	public function GetOrganizationWebhookConfiguration(DBObject $oWebhook, string $sOrganization, string $sHookId) : array
 	{
-		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
-
 		// API call
 		$client = new Client();
 		$request = new Request('GET', $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));

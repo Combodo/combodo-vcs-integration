@@ -19,6 +19,9 @@ class SessionHelper
 	public static string $SESSION_APP_INSTALLATION_ACCESS_TOKEN = 'github_app_installation_access_token';
 	public static string $SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE = 'github_app_installation_access_token_expiration_date';
 
+	/** @var array memory session vars for CLI */
+	private static array $aStaticVars = [];
+
 	/**
 	 * Get a session variable name.
 	 *
@@ -43,6 +46,9 @@ class SessionHelper
 	static public function GetVar(string $sSessionVar, string $sRepository) : mixed
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
+		if(array_key_exists($sVarName, self::$aStaticVars))		{
+			return self::$aStaticVars[$sVarName];
+		}
 		return Session::Get($sVarName);
 	}
 
@@ -58,6 +64,7 @@ class SessionHelper
 	static public function SetVar(string $sSessionVar, string $sRepository, mixed $oValue) : void
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
+		self::$aStaticVars[$sVarName] = $oValue;
 		Session::Set($sVarName, $oValue);
 	}
 
@@ -72,6 +79,9 @@ class SessionHelper
 	static public function IsSetVar(string $sSessionVar, string $sRepository) : bool
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
+		if(array_key_exists($sVarName, self::$aStaticVars))		{
+			return true;
+		}
 		return Session::IsSet($sVarName);
 	}
 
@@ -87,6 +97,9 @@ class SessionHelper
 	static public function UnsetVar(string $sSessionVar, string $sRepository) : void
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
+		if(array_key_exists($sVarName, self::$aStaticVars))		{
+			unset(self::$aStaticVars[$sVarName]);
+		}
 		Session::Unset($sVarName);
 	}
 }

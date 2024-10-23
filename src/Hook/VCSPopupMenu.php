@@ -43,8 +43,8 @@ class VCSPopupMenu implements iPopupMenuExtension
 					{
 						// log
 						ExceptionLog::LogException($e, [
-							'happened_on' => 'EnumItems in VCSPopupMenu.php',
-							'error_msg' => $e->getMessage(),
+							'happened_ n' => 'EnumItems in VCSPopupMenu.php',
+							'error message' => $e->getMessage(),
 						]);
 					}
 

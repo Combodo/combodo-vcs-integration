@@ -176,8 +176,9 @@ const iTopGithubWorker = new function(){
         // handle errors
         if(data.data.errors !== undefined){
             ShowErrors(title, data.data.errors)
+            return false
         }
-        return data.data.fatal === undefined;
+        return true;
     }
 
     /**

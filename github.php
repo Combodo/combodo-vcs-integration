@@ -37,9 +37,9 @@ try
 catch (Exception $e)
 {
 	ExceptionLog::LogException($e, [
-		'happened_when' => 'Receiving github webhook in GitHub.php',
-		'error_msg' => 'Webhook not found',
-		'webhook' => $_GET['webhook'],
+		'happened when' => 'Receiving github webhook in GitHub.php',
+		'error message' => 'Webhook not found',
+		'webhook id' => $_GET['webhook'],
 	]);
 	throw $e;
 }
@@ -93,10 +93,19 @@ $sUuid = $_SERVER['HTTP_X_GITHUB_HOOK_ID'];
 // retrieve webhook user
 $sWebhookUser = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_WEBHOOK_USER_ID);
 
-// trace
-ModuleHelper::LogDebug("GitHub Receiving event $sType", [
-	'type' => $sType,
-	'delivery id' => $sDeliveryId
+# Payload structure depends on triggered event
+# https://developer.github.com/v3/activity/events/types/
+$aPayload = json_decode($json, true);
+
+// get sender login
+$sSenderLogin = $aPayload['sender']['login'];
+
+// Log in log system
+ModuleHelper::LogInfo("Receiving GitHub Event #" . $sDeliveryId, [
+	'webhook id' => $_GET['webhook'],
+	'sender' => $sSenderLogin,
+	'delivery' => $sDeliveryId,
+	'uuid' => $sUuid,
 ]);
 
 // handle webhook
@@ -107,17 +116,3 @@ $oWebhookPayload->Set('type', $sType);
 $oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
 $oWebhookPayload->Set('payload', $json);
 $oWebhookPayload->DBInsert();
-
-# Payload structure depends on triggered event
-# https://developer.github.com/v3/activity/events/types/
-$aPayload = json_decode($json, true);
-
-// get sender login
-$sSenderLogin = $aPayload['sender']['login'];
-
-// Log in log system
-ModuleHelper::LogInfo("GitHub Event $sType by " . $sSenderLogin, [
-	'webhook' => $_GET['webhook'],
-	'delivery' => $sDeliveryId,
-	'uuid' => $sUuid,
-]);

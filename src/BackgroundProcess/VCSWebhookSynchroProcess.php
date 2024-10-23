@@ -61,9 +61,6 @@ class VCSWebhookSynchroProcess implements iBackgroundProcess
 	 */
 	public function Process($iUnixTimeLimit) : void
 	{
-		// log
-		ModuleHelper::LogDebug('Background task execution');
-
 		// search webhooks
 		$oDbObjectSearch = DBSearch::FromOQL('SELECT VCSWebhook');
 		$oDbObjectSearch->SetShowObsoleteData(false);
@@ -90,9 +87,9 @@ class VCSWebhookSynchroProcess implements iBackgroundProcess
 
 				// trace
 				ExceptionLog::LogException($e, [
-					'happened_on' => 'Process in VCSBackgroundProcess.php',
-					'webhook' => $oWebhook->GetKey(),
-					'error_msg' => $e->getMessage(),
+					'happened on' => 'Process in VCSBackgroundProcess.php',
+					'VCSWebhook' => $oWebhook->GetKey(),
+					'error message' => $e->getMessage(),
 				]);
 			}
 		}

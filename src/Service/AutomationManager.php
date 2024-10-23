@@ -93,13 +93,12 @@ class AutomationManager
 						self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload, $ScopeData, $AutomationGroupData);
 					}
 					self::LaunchAutomationHandleScopeEnd($oAutomation, $sType, $aPayload, $AutomationGroupData);
-					$iAutomationTriggeredCount++;
 				}
 				else{
 					self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload);
-					$iAutomationTriggeredCount++;
 				}
 
+				$iAutomationTriggeredCount++;
 			}
 		}
 
@@ -124,8 +123,8 @@ class AutomationManager
 		}
 		catch(Exception $e){
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'LaunchAutomationHandleEvent in AutomationManager.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'LaunchAutomationHandleEvent in AutomationManager.php',
+				'error message' => $e->getMessage(),
 			]);
 		}
 	}
@@ -147,8 +146,8 @@ class AutomationManager
 		}
 		catch(Exception $e){
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'LaunchAutomationHandleScopeEnd in AutomationManager.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'LaunchAutomationHandleScopeEnd in AutomationManager.php',
+				'error message' => $e->getMessage(),
 			]);
 		}
 	}
@@ -181,10 +180,12 @@ class AutomationManager
 					$oAutomation = MetaModel::GetObject(VCSAutomation::class, $sAutomationRef);
 
 					ModuleHelper::LogDebug("Unmet condition for automation", [
-						'automation' => $oAutomation->Get('name'),
-						'Condition number' => $iConditionNumber,
-						'Condition' => $sCondition,
-						'Value' => $val
+						'VCSAutomation' => $oAutomation->GetKey(),
+						'VCSLnkAutomationToRepository' => $oLnkAutomationToRepository->GetKey(),
+						'automation name' => $oAutomation->Get('name'),
+						'condition number' => $iConditionNumber,
+						'condition' => $sCondition,
+						'payload value' => $val
 					]);
 
 					return false;

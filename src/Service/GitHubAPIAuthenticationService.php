@@ -52,7 +52,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	/**
 	 * Create authorization request header.
 	 *
-	 * @param \VCSWebhook $oWebhook VCS Webhook
+	 * @param DBObject $oWebhook VCS Webhook
 	 *
 	 * @return array header elements array
 	 * @throws \CoreException
@@ -173,6 +173,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 *
 	 * @return string
 	 * @throws \CoreException
+	 * @throws \DateMalformedStringException
 	 */
 	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oConnector, DBObject $oWebhook, string $sType) : string
 	{
@@ -191,7 +192,10 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 			$sAppInstallationAccessToken = $aResponse['token'];
 
 			// log
-			ModuleHelper::LogDebug('Create new application access token for Webhook ' . $sName);
+			ModuleHelper::LogDebug('Create new application access token', [
+				'VCSConnector' => $oConnector->GetKey(),
+				'expires at' => $aResponse['expires_at']
+			]);
 
 			// store it in session
 			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sName, $sInstallationId);
@@ -253,9 +257,6 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 */
 	private function GetRepositoryAppInstallation(DBObject $oConnector, DBObject $oWebhook) : array
 	{
-		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
-
 		// retrieve useful settings
 		$sRepositoryName = $oConnector->Get('app_repository_name');
 		$sOwner = $oConnector->Get('app_repository_owner');
@@ -281,9 +282,6 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 */
 	private function GetUserAppInstallation(DBObject $oConnector) : array
 	{
-		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
-
 		// retrieve useful settings
 		$sUser = $oConnector->Get('app_user_name');
 
@@ -308,9 +306,6 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 */
 	private function GetOrganizationAppInstallation(DBObject $oConnector) : array
 	{
-		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
-
 		// retrieve useful settings
 		$sOrganization = $oConnector->Get('app_organization_name');
 
@@ -336,9 +331,6 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 */
 	private function CreateApplicationInstallationAccessToken(DBObject $oConnector, string $InstallationId) : array
 	{
-		// log
-		ModuleHelper::LogDebug(__FUNCTION__);
-
 		// API call
 		$client = new Client();
 		$request = new Request('POST', $this->GetAPIUri("/app/installations/$InstallationId/access_tokens"), $this->CreateAppAuthorizationHeader($oConnector));
@@ -352,6 +344,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @param string $sRepository
 	 *
 	 * @return bool
+	 * @throws \DateMalformedStringException
 	 */
 	static public function IsCurrentAppInstallationTokenExpired(string $sRepository): bool
 	{

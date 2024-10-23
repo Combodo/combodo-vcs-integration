@@ -1602,7 +1602,7 @@ your private key goes here
 		            $sText = $oTemplatingService->ParseTemplate($this->Get('template'), $sEvent, $bScopeData ? $aScopeData : $aPayload, $aScopeData);
 
                     // log parsed template
-                   ModuleHelper::LogInfo($sText);
+                   \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo($sText);
 	            }
             ]]>
           </code>
@@ -1828,7 +1828,15 @@ JS
                     if($oObject === null){
 
                         // output information (maybe normal)
-                        \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogDebug('HandleEvent error no object found');
+                        \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo('HandleEvent error no object found', [
+                            'VCSAutomation' => $this->GetKey(),
+                            'object class' => $sObjectClass,
+                            'object reference attribute code' => $sObjectRefAttCode,
+                            'object attribute code' => $sObjectAttCode,
+                            'reference regex pattern' => $sRefRegexPattern,
+                            'reference regex subject data' => $sRefRegexSubjectData,
+                            'reference subject data value' => $sRefSubjectDataValue
+                        ]);
                     }
                     else{
 

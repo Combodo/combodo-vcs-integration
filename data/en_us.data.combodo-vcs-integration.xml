@@ -37,30 +37,73 @@
 		<object_ref_att_code>ref</object_ref_att_code>
 		<ref_regex_pattern>(R-\d{6})</ref_regex_pattern>
 		<ref_regex_subject_data>message</ref_regex_subject_data>
-		<template><![CDATA[&lt;strong&gt;[[event]]&lt;/strong&gt; event form GitHub !
-
-[[@image context-&gt;repository-&gt;owner-&gt;avatar_url 32]] [[@mailto committer-&gt;email as committer-&gt;username]]
-
-&lt;a href=&quot;[[url]]&quot; target=&quot;_blank&quot; style=&quot;font-size:1.5rem;&quot;&gt;#[[@substring id 0 6]]&lt;/a&gt; on 🌵 [[context-&gt;ref]]
-[[message]]
-
-[[@hyperlink context-&gt;compare as compare on GitHub]]]]></template>
+		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] by [[pusher->name]]<br>
+[[ref]]
+[[@separator]]
+[[@count commits commit commits]] concernant ce ticket.
+<ul>
+[[@for commits]]
+<li>[[author->username]] <a href="[[url]]" target="_blank" >#[[@substring id 0 7]]</a></li>
+[[@endfor]]
+</ul>
+[[@separator]]
+[[@button compare as Compare on GitHub]]]]></template>
 	</VCSLogAttributeAutomation>
-	<VCSLogJournalAutomation alias="VCSLogJournalAutomation" id="2">
+	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="2">
+		<provider>github</provider>
+		<name>Pull requests into user request</name>
+		<scope_var></scope_var>
+		<object_class>UserRequest</object_class>
+		<object_att_code>private_log</object_att_code>
+		<object_ref_att_code>ref</object_ref_att_code>
+		<ref_regex_pattern>(R-\d{6})</ref_regex_pattern>
+		<ref_regex_subject_data>pull_request->title</ref_regex_subject_data>
+		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] by [[sender->login]]<br>
+[[pull_request->head->ref]] ➡️ [[pull_request->base->ref]]
+[[@separator]]
+Action: [[@text action]]
+[[@separator]]
+[[@button pull_request->html_url as Open on GitHub]]]]></template>
+	</VCSLogAttributeAutomation>
+	<VCSLogJournalAutomation alias="VCSLogJournalAutomation" id="3">
 		<provider>github</provider>
 		<name>All events tracking</name>
-		<template>[[@image sender-&gt;avatar_url 25]] [[event]] fired by [[@hyperlink sender-&gt;html_url as sender-&gt;login]]</template>
+		<template>[[event]] by [[sender->login]]</template>
 	</VCSLogJournalAutomation>
 	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="1">
-		<event_id>1</event_id>
 		<automation_id>1</automation_id>
+		<event_id>2</event_id>
 	</lnkVCSAutomationToVCSEvent>
 	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="2">
-		<event_id>1</event_id>
 		<automation_id>2</automation_id>
+		<event_id>4</event_id>
 	</lnkVCSAutomationToVCSEvent>
 	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="3">
+		<automation_id>3</automation_id>
+		<event_id>1</event_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="4">
+		<automation_id>3</automation_id>
 		<event_id>2</event_id>
-		<automation_id>2</automation_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="5">
+		<automation_id>3</automation_id>
+		<event_id>3</event_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="6">
+		<automation_id>3</automation_id>
+		<event_id>4</event_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="7">
+		<automation_id>3</automation_id>
+		<event_id>5</event_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="8">
+		<automation_id>3</automation_id>
+		<event_id>6</event_id>
+	</lnkVCSAutomationToVCSEvent>
+	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="9">
+		<automation_id>3</automation_id>
+		<event_id>7</event_id>
 	</lnkVCSAutomationToVCSEvent>
 </Set>

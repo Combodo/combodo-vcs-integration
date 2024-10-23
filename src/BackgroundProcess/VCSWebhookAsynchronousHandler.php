@@ -24,7 +24,7 @@ use VCSWebhook;
 class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 {
 	// task periodicity
-	private static int $iPERIODICITY = 10;
+	private static int $iPERIODICITY = 300;
 
 	/** @inheritDoc * */
 	public function GetPeriodicity() : int
@@ -46,9 +46,6 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 	 */
 	public function Process($iUnixTimeLimit) : void
 	{
-		// log
-		ModuleHelper::LogDebug('Asynchronous handler execution');
-
         // get automation instance
         $oAutomationInstance = AutomationManager::GetInstance();
 
@@ -57,28 +54,48 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 		$aDbObjectSet = $oDbObjectSet->ToArray();
         ksort($aDbObjectSet);
 
+		// log
+		ModuleHelper::LogDebug('Asynchronous webhook handler execution', [
+			'payloads count' => count($aDbObjectSet)
+		]);
+
 		// iterate through payloads
         foreach ($aDbObjectSet as $iKey => $oWebhookPayload) {
-            try {
+
+			try {
                 if ($oWebhookPayload->Get('provider') == 'github') {
                     /** @var VCSWebhook $oWebhook */
                     $oWebhook = MetaModel::GetObject('VCSWebhook', $oWebhookPayload->Get('webhook_id'));
-                    $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
+	                $iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
                     $oWebhookPayload->DBDelete();
+
+	                // increment events count and last date
+	                $oWebhook->DBIncrement('event_count');
+	                $oWebhook->Set('last_event_date', time());
+	                $oWebhook->DBUpdate();
+
+	                // log
+	                ModuleHelper::LogDebug('Processing payload Ref:' . $iKey, [
+						'VCSWebhookPayload' => $iKey,
+		                'VCSWebhook' => $oWebhookPayload->Get('webhook_id'),
+		                'provider' => $oWebhookPayload->Get('provider'),
+		                'event type' => $oWebhookPayload->Get('type'),
+		                'automations triggered count' => $iAutomationsTriggeredCount,
+	                ]);
                 }
-                // increment events count and last date
-                $oWebhook->DBIncrement('event_count');
-                $oWebhook->Set('last_event_date', time());
-                $oWebhook->DBUpdate();
             } catch (Exception $e) {
 				// trace
 				ExceptionLog::LogException($e, [
-					'happened_on' => 'Process in VCSWebhookAsynchronousHandler.php',
-					'webhook' => $oWebhook->GetKey(),
-					'error_msg' => $e->getMessage(),
+					'happened on' => 'Process in VCSWebhookAsynchronousHandler.php',
+					'VCSWebhookPayload' => $iKey,
+					'error message' => $e->getMessage(),
 				]);
 			}
             if (time() >= $iUnixTimeLimit) {
+	            // log
+	            ModuleHelper::LogDebug('Asynchronous webhook handler stopped (execution time limit)', [
+		            'time limit' => $iUnixTimeLimit,
+	            ]);
                 break;
             }
 		}

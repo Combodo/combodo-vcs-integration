@@ -41,7 +41,7 @@ class GitHubController extends AbstractController
 			$oGitHubManager = GitHubManager::GetInstance();
 			$oTemplatingService = TemplatingService::GetInstance();
 
-			// retrieve webhook - only webhook of type repository for the time being
+			// retrieve webhook
 			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
 			// get webhook info
@@ -59,11 +59,10 @@ class GitHubController extends AbstractController
 
 			// error handling
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OperationGetRepositoryInfo in GitHubController.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'OperationGetRepositoryInfo in GitHubController.php',
+				'error message' => $e->getMessage(),
 			]);
 			$aData['errors'][] = $e->getMessage();
-			$aData['fatal'] = true;
 		}
 
 		return $oPage->SetData($aData);
@@ -103,11 +102,10 @@ class GitHubController extends AbstractController
 
 			// error handling
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OperationSynchronizeWebhookConfiguration in GitHubController.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'OperationSynchronizeWebhookConfiguration in GitHubController.php',
+				'error message' => $e->getMessage(),
 			]);
 			$aData['errors'][] = $e->getMessage();
-			$aData['fatal'] = true;
 		}
 
 		return $oPage->SetData($aData);
@@ -146,11 +144,10 @@ class GitHubController extends AbstractController
 		catch(Exception  $e){
 
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OperationCheckWebhookConfigurationSynchro in GitHubController.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'OperationCheckWebhookConfigurationSynchro in GitHubController.php',
+				'error message' => $e->getMessage(),
 			]);
 			$aData['errors'][] = $e->getMessage();
-			$aData['fatal'] = true;
 		}
 
 		return $oPage->SetData($aData);

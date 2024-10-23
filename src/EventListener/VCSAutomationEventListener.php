@@ -73,8 +73,8 @@ class VCSAutomationEventListener implements iEventServiceSetup
 
             // log
             ExceptionLog::LogException($e, [
-                'happened_on' => 'OnDBAfterWrite in VCSAutomationEventListener.php',
-                'error_msg' => $e->getMessage(),
+                'happened on' => 'OnDBAfterWrite in VCSAutomationEventListener.php',
+                'error message' => $e->getMessage(),
             ]);
         }
     }

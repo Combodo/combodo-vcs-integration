@@ -85,8 +85,8 @@ class VCSWebhookEventListener implements iEventServiceSetup
 
 			// log
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBAfterWrite in VCSWebhookEventListener.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'OnDBAfterWrite in VCSWebhookEventListener.php',
+				'error message' => $e->getMessage(),
 			]);
 		}
 	}
@@ -115,8 +115,8 @@ class VCSWebhookEventListener implements iEventServiceSetup
 
 			// log exception
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBLinksChanged in VCSWebhookEventListener.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'OnDBLinksChanged in VCSWebhookEventListener.php',
+				'error message' => $e->getMessage(),
 			]);
 		}
 	}
@@ -142,8 +142,8 @@ class VCSWebhookEventListener implements iEventServiceSetup
 
 			// log exception
 			ExceptionLog::LogException($e, [
-				'happened_on' => 'OnDBAfterDelete in VCSWebhookEventListener.php',
-				'error_msg' => $e->getMessage(),
+				'happened on' => 'OnDBAfterDelete in VCSWebhookEventListener.php',
+				'error message' => $e->getMessage(),
 			]);
 		}
 	}
