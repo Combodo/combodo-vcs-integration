@@ -76,6 +76,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSWebhook/UI:Button:synchronize_configuration' => 'Synchroniser',
 	'Class:VCSWebhook/UI:Button:check_configuration' => 'Vérifier la synchronisation',
 	'Class:VCSWebhook/UI:Button:open' => 'Ouvrir sur GitHub',
+	'Class:VCSWebhook/UI:Button:revoke_token' => 'Regénérer le jetton d\'accès',
 
 	// CLASS lnkContactToVCSWebhook
 	'Class:lnkContactToVCSWebhook' => 'Lien Contact / Webhook',
@@ -83,7 +84,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToVCSWebhook/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToVCSWebhook/Attribute:contact_id+' => '',
 	'Class:lnkContactToVCSWebhook/Attribute:vcswebhook_id' => 'Webhook',
-	'Class:lnkContactToVCSWebhook/Attributevcs:vcswebhook_id+' => '',
+	'Class:lnkContactToVCSWebhook/Attribute:vcswebhook_id+' => '',
 
 	// CLASS lnkDocumentToVCSWebhook
 	'Class:lnkDocumentToVCSWebhook' => 'Lien Document / Webhook',
@@ -91,7 +92,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToVCSWebhook/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToVCSWebhook/Attribute:document_id+' => '',
 	'Class:lnkDocumentToVCSWebhook/Attribute:vcswebhook_id' => 'Webhook',
-	'Class:lnkDocumentToVCSWebhook/Attributevcs:vcswebhook_id+' => '',
+	'Class:lnkDocumentToVCSWebhook/Attribute:vcswebhook_id+' => '',
 
 	// CLASS lnkVCSAutomationToVCSWebhook
 	'Class:lnkVCSAutomationToVCSWebhook' => 'Lien Automatisme / Webhook',

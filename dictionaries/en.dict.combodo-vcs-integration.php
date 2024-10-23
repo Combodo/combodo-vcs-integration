@@ -84,7 +84,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContactToVCSWebhook/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToVCSWebhook/Attribute:contact_id+' => '',
 	'Class:lnkContactToVCSWebhook/Attribute:vcswebhook_id' => 'Webhook',
-	'Class:lnkContactToVCSWebhook/Attributevcs:vcswebhook_id+' => 'VCS Webhook',
+	'Class:lnkContactToVCSWebhook/Attribute:vcswebhook_id+' => 'VCS Webhook',
 
 	// CLASS lnkDocumentToVCSWebhook
 	'Class:lnkDocumentToVCSWebhook' => 'Link Document To VCS Webhook',
@@ -92,7 +92,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkDocumentToVCSWebhook/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToVCSWebhook/Attribute:document_id+' => '',
 	'Class:lnkDocumentToVCSWebhook/Attribute:vcswebhook_id' => 'Webhook',
-	'Class:lnkDocumentToVCSWebhook/Attributevcs:vcswebhook_id+' => 'VCS Webhook',
+	'Class:lnkDocumentToVCSWebhook/Attribute:vcswebhook_id+' => 'VCS Webhook',
 
 	// CLASS lnkVCSAutomationToVCSWebhook
 	'Class:lnkVCSAutomationToVCSWebhook' => 'Link Automation To VCS Webhook',
