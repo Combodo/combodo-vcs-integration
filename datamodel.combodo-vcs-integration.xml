@@ -151,7 +151,7 @@ your private key goes here
                           break;
                       case 'app_id':
                       case 'app_private_key':
-                          $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
+                          $iFlag = ($sMode == 'app_repository' || $sMode == 'app_organization' || $sMode == 'app_user') ? OPT_ATT_MANDATORY : 0;
                           break;
                       default:
                           $iFlag = 0;
@@ -181,7 +181,7 @@ your private key goes here
                           break;
                       case 'app_id':
                       case 'app_private_key':
-                          $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
+                          $iFlag = ($sMode == 'app_repository' || $sMode == 'app_organization' || $sMode == 'app_user') ? OPT_ATT_MANDATORY : 0;
                           break;
                       default:
                           $iFlag = 0;
