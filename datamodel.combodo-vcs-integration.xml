@@ -4,9 +4,9 @@
   </constants>
   <classes>
     <!--
-    /* VCS Connector *///////////////////////////////////////////////////////////////////////////////////////////////
+    /* VCS Application *///////////////////////////////////////////////////////////////////////////////////////////////
     -->
-    <class id="VCSConnector" _delta="define">
+    <class id="VCSApplication" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -56,21 +56,17 @@
         <!-- mode -->
         <field id="mode" xsi:type="AttributeEnum">
           <values>
-            <value id="personal">
-              <code>personal</code>
-              <rank>1</rank>
-            </value>
             <value id="app_repository">
               <code>app_repository</code>
-              <rank>2</rank>
+              <rank>1</rank>
             </value>
             <value id="app_user">
               <code>app_user</code>
-              <rank>3</rank>
+              <rank>2</rank>
             </value>
             <value id="app_organization">
               <code>app_organization</code>
-              <rank>4</rank>
+              <rank>3</rank>
             </value>
           </values>
           <sql>mode</sql>
@@ -78,14 +74,6 @@
           <is_null_allowed>false</is_null_allowed>
           <sort_type>rank</sort_type>
           <display_style>list</display_style>
-        </field>
-        <!-- mode personal access token -->
-        <field id="personal_access_token" xsi:type="AttributeString">
-          <sql>personal_access_token</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <dependencies>
-            <attribute id="mode"/>
-          </dependencies>
         </field>
         <!-- mode organization -->
         <field id="app_organization_name" xsi:type="AttributeString">
@@ -124,225 +112,6 @@
           <default_value><![CDATA[-----BEGIN RSA PRIVATE KEY-----
 your private key goes here
 -----END RSA PRIVATE KEY-----]]></default_value>
-        </field>
-        <!-- webhooks -->
-        <field id="webhooks_list" xsi:type="AttributeLinkedSet">
-        <linked_class>VCSWebhook</linked_class>
-        <ext_key_to_me>connector_id</ext_key_to_me>
-        <edit_mode>actions</edit_mode>
-        </field>
-        </fields>
-      <methods>
-        <!-- GetInitialStateAttributeFlags -->
-        <method id="GetInitialStateAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-              public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-              {
-                  $sMode = $this->Get('mode');
-                  switch ($sAttCode) {
-                      case 'provider':
-                          $iFlag = OPT_ATT_READONLY;
-                          break;
-                      case 'personal_access_token':
-                         $iFlag = ($sMode == 'personal') ? OPT_ATT_MANDATORY : 0;
-                          break;
-                      case 'app_id':
-                      case 'app_private_key':
-                          $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
-                          break;
-                      default:
-                          $iFlag = 0;
-                          break;
-                   }
-
-                  return $iFlag | parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-              }
-          ]]>
-          </code>
-        </method>
-        <!-- GetAttributeFlags -->
-        <method id="GetAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-              public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-              {
-                  $sMode = $this->Get('mode');
-                  switch ($sAttCode) {
-                      case 'provider':
-                          $iFlag = OPT_ATT_READONLY;
-                          break;
-                      case 'personal_access_token':
-                         $iFlag = ($sMode == 'personal') ? OPT_ATT_MANDATORY : 0;
-                          break;
-                      case 'app_id':
-                      case 'app_private_key':
-                          $iFlag = ($sMode == 'app') ? OPT_ATT_MANDATORY : 0;
-                          break;
-                      default:
-                          $iFlag = 0;
-                          break;
-                  }
-
-                  return $iFlag | parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-              }
-            ]]>
-          </code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="fieldset:Class:VCSConnector:connector">
-              <rank>10</rank>
-              <items>
-                <item id="name">
-                  <rank>10</rank>
-                </item>
-                <item id="provider">
-                  <rank>20</rank>
-                </item>
-<!--                <item id="mode">-->
-<!--                  <rank>40</rank>-->
-<!--                </item>-->
-              </items>
-            </item>
-            <item id="fieldset:Class:VCSConnector:app_organization">
-              <rank>20</rank>
-              <items>
-                <item id="app_organization_name">
-                  <rank>10</rank>
-                </item>
-              </items>
-            </item>
-<!--            <item id="fieldset:VCSConnector:personal_access_token">-->
-<!--              <rank>20</rank>-->
-<!--              <items>-->
-<!--                <item id="personal_access_token" _delta="define">-->
-<!--                  <rank>10</rank>-->
-<!--                </item>-->
-<!--              </items>-->
-<!--            </item>-->
-            <item id="fieldset:Class:VCSConnector:application">
-              <rank>30</rank>
-              <items>
-                <item id="app_id">
-                  <rank>10</rank>
-                </item>
-                <item id="app_private_key">
-                  <rank>20</rank>
-                </item>
-              </items>
-            </item>
-            <item id="webhooks_list">
-              <rank>40</rank>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSWebhook" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_webhook</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <format>%1$s</format>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-          <complementary_attributes>
-            <attribute id="url"/>
-          </complementary_attributes>
-        </naming>
-        <fields_semantic>
-          <state_attribute>status</state_attribute>
-        </fields_semantic>
-        <display_template/>
-        <style>
-          <icon>assets/img/icons8-repository-code-fork.svg</icon>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <!-- type -->
-        <field id="type" xsi:type="AttributeEnum">
-          <values>
-            <value id="repository">
-              <code>repository</code>
-            </value>
-            <value id="organization">
-              <code>organization</code>
-            </value>
-          </values>
-          <sql>type</sql>
-          <default_value>organization</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>radio_horizontal</display_style>
-        </field>
-        <!-- name -->
-        <field id="name" xsi:type="AttributeString">
-          <sql>name</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- connector -->
-        <field id="connector_id" xsi:type="AttributeExternalKey">
-          <sql>connector_id</sql>
-          <target_class>VCSConnector</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <!-- connector_provider -->
-        <field id="connector_provider" xsi:type="AttributeExternalField">
-          <extkey_attcode>connector_id</extkey_attcode>
-          <target_attcode>provider</target_attcode>
         </field>
         <!-- url -->
         <field id="url" xsi:type="AttributeString">
@@ -450,8 +219,77 @@ your private key goes here
           <is_null_allowed>true</is_null_allowed>
           <tracking_level>none</tracking_level>
         </field>
-      </fields>
+        </fields>
       <methods>
+        <!-- GetInitialStateAttributeFlags -->
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+              public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+              {
+                  $sMode = $this->Get('mode');
+                  switch ($sAttCode) {
+                      case 'provider':
+                          $iFlag = OPT_ATT_READONLY;
+                          break;
+                      case 'app_id':
+                      case 'app_private_key':
+                          $iFlag = OPT_ATT_MANDATORY;
+                          break;
+                      default:
+                          $iFlag = 0;
+                          break;
+                   }
+
+                  if (in_array($sAttCode, ['url', 'status', 'event_count', 'last_event_date', 'configuration'])) {
+                      $iFlag = OPT_ATT_HIDDEN;
+                  }
+
+                  return $iFlag | parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+              }
+          ]]>
+          </code>
+        </method>
+        <!-- GetAttributeFlags -->
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+              public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+              {
+                  $sMode = $this->Get('mode');
+                  switch ($sAttCode) {
+                      case 'provider':
+                          $iFlag = OPT_ATT_READONLY;
+                          break;
+                      case 'app_id':
+                      case 'app_private_key':
+                          $iFlag = OPT_ATT_MANDATORY;
+                          break;
+                      case 'last_event_date':
+                        if($this->Get('event_count') === 0){
+                            $iFlag = OPT_ATT_HIDDEN;
+                        }
+                        else{
+                            $iFlag = OPT_ATT_READONLY;
+                        }
+                        break;
+                      case 'status':
+                      $iFlag = OPT_ATT_READONLY;
+                        break;
+                      default:
+                          $iFlag = 0;
+                          break;
+                  }
+
+                  return $iFlag | parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+              }
+            ]]>
+          </code>
+        </method>
         <!-- PrefillCreationForm -->
         <method id="PrefillCreationForm">
           <static>false</static>
@@ -465,102 +303,78 @@ your private key goes here
     }
             ]]></code>
         </method>
-        <!-- GetInitialStateAttributeFlags -->
-        <method id="GetInitialStateAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-              public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-              {
-                  $sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-
-                  if (in_array($sAttCode, ['url', 'status', 'event_count', 'last_event_date', 'configuration'])) {
-                      return (OPT_ATT_HIDDEN | $sFlagsFromParent);
-                  }
-                  return $sFlagsFromParent;
-              }
-          ]]>
-          </code>
-        </method>
-        <!-- GetAttributeFlags -->
-        <method id="GetAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
-              public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-              {
-                  $sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-                  if($sAttCode === 'last_event_date' && $this->Get('event_count') === 0){
-                      return (OPT_ATT_HIDDEN | $sFlagsFromParent);
-                  }
-
-                  if (in_array($sAttCode, ['status', 'last_event_date'])) {
-                      return (OPT_ATT_READONLY | $sFlagsFromParent);
-                  }
-
-                  if($sAttCode === 'name' && $this->Get('status') !== 'error'){
-                      return (OPT_ATT_READONLY | $sFlagsFromParent);
-                  }
-
-                  if($sAttCode === 'configuration' && utils::IsNullOrEmptyString($this->Get('configuration'))){
-                      return (OPT_ATT_HIDDEN | $sFlagsFromParent);
-                  }
-
-                  return $sFlagsFromParent;
-              }
-            ]]>
-          </code>
-        </method>
-        <!-- GetConnector -->
-        <method id="GetConnector">
-          <static>false</static>
-          <type>Custom</type>
-          <code><![CDATA[
-    public function GetConnector()
-    {
-        return MetaModel::GetObject(VCSConnector::class, $this->Get('connector_id'));
-    }
-            ]]></code>
-        </method>
       </methods>
       <presentation>
         <details>
           <items>
-            <!--            <item id="type">-->
-            <!--              <rank>10</rank>-->
-            <!--            </item>-->
-            <item id="name">
+            <item id="fieldset:Class:VCSConnector:connector">
+              <rank>10</rank>
+              <items>
+                <item id="name">
+                  <rank>10</rank>
+                </item>
+                <item id="provider">
+                  <rank>20</rank>
+                </item>
+<!--                <item id="mode">-->
+<!--                  <rank>40</rank>-->
+<!--                </item>-->
+              </items>
+            </item>
+            <item id="fieldset:Class:VCSConnector:app_organization">
               <rank>20</rank>
+              <items>
+                <item id="app_organization_name">
+                  <rank>10</rank>
+                </item>
+              </items>
             </item>
-            <item id="status">
+            <item id="fieldset:Class:VCSConnector:application">
               <rank>30</rank>
+              <items>
+                <item id="app_id">
+                  <rank>10</rank>
+                </item>
+                <item id="app_private_key">
+                  <rank>20</rank>
+                </item>
+              </items>
             </item>
-            <item id="connector_id">
+            <item id="fieldset:Class:VCSConnector:detail">
               <rank>40</rank>
+              <items>
+                <item id="name">
+                  <rank>20</rank>
+                </item>
+                <item id="status">
+                  <rank>30</rank>
+                </item>
+                <item id="connector_id">
+                  <rank>40</rank>
+                </item>
+                <item id="connector_provider">
+                  <rank>50</rank>
+                </item>
+                <item id="url">
+                  <rank>60</rank>
+                </item>
+                <item id="secret">
+                  <rank>70</rank>
+                </item>
+                <item id="last_event_date">
+                  <rank>80</rank>
+                </item>
+                <item id="automations_list">
+                  <rank>90</rank>
+                </item>
+                <item id="contacts_list">
+                  <rank>100</rank>
+                </item>
+                <item id="documents_list">
+                  <rank>110</rank>
+                </item>
+              </items>
             </item>
-            <item id="connector_provider">
-              <rank>50</rank>
-            </item>
-            <item id="url">
-              <rank>60</rank>
-            </item>
-            <item id="secret">
-              <rank>70</rank>
-            </item>
-            <item id="last_event_date">
-              <rank>80</rank>
-            </item>
-            <item id="automations_list">
-              <rank>90</rank>
-            </item>
-            <item id="contacts_list">
-              <rank>100</rank>
-            </item>
-            <item id="documents_list">
-              <rank>110</rank>
             </item>
           </items>
         </details>
@@ -569,11 +383,8 @@ your private key goes here
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="type">
+            <item id="provider">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
             </item>
           </items>
         </default_search>
@@ -582,27 +393,18 @@ your private key goes here
             <item id="name">
               <rank>10</rank>
             </item>
-            <item id="type">
+            <item id="provider">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
             </item>
           </items>
         </search>
         <list>
           <items>
-            <item id="type">
+            <item id="name">
               <rank>10</rank>
             </item>
-            <item id="connector_id">
+            <item id="provider">
               <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="last_event_date">
-              <rank>40</rank>
             </item>
           </items>
         </list>
@@ -735,22 +537,22 @@ your private key goes here
       </presentation>
     </class>
     <!--
-    /* Link Contact To VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
+    /* Link Contact To VCS Application *///////////////////////////////////////////////////////////////////////////////////////////////
     -->
-    <class id="lnkContactToVCSWebhook" _delta="define">
+    <class id="lnkContactToVCSApplication" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>lnkcontacttovcswebhook</db_table>
+        <db_table>lnkcontacttovcsapplication</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
           <attributes>
             <attribute id="contact_name"/>
-            <attribute id="vcswebhook_name"/>
+            <attribute id="vcsapplication_name"/>
           </attributes>
         </naming>
         <style>
@@ -759,14 +561,14 @@ your private key goes here
         <reconciliation>
           <attributes>
             <attribute id="contact_id"/>
-            <attribute id="vcswebhook_name"/>
+            <attribute id="vcsapplication_name"/>
           </attributes>
         </reconciliation>
         <uniqueness_rules>
           <rule id="no_duplicate">
             <attributes>
               <attribute id="contact_id"/>
-              <attribute id="vcswebhook_id"/>
+              <attribute id="vcsapplication_id"/>
             </attributes>
             <filter><![CDATA[]]></filter>
             <disabled>false</disabled>
@@ -785,14 +587,14 @@ your private key goes here
           <extkey_attcode>contact_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-        <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
-          <sql>vcswebhook_id</sql>
-          <target_class>VCSWebhook</target_class>
+        <field id="vcsapplication_id" xsi:type="AttributeExternalKey">
+          <sql>vcsapplication_id</sql>
+          <target_class>VCSApplication</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="vcswebhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcswebhook_id</extkey_attcode>
+          <extkey_attcode>vcsapplication_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
       </fields>
@@ -803,7 +605,7 @@ your private key goes here
             <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
           </items>
@@ -813,7 +615,7 @@ your private key goes here
             <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
           </items>
@@ -823,7 +625,7 @@ your private key goes here
             <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
           </items>
@@ -831,22 +633,22 @@ your private key goes here
       </presentation>
     </class>
     <!--
-    /* Link Document To VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
+    /* Link Document To VCS Application *///////////////////////////////////////////////////////////////////////////////////////////////
     -->
-    <class id="lnkDocumentToVCSWebhook" _delta="define">
+    <class id="lnkDocumentToVCSApplication" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>lnkdocumenttovcswebhook</db_table>
+        <db_table>lnkdocumenttovcsapplication</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
           <attributes>
             <attribute id="document_name"/>
-            <attribute id="vcswebhook_name"/>
+            <attribute id="vcswapplication_name"/>
           </attributes>
         </naming>
         <style>
@@ -855,14 +657,14 @@ your private key goes here
         <reconciliation>
           <attributes>
             <attribute id="document_id"/>
-            <attribute id="vcswebhook_id"/>
+            <attribute id="vcsapplication_id"/>
           </attributes>
         </reconciliation>
         <uniqueness_rules>
           <rule id="no_duplicate">
             <attributes>
               <attribute id="document_id"/>
-              <attribute id="vcswebhook_id"/>
+              <attribute id="vcsapplication_id"/>
             </attributes>
             <filter><![CDATA[]]></filter>
             <disabled>false</disabled>
@@ -881,14 +683,14 @@ your private key goes here
           <extkey_attcode>document_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-        <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
-          <sql>vcswebhook_id</sql>
-          <target_class>VCSWebhook</target_class>
+        <field id="vcsapplication_id" xsi:type="AttributeExternalKey">
+          <sql>vcsapplication_id</sql>
+          <target_class>VCSApplication</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <field id="vcswebhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcswebhook_id</extkey_attcode>
+        <field id="vcsapplication_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>vcsapplication_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
       </fields>
@@ -899,7 +701,7 @@ your private key goes here
             <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
           </items>
@@ -909,7 +711,7 @@ your private key goes here
             <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
           </items>
@@ -919,7 +721,7 @@ your private key goes here
             <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
           </items>
@@ -927,23 +729,23 @@ your private key goes here
       </presentation>
     </class>
     <!--
-    /* Link VCS Webhook To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
+    /* Link VCS Application To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
     -->
-    <class id="lnkVCSAutomationToVCSWebhook" _delta="define">
+    <class id="lnkVCSApplicationToVCSWebhook" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>lnkvcsautomationtovcswebhook</db_table>
+        <db_table>lnkvcsautomationtovcsapplication</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <obsolescence>
         </obsolescence>
         <naming>
           <attributes>
-            <attribute id="vcswebhook_name"/>
+            <attribute id="vcsapplication_name"/>
             <attribute id="automation_name"/>
           </attributes>
         </naming>
@@ -953,14 +755,14 @@ your private key goes here
         </style>
         <reconciliation>
           <attributes>
-            <attribute id="vcswebhook_id"/>
+            <attribute id="vcsapplication_id"/>
             <attribute id="automation_id"/>
           </attributes>
         </reconciliation>
         <uniqueness_rules>
           <rule id="no_duplicate">
             <attributes>
-              <attribute id="vcswebhook_id"/>
+              <attribute id="vcsapplication_id"/>
               <attribute id="automation_id"/>
             </attributes>
             <filter><![CDATA[]]></filter>
@@ -970,15 +772,15 @@ your private key goes here
         </uniqueness_rules>
       </properties>
       <fields>
-        <!-- webhook -->
-        <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
-          <sql>vcswebhook_id</sql>
-          <target_class>VCSWebhook</target_class>
+        <!-- application -->
+        <field id="vcsapplication_id" xsi:type="AttributeExternalKey">
+          <sql>vcsapplication_id</sql>
+          <target_class>VCSApplication</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <field id="vcswebhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcswebhook_id</extkey_attcode>
+        <field id="vcsapplication_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>vcsapplication_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
         <!-- automation -->
@@ -1060,7 +862,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
             <item id="status">
@@ -1087,7 +889,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
             <item id="status">
@@ -1109,7 +911,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
             <item id="status">
@@ -1131,7 +933,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcswebhook_id">
+            <item id="vcsapplication_id">
               <rank>20</rank>
             </item>
           </items>
