@@ -61,34 +61,29 @@ class VCSWebhookSynchroProcess implements iBackgroundProcess
 	 */
 	public function Process($iUnixTimeLimit) : void
 	{
-		// search webhooks
-		$oDbObjectSearch = DBSearch::FromOQL('SELECT VCSWebhook');
+		// search applications
+		$oDbObjectSearch = DBSearch::FromOQL('SELECT VCSApplication');
 		$oDbObjectSearch->SetShowObsoleteData(false);
 		$oDbObjectSet = new DBObjectSet($oDbObjectSearch);
 
 		// iterate throw webhooks...
-		while ((time() < $iUnixTimeLimit) && ($oWebhook = $oDbObjectSet->Fetch())) {
+		while ((time() < $iUnixTimeLimit) && ($oApplication = $oDbObjectSet->Fetch())) {
 
 			try{
 
-				// ignore webhook without connector
-				if($oWebhook->Get('connector_id') === 0){
-					continue;
-				}
-
 				// check webhook status
-				$this->oGitHubManager->UpdateWebhookStatus($oWebhook);
-				$oWebhook->DBUpdate();
+				$this->oGitHubManager->UpdateWebhookStatus($oApplication);
+				$oApplication->DBUpdate();
 
 				// auto synchronize
-				$this->oGitHubManager->PerformWebhookAutoSynchronization($oWebhook);
+				$this->oGitHubManager->PerformWebhookAutoSynchronization($oApplication);
 			}
 			catch(Exception $e){
 
 				// trace
 				ExceptionLog::LogException($e, [
 					'happened on' => 'Process in VCSBackgroundProcess.php',
-					'VCSWebhook' => $oWebhook->GetKey(),
+					'VCSWebhook' => $oApplication->GetKey(),
 					'error message' => $e->getMessage(),
 				]);
 			}

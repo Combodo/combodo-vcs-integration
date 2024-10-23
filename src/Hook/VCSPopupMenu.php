@@ -33,7 +33,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 				// allowed profiles for github actions
 				$bAllowedProfile = UserRights::HasProfile('Administrator') || UserRights::HasProfile('VCS Manager');
 
-				if(get_class($param) ===  'VCSWebhook' && $bAllowedProfile)
+				if(get_class($param) ===  'VCSApplication' && $bAllowedProfile)
 				{
 					$sConnectorId = null;
 					try{
@@ -56,7 +56,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 						// synchronize webhook
 						$oItem = new JSPopupMenuItem('GitHubSynchronizeWebhook',
-							Dict::S('Class:VCSWebhook/UI:Button:synchronize_configuration'),
+							Dict::S('Class:VCSApplication/UI:Button:synchronize_configuration'),
 							'iTopGithubWorker.SynchronizeWebhook("'.$param->GetKey().'");',
 							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
@@ -64,7 +64,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 						// check webhook configuration
 						$oItem = new JSPopupMenuItem('GitHubCheckWebhookSynchro',
-							Dict::S('Class:VCSWebhook/UI:Button:check_configuration'),
+							Dict::S('Class:VCSApplication/UI:Button:check_configuration'),
 							'iTopGithubWorker.CheckWebhookConfigurationSynchro("'.$param->GetKey().'");',
 							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');
@@ -72,7 +72,7 @@ class VCSPopupMenu implements iPopupMenuExtension
 
 						// revoke token
 						$oItem = new JSPopupMenuItem('GitHubRevokeToken',
-							Dict::S('Class:VCSWebhook/UI:Button:revoke_token'),
+							Dict::S('Class:VCSApplication/UI:Button:revoke_token'),
 							'iTopGithubWorker.RegenerateAccessToken("'.$param->GetKey().'");',
 							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 						$oItem->SetIconClass('fab fa-github-alt');

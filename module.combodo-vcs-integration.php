@@ -30,7 +30,7 @@ SetupWebPage::AddModule(
 			'src/BackgroundProcess/VCSWebhookSynchroProcess.php',
             'src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
 			'src/EventListener/VCSAutomationEventListener.php',
-            'src/EventListener/VCSWebhookEventListener.php',
+            'src/EventListener/VCSApplicationEventListener.php',
 		),
 		'webservice' => array(
 			

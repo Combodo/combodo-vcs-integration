@@ -51,21 +51,21 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/fr/rest/repos/repos?apiVersion=2022-11-28#get-a-repository
 	 * GET /repos/{owner}/{repo}
 	 *
-	 * @param DBObject $oWebhook. The Webhook
+	 * @param DBObject $oApplication. The Webhook
 	 *
 	 * @return array The repository information, including the number of watchers, forks,
 	 *               open issues, and clone URL.
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryInfo(DBObject $oWebhook) : array
+	public function GetRepositoryInfo(DBObject $oApplication) : array
 	{
 		// retrieve useful settings
-		$sOwner = $oWebhook->Get('owner');
-		$sRepositoryName = $oWebhook->Get('name');
+		$sOwner = $oApplication->Get('owner');
+		$sRepositoryName = $oApplication->Get('name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$request = new Request('GET',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication));
 		$res = $client->sendAsync($request)->wait();
 		$object = json_decode($res->getBody(), true);
 
@@ -89,7 +89,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/fr/rest/repos/webhooks?apiVersion=2022-11-28#create-a-repository-webhook
 	 * POST /repos/{owner}/{repo}/hooks
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOwner The owner of the repository.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sSecret The shared secret for the webhook.
@@ -98,18 +98,18 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function CreateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sSecret, array $aListeningEvents) : array
+	public function CreateRepositoryWebhook(DBObject $oApplication, string $sOwner, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__, [
-			'VCSWebhook' => $oWebhook->GetKey(),
+			'VCSWebhook' => $oApplication->GetKey(),
 			'owner' => $sOwner,
 			'url' => $sUrl,
 			'events' => json_encode($aListeningEvents)
 		]);
 
 		// retrieve useful settings
-        $sRepositoryName = $oWebhook->Get('name');
+        $sRepositoryName = $oApplication->Get('name');
 
 		// request body
 		$aBody = [
@@ -126,7 +126,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 
 		// API call
 		$client = new Client();
-		$request = new Request('POST',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook), json_encode($aBody,JSON_UNESCAPED_SLASHES));
+		$request = new Request('POST',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication), json_encode($aBody,JSON_UNESCAPED_SLASHES));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -138,7 +138,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/fr/rest/orgs/webhooks?apiVersion=2022-11-28#create-an-organization-webhook
 	 * POST /orgs/{org}/hooks
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOrganization Organization name.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sSecret The shared secret for the webhook.
@@ -147,11 +147,11 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function CreateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sSecret, array $aListeningEvents) : array
+	public function CreateOrganizationWebhook(DBObject $oApplication, string $sOrganization, string $sUrl, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__, [
-			'VCSWebhook' => $oWebhook->GetKey(),
+			'VCSWebhook' => $oApplication->GetKey(),
 			'organization' => $sOrganization,
 			'url' => $sUrl,
 			'events' => json_encode($aListeningEvents)
@@ -172,7 +172,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 
 		// API call
 		$client = new Client();
-		$request = new Request('POST',  $this->GetAPIUri("/orgs/$sOrganization/hooks"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook), json_encode($aBody,JSON_UNESCAPED_SLASHES));
+		$request = new Request('POST',  $this->GetAPIUri("/orgs/$sOrganization/hooks"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication), json_encode($aBody,JSON_UNESCAPED_SLASHES));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -184,7 +184,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#update-a-repository-webhook
 	 * PATCH /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOwner The owner of the repository.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sHookId The webhook configuration id.
@@ -194,18 +194,18 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function UpdateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
+	public function UpdateRepositoryWebhook(DBObject $oApplication, string $sOwner, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__, [
-			'VCSWebhook' => $oWebhook->GetKey(),
+			'VCSWebhook' => $oApplication->GetKey(),
 			'owner' => $sOwner,
 			'url' => $sUrl,
 			'events' => json_encode($aListeningEvents)
 		]);
 
 		// retrieve useful settings
-        $sRepositoryName = $oWebhook->Get('name');
+        $sRepositoryName = $oApplication->Get('name');
 
 		// request body
 		$aBody = [
@@ -218,7 +218,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 
 		// API call
 		$client = new Client();
-		$request = new Request('PATCH',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook), json_encode($aBody,JSON_UNESCAPED_SLASHES));
+		$request = new Request('PATCH',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication), json_encode($aBody,JSON_UNESCAPED_SLASHES));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -230,7 +230,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/fr/rest/orgs/webhooks?apiVersion=2022-11-28#update-an-organization-webhook
 	 * PATCH /orgs/{org}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOrganization Organization name.
 	 * @param string $sUrl The webhook url.
 	 * @param string $sHookId The webhook configuration id.
@@ -240,11 +240,11 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @return array The created webhook object.
 	 * @throws \CoreException
 	 */
-	public function UpdateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
+	public function UpdateOrganizationWebhook(DBObject $oApplication, string $sOrganization, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents) : array
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__, [
-			'VCSWebhook' => $oWebhook->GetKey(),
+			'VCSWebhook' => $oApplication->GetKey(),
 			'organization' => $sOrganization,
 			'url' => $sUrl,
 			'events' => json_encode($aListeningEvents)
@@ -261,7 +261,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 
 		// API call
 		$client = new Client();
-		$request = new Request('PATCH',  $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook), json_encode($aBody,JSON_UNESCAPED_SLASHES));
+		$request = new Request('PATCH',  $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication), json_encode($aBody,JSON_UNESCAPED_SLASHES));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -273,28 +273,28 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#delete-a-repository-webhook
 	 * DELETE /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOwner The owner of the repository.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
 	 * @throws \CoreException
 	 */
-	public function DeleteRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sHookId) : bool
+	public function DeleteRepositoryWebhook(DBObject $oApplication, string $sOwner, string $sHookId) : bool
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__, [
-			'VCSWebhook' => $oWebhook->GetKey(),
+			'VCSWebhook' => $oApplication->GetKey(),
 			'owner' => $sOwner,
 			'hook id' => $sHookId
 		]);
 
 		// retrieve useful settings
-        $sRepositoryName = $oWebhook->Get('name');
+        $sRepositoryName = $oApplication->Get('name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('DELETE',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$request = new Request('DELETE',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication));
 		$res = $client->sendAsync($request)->wait();
 
 		return $res->getStatusCode() === 204;
@@ -306,25 +306,25 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/fr/rest/orgs/webhooks?apiVersion=2022-11-28#delete-an-organization-webhook
 	 * DELETE /orgs/{org}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOrganization Organization name.
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
 	 * @throws \CoreException
 	 */
-	public function DeleteOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sHookId) : bool
+	public function DeleteOrganizationWebhook(DBObject $oApplication, string $sOrganization, string $sHookId) : bool
 	{
 		// log
 		ModuleHelper::LogDebug(__FUNCTION__, [
-			'VCSWebhook' => $oWebhook->GetKey(),
+			'VCSWebhook' => $oApplication->GetKey(),
 			'organization' => $sOrganization,
 			'hook id' => $sHookId
 		]);
 
 		// API call
 		$client = new Client();
-		$request = new Request('DELETE',  $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$request = new Request('DELETE',  $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication));
 		$res = $client->sendAsync($request)->wait();
 
 		return $res->getStatusCode() === 204;
@@ -336,21 +336,21 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/en/rest/repos/webhooks?apiVersion=2022-11-28#get-a-repository-webhook
 	 * GET /repos/{owner}/{repo}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOwner The owner of the repository.
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
 	 * @throws \CoreException
 	 */
-	public function GetRepositoryWebhookConfiguration(DBObject $oWebhook, string $sOwner, string $sHookId) : array
+	public function GetRepositoryWebhookConfiguration(DBObject $oApplication, string $sOwner, string $sHookId) : array
 	{
 		// retrieve useful settings
-        $sRepositoryName = $oWebhook->Get('name');
+        $sRepositoryName = $oApplication->Get('name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET', $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$request = new Request('GET', $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication));
 		$res = $client->sendAsync($request)->wait();
 		return json_decode($res->getBody(), true);
 	}
@@ -361,18 +361,18 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * https://docs.github.com/fr/rest/orgs/webhooks?apiVersion=2022-11-28#get-an-organization-webhook
 	 * GET /orgs/{org}/hooks/{hook_id}
 	 *
-	 * @param DBObject $oWebhook The webhook.
+	 * @param DBObject $oApplication The webhook.
 	 * @param string $sOrganization Organization name.
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
 	 * @throws \CoreException
 	 */
-	public function GetOrganizationWebhookConfiguration(DBObject $oWebhook, string $sOrganization, string $sHookId) : array
+	public function GetOrganizationWebhookConfiguration(DBObject $oApplication, string $sOrganization, string $sHookId) : array
 	{
 		// API call
 		$client = new Client();
-		$request = new Request('GET', $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$request = new Request('GET', $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oApplication));
 		$res = $client->sendAsync($request)->wait();
 		return json_decode($res->getBody(), true);
 	}

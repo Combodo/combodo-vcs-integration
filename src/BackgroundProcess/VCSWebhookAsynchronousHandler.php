@@ -15,7 +15,7 @@ use Exception;
 use ExceptionLog;
 use iBackgroundProcess;
 use MetaModel;
-use VCSWebhook;
+use VCSApplication;
 
 /**
  * Asynchronous handing of webhook payloads
@@ -64,20 +64,20 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 
 			try {
                 if ($oWebhookPayload->Get('provider') == 'github') {
-                    /** @var VCSWebhook $oWebhook */
-                    $oWebhook = MetaModel::GetObject('VCSWebhook', $oWebhookPayload->Get('webhook_id'));
-	                $iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
+                    /** @var VCSApplication $oApplication */
+                    $oApplication = MetaModel::GetObject('VCSApplication', $oWebhookPayload->Get('webhook_id'));
+	                $iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oApplication, json_decode($oWebhookPayload->Get('payload'), true));
                     $oWebhookPayload->DBDelete();
 
 	                // increment events count and last date
-	                $oWebhook->DBIncrement('event_count');
-	                $oWebhook->Set('last_event_date', time());
-	                $oWebhook->DBUpdate();
+	                $oApplication->DBIncrement('event_count');
+	                $oApplication->Set('last_event_date', time());
+	                $oApplication->DBUpdate();
 
 	                // log
 	                ModuleHelper::LogDebug('Processing payload Ref:' . $iKey, [
 						'VCSWebhookPayload' => $iKey,
-		                'VCSWebhook' => $oWebhookPayload->Get('webhook_id'),
+		                'VCSApplication' => $oWebhookPayload->Get('application_id'),
 		                'provider' => $oWebhookPayload->Get('provider'),
 		                'event type' => $oWebhookPayload->Get('type'),
 		                'automations triggered count' => $iAutomationsTriggeredCount,

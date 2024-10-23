@@ -28,24 +28,24 @@ set_exception_handler(function($e) {
 	die();
 });
 
-// retrieve VCS webhook
+// retrieve VCS application
 try
 {
-	/** @var VCSWebhook $oWebhook */
-	$oWebhook = MetaModel::GetObject('VCSWebhook', $_GET['webhook']);
+	/** @var VCSApplication $oApplication */
+	$oApplication = MetaModel::GetObject('VCSApplication', $_GET['application']);
 }
 catch (Exception $e)
 {
 	ExceptionLog::LogException($e, [
 		'happened when' => 'Receiving github webhook in GitHub.php',
-		'error message' => 'Webhook not found',
-		'webhook id' => $_GET['webhook'],
+		'error message' => 'application not found',
+		'application id' => $_GET['application'],
 	]);
 	throw $e;
 }
 
 // get webhook secret
-$sHookSecret = $oWebhook->Get('secret');
+$sHookSecret = $oApplication->Get('secret');
 
 $sRawPost = NULL;
 
@@ -113,6 +113,6 @@ ModuleHelper::LogInfo("Receiving GitHub Event #" . $sDeliveryId, [
 $oWebhookPayload = MetaModel::NewObject('VCSWebhookPayload');
 $oWebhookPayload->Set('provider', 'github');
 $oWebhookPayload->Set('type', $sType);
-$oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
+$oWebhookPayload->Set('application_id', $oApplication->GetKey());
 $oWebhookPayload->Set('payload', $json);
 $oWebhookPayload->DBInsert();

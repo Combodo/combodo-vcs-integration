@@ -42,20 +42,20 @@ class AutomationManager
 	 * Handle received webhook.
 	 *
 	 * @param string $sType
-	 * @param \VCSWebhook $oWebhook
+	 * @param \VCSApplication $oApplication
 	 * @param array $aPayload
 	 *
 	 * @throws \Exception
 	 *
 	 * @return int
 	 */
-	public function HandleWebhook(string $sType, VCSWebhook $oWebhook, array $aPayload) : int
+	public function HandleWebhook(string $sType, VCSApplication $oApplication, array $aPayload) : int
 	{
 		// variables
 		$iAutomationTriggeredCount = 0;
 
 		// iterate through automations...
-		foreach($oWebhook->Get('automations_list') as $oLnk){
+		foreach($oApplication->Get('automations_list') as $oLnk){
 
 			// retrieve automation
 			$oAutomation = MetaModel::GetObject('VCSAutomation', $oLnk->Get('automation_id'));
@@ -153,14 +153,14 @@ class AutomationManager
 	}
 
 	/**
-	 * @param \DBObject $oLnkAutomationToRepository
+	 * @param \DBObject $oLnkAutomationToApplication
 	 * @param int $iConditionNumber
 	 * @param array $aPayload
 	 *
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, int $iConditionNumber, array $aPayload) : bool
+	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToApplication, int $iConditionNumber, array $aPayload) : bool
 	{
 		// check condition number
 		if($iConditionNumber <= 0 || $iConditionNumber > 3){
@@ -168,7 +168,7 @@ class AutomationManager
 		}
 
 		// check condition
-		$sCondition = $oLnkAutomationToRepository->Get('condition_' . $iConditionNumber);
+		$sCondition = $oLnkAutomationToApplication->Get('condition_' . $iConditionNumber);
 		if(!utils::IsNullOrEmptyString($sCondition)){
 			$aMatch = [];
 			$res = preg_match('/([>\w-]+)=(.*)/', $sCondition, $aMatch);
@@ -176,12 +176,12 @@ class AutomationManager
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
 				if(!preg_match("#$aMatch[2]#", $val)){
 
-					$sAutomationRef = $oLnkAutomationToRepository->Get('automation_id');
+					$sAutomationRef = $oLnkAutomationToApplication->Get('automation_id');
 					$oAutomation = MetaModel::GetObject(VCSAutomation::class, $sAutomationRef);
 
 					ModuleHelper::LogDebug("Unmet condition for automation", [
 						'VCSAutomation' => $oAutomation->GetKey(),
-						'VCSLnkAutomationToRepository' => $oLnkAutomationToRepository->GetKey(),
+						'VCSLnkAutomationToApplication' => $oLnkAutomationToApplication->GetKey(),
 						'automation name' => $oAutomation->Get('name'),
 						'condition number' => $iConditionNumber,
 						'condition' => $sCondition,

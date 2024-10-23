@@ -186,7 +186,7 @@ your private key goes here
         <!-- contacts_list -->
         <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContactToVCSWebhook</linked_class>
-          <ext_key_to_me>vcswebhook_id</ext_key_to_me>
+          <ext_key_to_me>vcsapplication_id</ext_key_to_me>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -196,7 +196,7 @@ your private key goes here
         <!-- documents_list -->
         <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToVCSWebhook</linked_class>
-          <ext_key_to_me>vcswebhook_id</ext_key_to_me>
+          <ext_key_to_me>vcsapplication_id</ext_key_to_me>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -206,7 +206,7 @@ your private key goes here
         <!-- automations_list -->
         <field id="automations_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
-          <ext_key_to_me>vcswebhook_id</ext_key_to_me>
+          <ext_key_to_me>vcsapplication_id</ext_key_to_me>
           <ext_key_to_remote>automation_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -219,7 +219,7 @@ your private key goes here
           <is_null_allowed>true</is_null_allowed>
           <tracking_level>none</tracking_level>
         </field>
-        </fields>
+      </fields>
       <methods>
         <!-- GetInitialStateAttributeFlags -->
         <method id="GetInitialStateAttributeFlags">
@@ -238,14 +238,15 @@ your private key goes here
                       case 'app_private_key':
                           $iFlag = OPT_ATT_MANDATORY;
                           break;
+                      case 'url':
+                      case 'status':
+                      case 'event_count':
+                      case 'last_event_date':
+                      case 'configuration':
                       default:
-                          $iFlag = 0;
+                          $iFlag = OPT_ATT_HIDDEN;
                           break;
                    }
-
-                  if (in_array($sAttCode, ['url', 'status', 'event_count', 'last_event_date', 'configuration'])) {
-                      $iFlag = OPT_ATT_HIDDEN;
-                  }
 
                   return $iFlag | parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
               }
@@ -278,7 +279,7 @@ your private key goes here
                         }
                         break;
                       case 'status':
-                      $iFlag = OPT_ATT_READONLY;
+                        $iFlag = OPT_ATT_READONLY;
                         break;
                       default:
                           $iFlag = 0;
@@ -375,7 +376,6 @@ your private key goes here
                 </item>
               </items>
             </item>
-            </item>
           </items>
         </details>
         <default_search>
@@ -460,15 +460,15 @@ your private key goes here
           <sql>type</sql>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <!-- webhook -->
-        <field id="webhook_id" xsi:type="AttributeExternalKey">
-          <sql>webhook_id</sql>
-          <target_class>VCSWebhook</target_class>
+        <!-- application -->
+        <field id="application_id" xsi:type="AttributeExternalKey">
+          <sql>application_id</sql>
+          <target_class>VCSApplication</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="webhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>webhook_id</extkey_attcode>
+          <extkey_attcode>vcsapplication_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
         <!-- configuration -->
@@ -487,7 +487,7 @@ your private key goes here
             <item id="type">
               <rank>20</rank>
             </item>
-            <item id="webhook_id">
+            <item id="application_id">
               <rank>30</rank>
             </item>
             <item id="payload">
@@ -503,7 +503,7 @@ your private key goes here
             <item id="type">
               <rank>20</rank>
             </item>
-            <item id="webhook_id">
+            <item id="application_id">
               <rank>30</rank>
             </item>
           </items>
@@ -516,7 +516,7 @@ your private key goes here
             <item id="type">
               <rank>20</rank>
             </item>
-            <item id="webhook_id">
+            <item id="application_id">
               <rank>30</rank>
             </item>
           </items>
@@ -529,7 +529,7 @@ your private key goes here
             <item id="type">
               <rank>20</rank>
             </item>
-            <item id="webhook_id">
+            <item id="application_id">
               <rank>30</rank>
             </item>
           </items>
@@ -1220,7 +1220,7 @@ your private key goes here
         <field id="webhooks_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
           <ext_key_to_me>automation_id</ext_key_to_me>
-          <ext_key_to_remote>vcswebhook_id</ext_key_to_remote>
+          <ext_key_to_remote>vcsapplication_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <with_php_computation>true</with_php_computation>

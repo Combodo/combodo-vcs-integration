@@ -20,7 +20,7 @@ use ExceptionLog;
  * - update synchronization status
  * - synchronize webhook
  */
-class VCSWebhookEventListener implements iEventServiceSetup
+class VCSApplicationEventListener implements iEventServiceSetup
 {
 	/** @var \Combodo\iTop\VCSManagement\Service\GitHubManager $oGitHubManager */
 	private GitHubManager $oGitHubManager;
@@ -43,21 +43,21 @@ class VCSWebhookEventListener implements iEventServiceSetup
 		EventService::RegisterListener(
 			EVENT_DB_AFTER_WRITE,
 			[$this, 'OnDBAfterWrite'],
-			'VCSWebhook'
+			'VCSApplication'
 		);
 
 		// EVENT_DB_LINKS_CHANGED
 		EventService::RegisterListener(
 			EVENT_DB_LINKS_CHANGED,
 			[$this, 'OnDBLinksChanged'],
-			'VCSWebhook'
+			'VCSApplication'
 		);
 
 		// EVENT_DB_AFTER_DELETE
 		EventService::RegisterListener(
 			EVENT_DB_AFTER_DELETE,
 			[$this, 'OnDBAfterDelete'],
-			'VCSWebhook'
+			'VCSApplication'
 		);
     }
 
@@ -72,14 +72,14 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	{
 		try{
 
-			// retrieve webhook
-			$oWebhook = $oEventData->GetEventData()['object'];
+			// retrieve application
+			$oApplication = $oEventData->GetEventData()['object'];
 
 			// changes
 			$aChanges = $oEventData->GetEventData()['changes'];
 
 			// update web hook url (may have changed with module configuration)
-			$this->oGitHubManager->UpdateVCSWebhook($oWebhook, array_key_exists('secret', $aChanges));
+			$this->oGitHubManager->UpdateVCSWebhook($oApplication, array_key_exists('secret', $aChanges));
 		}
 		catch(Exception $e){
 
@@ -102,14 +102,14 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	{
 		try{
 
-			// retrieve webhook
-			$oWebhook = $oEventData->GetEventData()['object'];
+			// retrieve application
+			$oApplication = $oEventData->GetEventData()['object'];
 
 			// update synchro state
-			$this->oGitHubManager->UpdateWebhookStatus($oWebhook);
+			$this->oGitHubManager->UpdateWebhookStatus($oApplication);
 
 			// auto synchronize
-			$this->oGitHubManager->PerformWebhookAutoSynchronization($oWebhook);
+			$this->oGitHubManager->PerformWebhookAutoSynchronization($oApplication);
 		}
 		catch(Exception $e){
 
@@ -132,11 +132,11 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	{
 		try{
 
-			// retrieve webhook
-			$oWebhook = $oEventData->GetEventData()['object'];
+			// retrieve application
+			$oApplication = $oEventData->GetEventData()['object'];
 
 			// delete synchronization
-			$this->oGitHubManager->DeleteWebhookSynchronization($oWebhook);
+			$this->oGitHubManager->DeleteWebhookSynchronization($oApplication);
 		}
 		catch(Exception $e){
 
