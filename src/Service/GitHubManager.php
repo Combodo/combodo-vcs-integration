@@ -16,7 +16,7 @@ use ExceptionLog;
 use GuzzleHttp\Exception\ClientException;
 use MetaModel;
 use utils;
-use VCSWebhook;
+use VCSApplication;
 
 /**
  * GitHub manager service.
@@ -386,24 +386,24 @@ class GitHubManager
 			throw new Exception('Missing `application_id` query parameter');
 		}
 
-		return MetaModel::GetObject(VCSWebhook::class, $sApplicationRef);
+		return MetaModel::GetObject(VCSApplication::class, $sApplicationRef);
 	}
 
 	/**
 	 * Append webhook status field html to data.
 	 *
-	 * @param DBObject $oWebhook
+	 * @param DBObject $oApplication
 	 * @param array $aData
 	 *
 	 * @return void
 	 * @throws \Exception
 	 */
-	public function AppendWebhookStatusFieldHtml(DBObject $oWebhook, array &$aData) : void
+	public function AppendWebhookStatusFieldHtml(DBObject $oApplication, array &$aData) : void
 	{
 		/** @var \AttributeEnumSet $oAttributeSet */
-		$oAttributeEnumSet = MetaModel::GetAttributeDef(VCSWebhook::class, 'status');
-		$aData['status_field_html'] = $oAttributeEnumSet->GetAsHTML($oWebhook->Get('status'));
-		$aData['status'] = $oWebhook->Get('status');
+		$oAttributeEnumSet = MetaModel::GetAttributeDef(VCSApplication::class, 'status');
+		$aData['status_field_html'] = $oAttributeEnumSet->GetAsHTML($oApplication->Get('status'));
+		$aData['status'] = $oApplication->Get('status');
 	}
 
 	/**
@@ -535,7 +535,7 @@ class GitHubManager
 	}
 
 	/**
-	 * @param VCSWebhook $oApplication
+	 * @param DBObject $oApplication
 	 * @param string $sHookId
 	 * @param string $sUrl
 	 * @param string $sSecret

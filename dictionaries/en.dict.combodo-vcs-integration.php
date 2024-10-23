@@ -66,6 +66,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSApplication/UI:Button:check_configuration' => 'Check synchronization',
 	'Class:VCSApplication/UI:Button:open' => 'Open on GitHub',
 	'Class:VCSApplication/UI:Button:revoke_token' => 'Regenerate access token',
+	'Class:VCSApplication/UI:Button:get_app' => 'Get application information',
 
 	// CLASS lnkContactToVCSApplication
 	'Class:lnkContactToVCSApplication' => 'Link Contact To VCS Application',

@@ -86,7 +86,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array header elements array
 	 * @throws \CoreException
 	 */
-	private function CreateAppAuthorizationHeader(DBObject $oApplication) : array
+	public function CreateAppAuthorizationHeader(DBObject $oApplication) : array
 	{
 		return [
 			'Accept' => 'application/vnd.github+json',

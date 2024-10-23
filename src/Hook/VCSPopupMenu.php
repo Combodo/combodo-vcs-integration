@@ -62,6 +62,14 @@ class VCSPopupMenu implements iPopupMenuExtension
 						['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
 					$oItem->SetIconClass('fab fa-github-alt');
 					$aResult[] = $oItem;
+
+					// get app
+					$oItem = new JSPopupMenuItem('GitHubGetApp',
+						Dict::S('Class:VCSApplication/UI:Button:get_app'),
+						'iTopGithubWorker.GetApp("'.$param->GetKey().'");',
+						['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
+					$oItem->SetIconClass('fab fa-github-alt');
+					$aResult[] = $oItem;
 				}
 				break;
 

@@ -17,6 +17,7 @@ const iTopGithubWorker = new function(){
     const ROUTE_SYNCHRONIZE_WEBHOOK_CONFIGURATION = 'github.synchronize_webhook_configuration';
     const ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO = 'github.check_webhook_configuration_synchro';
     const ROUTE_REGENERATE_ACCESS_TOKEN = 'github.regenerate_access_token';
+    const ROUTE_GET_APP = 'github.get_app';
 
     /**
      * Synchronize webhook
@@ -30,9 +31,9 @@ const iTopGithubWorker = new function(){
     /**
      * Get repository information.
      *
-     * @param repository_reference
+     * @param application_reference
      */
-    async function GetRepositoryInfo(repository_reference)
+    async function GetRepositoryInfo(application_reference)
     {
         try{
 
@@ -42,7 +43,7 @@ const iTopGithubWorker = new function(){
             });
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&webhook_id=` + repository_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_REPOSITORY_INFO}&application_id=` + application_reference);
             const data = await response.json();
 
             // check errors
@@ -65,14 +66,14 @@ const iTopGithubWorker = new function(){
     /**
      * Synchronize a webhook configuration.
      *
-     * @param webhook_reference
+     * @param application_reference
      */
-    async function SynchronizeWebhookConfiguration(webhook_reference){
+    async function SynchronizeWebhookConfiguration(application_reference){
 
         try{
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_WEBHOOK_CONFIGURATION}&webhook_id=` + webhook_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_WEBHOOK_CONFIGURATION}&application_id=` + application_reference);
             const data = await response.json();
 
             // check errors
@@ -100,14 +101,14 @@ const iTopGithubWorker = new function(){
     /**
      * Check a webhook configuration synchronization.
      *
-     * @param webhook_reference
+     * @param application_reference
      */
-    async function CheckWebhookConfigurationSynchro(webhook_reference){
+    async function CheckWebhookConfigurationSynchro(application_reference){
 
         try{
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO}&webhook_id=` + webhook_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO}&application_id=` + application_reference);
             const data = await response.json();
 
             // check errors
@@ -136,14 +137,14 @@ const iTopGithubWorker = new function(){
     /**
      * Regenerate an access token
      *
-     * @param webhook_reference
+     * @param application_reference
      */
-    async function RegenerateAccessToken(webhook_reference){
+    async function RegenerateAccessToken(application_reference){
 
         try{
 
             // endpoint call
-            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_REGENERATE_ACCESS_TOKEN}&webhook_id=` + webhook_reference);
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_REGENERATE_ACCESS_TOKEN}&application_id=` + application_reference);
             const data = await response.json();
 
             // check errors
@@ -164,6 +165,38 @@ const iTopGithubWorker = new function(){
 
     }
 
+    /**
+     * Get application
+     *
+     * @param application_reference
+     */
+    async function GetApp(application_reference){
+
+        try{
+
+            // endpoint call
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_APP}&application_id=` + application_reference);
+            const data = await response.json();
+
+            // check errors
+            if(CheckErrors('Unable to get application', data)) {
+
+                CombodoToast.OpenSuccessToast('Token successfully revoked');
+            }
+
+            console.log(data);
+
+            return data.data.errors === undefined;
+        }
+        catch(error){
+
+            // log
+            console.error(error);
+
+            return false;
+        }
+
+    }
 
     /**
      * Check errors.
@@ -230,5 +263,6 @@ const iTopGithubWorker = new function(){
         OpenUrl,
         SynchronizeWebhook,
         RegenerateAccessToken,
+        GetApp
     }
 };

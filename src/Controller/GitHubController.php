@@ -8,6 +8,7 @@ namespace Combodo\iTop\VCSManagement\Controller;
 
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\VCSManagement\Service\GitHubAPIAuthenticationService;
+use Combodo\iTop\VCSManagement\Service\GitHubAPIService;
 use Combodo\iTop\VCSManagement\Service\GitHubManager;
 use Combodo\iTop\VCSManagement\Service\TemplatingService;
 use Exception;
@@ -82,7 +83,7 @@ class GitHubController extends AbstractController
 			// services injection
 			$oGitHubManager  = GitHubManager::GetInstance();
 
-			// retrieve webhook
+			// retrieve application
 			$oApplication = $oGitHubManager->ExtractApplicationFromRequestParam();
 
 			// test GitHub webhook existence
@@ -125,7 +126,7 @@ class GitHubController extends AbstractController
 			$oGitHubManager  = GitHubManager::GetInstance();
 			$oGitHubApiAuthenticationService = GitHubAPIAuthenticationService::GetInstance();
 
-			// retrieve webhook
+			// retrieve application
 			$oApplication = $oGitHubManager->ExtractApplicationFromRequestParam();
 
 			// revoke token
@@ -140,4 +141,36 @@ class GitHubController extends AbstractController
 		return $oPage->SetData($aData);
 	}
 
+	/**
+	 * Get application.
+	 *
+	 * @return JsonPage|null
+	 * @noinspection PhpUnused
+	 */
+	public function OperationGetApp(): ?JsonPage
+	{
+		// variables
+		$oPage = new JsonPage();
+		$aData = [];
+
+		try{
+
+			// services injection
+			$oGitHubManager  = GitHubManager::GetInstance();
+			$oGitHubApiService = GitHubAPIService::GetInstance();
+
+			// retrieve application
+			$oApplication = $oGitHubManager->ExtractApplicationFromRequestParam();
+
+			// get app
+			$aData['app'] = $oGitHubApiService->GetApp($oApplication);
+		}
+		catch(Exception $e){
+
+			$aData['errors'][] = $e->getMessage();
+		}
+
+
+		return $oPage->SetData($aData);
+	}
 }
