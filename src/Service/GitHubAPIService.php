@@ -396,4 +396,24 @@ class GitHubAPIService extends AbstractGitHubAPI
 		$res = $client->sendAsync($request)->wait();
 		return json_decode($res->getBody(), true);
 	}
+
+	/**
+	 * Get app installations.
+	 *
+	 * https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#list-installations-for-the-authenticated-app
+	 * GET /app/installations
+	 *
+	 * @param DBObject $oApplication The webhook.
+	 *
+	 * @return array application information
+	 * @throws \CoreException
+	 */
+	public function GetAppInstallations(DBObject $oApplication) : array
+	{
+		// API call
+		$client = new Client();
+		$request = new Request('GET', $this->GetAPIUri("/app/installations"), $this->oAPIAuthenticationService->CreateAppAuthorizationHeader($oApplication));
+		$res = $client->sendAsync($request)->wait();
+		return json_decode($res->getBody(), true);
+	}
 }

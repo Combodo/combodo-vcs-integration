@@ -173,4 +173,37 @@ class GitHubController extends AbstractController
 
 		return $oPage->SetData($aData);
 	}
+
+	/**
+	 * Get application installations.
+	 *
+	 * @return JsonPage|null
+	 * @noinspection PhpUnused
+	 */
+	public function OperationGetAppInstallations(): ?JsonPage
+	{
+		// variables
+		$oPage = new JsonPage();
+		$aData = [];
+
+		try{
+
+			// services injection
+			$oGitHubManager  = GitHubManager::GetInstance();
+			$oGitHubApiService = GitHubAPIService::GetInstance();
+
+			// retrieve application
+			$oApplication = $oGitHubManager->ExtractApplicationFromRequestParam();
+
+			// get app
+			$aData['installations'] = $oGitHubApiService->GetAppInstallations($oApplication);
+		}
+		catch(Exception $e){
+
+			$aData['errors'][] = $e->getMessage();
+		}
+
+
+		return $oPage->SetData($aData);
+	}
 }

@@ -18,6 +18,7 @@ const iTopGithubWorker = new function(){
     const ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO = 'github.check_webhook_configuration_synchro';
     const ROUTE_REGENERATE_ACCESS_TOKEN = 'github.regenerate_access_token';
     const ROUTE_GET_APP = 'github.get_app';
+    const ROUTE_GET_APP_INSTALLATIONS = 'github.get_app_installations';
 
     /**
      * Synchronize webhook
@@ -181,7 +182,40 @@ const iTopGithubWorker = new function(){
             // check errors
             if(CheckErrors('Unable to get application', data)) {
 
-                CombodoToast.OpenSuccessToast('Token successfully revoked');
+                CombodoToast.OpenSuccessToast(JSON.stringify(data.data['app'], null, '      '));
+            }
+
+            console.log(data);
+
+            return data.data.errors === undefined;
+        }
+        catch(error){
+
+            // log
+            console.error(error);
+
+            return false;
+        }
+
+    }
+
+    /**
+     * Get application installations
+     *
+     * @param application_reference
+     */
+    async function GetAppInstallations(application_reference){
+
+        try{
+
+            // endpoint call
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_GET_APP_INSTALLATIONS}&application_id=` + application_reference);
+            const data = await response.json();
+
+            // check errors
+            if(CheckErrors('Unable to get application installations', data)) {
+
+                CombodoToast.OpenSuccessToast(JSON.stringify(data.data['installations'], null, '      '));
             }
 
             console.log(data);
@@ -263,6 +297,7 @@ const iTopGithubWorker = new function(){
         OpenUrl,
         SynchronizeWebhook,
         RegenerateAccessToken,
-        GetApp
+        GetApp,
+        GetAppInstallations
     }
 };
