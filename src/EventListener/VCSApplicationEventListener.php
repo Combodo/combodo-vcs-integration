@@ -79,7 +79,7 @@ class VCSApplicationEventListener implements iEventServiceSetup
 			$aChanges = $oEventData->GetEventData()['changes'];
 
 			// update web hook url (may have changed with module configuration)
-			$this->oGitHubManager->UpdateVCSWebhook($oApplication, array_key_exists('secret', $aChanges));
+			$this->oGitHubManager->UpdateVCSApplication($oApplication, array_key_exists('secret', $aChanges));
 		}
 		catch(Exception $e){
 

@@ -40,8 +40,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSApplication/Attribute:app_id+' => 'Identificateur de l\'application - Pertinent uniquement si le mode correspondant est sélectionné ci-dessus',
 	'Class:VCSApplication/Attribute:app_private_key' => 'Clé privée',
 	'Class:VCSApplication/Attribute:app_private_key+' => 'Clé privée liée à l\'application - Pertinent uniquement si le mode "Jeton d\'accès à l\'installation de l\'application" est sélectionné ci-dessus',
-	'Class:VCSWebhook/Attribute:connector_id' => 'Connecteur API',
-	'Class:VCSWebhook/Attribute:connector_id+' => 'Connecteur utilisé pour les appels API',
 	'Class:VCSWebhook/Attribute:url' => 'URL',
 	'Class:VCSWebhook/Attribute:url+' => 'Point d\'accès du webhook',
 	'Class:VCSWebhook/Attribute:status' => 'Statut de la synchro',
@@ -75,16 +73,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkContactToVCSApplication+' => '',
 	'Class:lnkContactToVCSApplication/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToVCSApplication/Attribute:contact_id+' => '',
-	'Class:lnkContactToVCSApplication/Attribute:vcsapplication_id' => 'Application',
-	'Class:lnkContactToVCSApplication/Attribute:vcsapplication_id+' => '',
+	'Class:lnkContactToVCSApplication/Attribute:application_id' => 'Application',
+	'Class:lnkContactToVCSApplication/Attribute:application_id+' => 'VCS Application',
 
 	// CLASS lnkDocumentToVCSWebhook
 	'Class:lnkDocumentToVCSApplication' => 'Lien Document / Application',
 	'Class:lnkDocumentToVCSApplication+' => '',
 	'Class:lnkDocumentToVCSApplication/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToVCSApplication/Attribute:document_id+' => '',
-	'Class:lnkDocumentToVCSApplication/Attribute:vcsapplication_id' => 'Application',
-	'Class:lnkDocumentToVCSApplication/Attribute:vcsapplication_id+' => '',
+	'Class:lnkDocumentToVCSApplication/Attribute:application_id' => 'Application',
+	'Class:lnkDocumentToVCSApplication/Attribute:application_id+' => 'VCS Application',
 
 	// CLASS lnkVCSAutomationToVCSWebhook
 	'Class:lnkVCSAutomationToVCSApplication' => 'Lien Automatisme / Application',
@@ -102,8 +100,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVCSAutomationToVCSApplication/Attribute:condition_3+' => 'Exemple: sender->username=me',
 	'Class:lnkVCSAutomationToVCSApplication/Attribute:automation_id' => 'Automatisme',
 	'Class:lnkVCSAutomationToVCSApplication/Attribute:automation_id+' => '',
-	'Class:lnkVCSAutomationToVCSApplication/Attribute:vcsapplication_id' => 'Application',
-	'Class:lnkVCSAutomationToVCSApplication/Attribute:vcsapplication_id+' => '',
+	'Class:lnkVCSAutomationToVCSApplication/Attribute:application_id' => 'Application',
+	'Class:lnkVCSAutomationToVCSApplication/Attribute:application_id+' => 'VCS Application',
 
     // CLASS VCSWebhookPayload
     'Class:VCSWebhookPayload' => 'Charge utile',

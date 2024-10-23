@@ -13,7 +13,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:VCSIntegration:Automation' => 'Automation',
 
 	// CLASS VCSApplication
-	'Class:VCSApplication' => 'VCS Webhook',
+	'Class:VCSApplication' => 'VCS Application',
 	'Class:VCSApplication+' => 'Version Control System Webhook',
     'Class:VCSApplication/Attribute:type' => 'Type',
     'Class:VCSApplication/Attribute:type+' => 'Type of webhook',
@@ -39,8 +39,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VCSApplication/Attribute:app_id+' => 'Application identifier - Relevant only if corresponding mode is selected above',
 	'Class:VCSApplication/Attribute:app_private_key' => 'Private key',
 	'Class:VCSApplication/Attribute:app_private_key+' => 'Application private key - Relevant only if \'Application installation access token\' mode is selected above',
-	'Class:VCSApplication/Attribute:connector_id' => 'API Connector',
-	'Class:VCSApplication/Attribute:connector_id+' => 'Connector used for API access',
 	'Class:VCSApplication/Attribute:url' => 'URL',
 	'Class:VCSApplication/Attribute:url+' => 'Endpoint URL to receive events',
 	'Class:VCSApplication/Attribute:status' => 'Synchronization status',
@@ -74,16 +72,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkContactToVCSApplication+' => '',
 	'Class:lnkContactToVCSApplication/Attribute:contact_id' => 'Contact',
 	'Class:lnkContactToVCSApplication/Attribute:contact_id+' => '',
-	'Class:lnkContactToVCSApplication/Attribute:vcsapplication_id' => 'Webhook',
-	'Class:lnkContactToVCSApplication/Attributevcs:vcsapplication_id+' => 'VCS Webhook',
+	'Class:lnkContactToVCSApplication/Attribute:application_id' => 'Application',
+	'Class:lnkContactToVCSApplication/Attribute:application_id+' => 'VCS Application',
 
 	// CLASS lnkDocumentToVCSApplication
 	'Class:lnkDocumentToVCSApplication' => 'Link Document To VCS Application',
 	'Class:lnkDocumentToVCSApplication+' => '',
 	'Class:lnkDocumentToVCSApplication/Attribute:document_id' => 'Document',
 	'Class:lnkDocumentToVCSApplication/Attribute:document_id+' => '',
-	'Class:lnkDocumentToVCSApplication/Attribute:vcsapplication_id' => 'Webhook',
-	'Class:lnkDocumentToVCSApplication/Attributevcs:vcsapplication_id+' => 'VCS Webhook',
+	'Class:lnkDocumentToVCSApplication/Attribute:application_id' => 'Application',
+	'Class:lnkDocumentToVCSApplication/Attribute:application_id+' => 'VCS Application',
 
 	// CLASS lnkVCSAutomationToVCSApplication
 	'Class:lnkVCSAutomationToVCSApplication' => 'Link Automation To VCS Application',
@@ -101,12 +99,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkVCSAutomationToVCSApplication/Attribute:condition_3+' => 'Example: sender->username=me',
 	'Class:lnkVCSAutomationToVCSApplication/Attribute:automation_id' => 'Automation',
 	'Class:lnkVCSAutomationToVCSApplication/Attribute:automation_id+' => 'VCS Automation',
-	'Class:lnkVCSAutomationToVCSApplication/Attribute:vcsapplication_id' => 'Webhook',
-	'Class:lnkVCSAutomationToVCSApplication/Attribute:vcsapplication_id+' => 'VCS Webhook',
+	'Class:lnkVCSAutomationToVCSApplication/Attribute:application_id' => 'Application',
+	'Class:lnkVCSAutomationToVCSApplication/Attribute:application_id+' => 'VCS Application',
 
     // CLASS VCSWebhookPayload
     'Class:VCSWebhookPayload' => 'VCS Webhook Payload',
-    'Class:VCSWebhookPayload+' => 'Payload received from a VCS Webhook',
+    'Class:VCSWebhookPayload+' => 'Payload received from a VCS Application',
     'Class:VCSWebhookPayload/name' => '%1$s - %2$s - %3$s',
     'Class:VCSWebhookPayload/Attribute:provider' => 'Provider',
     'Class:VCSWebhookPayload/Attribute:provider+' => '',

@@ -65,7 +65,7 @@ class VCSAutomationEventListener implements iEventServiceSetup
             while ($olnkVCSAutomationToVCSApplication = $olnkVCSAutomationToVCSApplicationSet->Fetch()) {
 	            $oApplication = MetaModel::GetObject('VCSApplication', $olnkVCSAutomationToVCSApplication->Get('vcsapplication_id'));
                 if (!is_null($oApplication)) {
-                    $this->oGitHubManager->UpdateVCSWebhook($oApplication);
+                    $this->oGitHubManager->UpdateVCSApplication($oApplication);
                 }
             }
         }

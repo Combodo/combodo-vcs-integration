@@ -12,7 +12,7 @@
         <category>bizmodel,searchable</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
-        <db_table>vcs_connector</db_table>
+        <db_table>vcs_application</db_table>
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <obsolescence>
@@ -39,7 +39,7 @@
         <!-- name -->
         <field id="name" xsi:type="AttributeString">
           <sql>name</sql>
-          <is_null_allowed>false</is_null_allowed>
+          <is_null_allowed>true</is_null_allowed>
         </field>
         <!-- provider -->
         <field id="provider" xsi:type="AttributeEnum">
@@ -186,7 +186,7 @@ your private key goes here
         <!-- contacts_list -->
         <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContactToVCSWebhook</linked_class>
-          <ext_key_to_me>vcsapplication_id</ext_key_to_me>
+          <ext_key_to_me>application_id</ext_key_to_me>
           <ext_key_to_remote>contact_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -196,7 +196,7 @@ your private key goes here
         <!-- documents_list -->
         <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkDocumentToVCSWebhook</linked_class>
-          <ext_key_to_me>vcsapplication_id</ext_key_to_me>
+          <ext_key_to_me>application_id</ext_key_to_me>
           <ext_key_to_remote>document_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -206,7 +206,7 @@ your private key goes here
         <!-- automations_list -->
         <field id="automations_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
-          <ext_key_to_me>vcsapplication_id</ext_key_to_me>
+          <ext_key_to_me>application_id</ext_key_to_me>
           <ext_key_to_remote>automation_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -238,13 +238,13 @@ your private key goes here
                       case 'app_private_key':
                           $iFlag = OPT_ATT_MANDATORY;
                           break;
-                      case 'url':
-                      case 'status':
-                      case 'event_count':
-                      case 'last_event_date':
-                      case 'configuration':
+//                      case 'url':
+//                      case 'status':
+//                      case 'event_count':
+//                      case 'last_event_date':
+//                      case 'configuration':
                       default:
-                          $iFlag = OPT_ATT_HIDDEN;
+                          $iFlag = OPT_ATT_NORMAL;
                           break;
                    }
 
@@ -308,7 +308,7 @@ your private key goes here
       <presentation>
         <details>
           <items>
-            <item id="fieldset:Class:VCSConnector:connector">
+            <item id="fieldset:Class:VCSApplication:general">
               <rank>10</rank>
               <items>
                 <item id="name">
@@ -322,7 +322,7 @@ your private key goes here
 <!--                </item>-->
               </items>
             </item>
-            <item id="fieldset:Class:VCSConnector:app_organization">
+            <item id="fieldset:Class:VCSApplication:app_organization">
               <rank>20</rank>
               <items>
                 <item id="app_organization_name">
@@ -330,7 +330,7 @@ your private key goes here
                 </item>
               </items>
             </item>
-            <item id="fieldset:Class:VCSConnector:application">
+            <item id="fieldset:Class:VCSApplication:application">
               <rank>30</rank>
               <items>
                 <item id="app_id">
@@ -341,40 +341,31 @@ your private key goes here
                 </item>
               </items>
             </item>
-            <item id="fieldset:Class:VCSConnector:detail">
+            <item id="fieldset:Class:VCSApplication:webhook">
               <rank>40</rank>
               <items>
-                <item id="name">
-                  <rank>20</rank>
-                </item>
                 <item id="status">
-                  <rank>30</rank>
-                </item>
-                <item id="connector_id">
-                  <rank>40</rank>
-                </item>
-                <item id="connector_provider">
-                  <rank>50</rank>
+                  <rank>10</rank>
                 </item>
                 <item id="url">
-                  <rank>60</rank>
+                  <rank>20</rank>
                 </item>
                 <item id="secret">
-                  <rank>70</rank>
+                  <rank>30</rank>
                 </item>
                 <item id="last_event_date">
-                  <rank>80</rank>
-                </item>
-                <item id="automations_list">
-                  <rank>90</rank>
-                </item>
-                <item id="contacts_list">
-                  <rank>100</rank>
-                </item>
-                <item id="documents_list">
-                  <rank>110</rank>
+                  <rank>40</rank>
                 </item>
               </items>
+            </item>
+            <item id="automations_list">
+              <rank>50</rank>
+            </item>
+            <item id="contacts_list">
+              <rank>60</rank>
+            </item>
+            <item id="documents_list">
+              <rank>70</rank>
             </item>
           </items>
         </details>
@@ -468,7 +459,7 @@ your private key goes here
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
         <field id="webhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcsapplication_id</extkey_attcode>
+          <extkey_attcode>application_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
         <!-- configuration -->
@@ -552,7 +543,7 @@ your private key goes here
         <naming>
           <attributes>
             <attribute id="contact_name"/>
-            <attribute id="vcsapplication_name"/>
+            <attribute id="application_name"/>
           </attributes>
         </naming>
         <style>
@@ -561,14 +552,14 @@ your private key goes here
         <reconciliation>
           <attributes>
             <attribute id="contact_id"/>
-            <attribute id="vcsapplication_name"/>
+            <attribute id="application_name"/>
           </attributes>
         </reconciliation>
         <uniqueness_rules>
           <rule id="no_duplicate">
             <attributes>
               <attribute id="contact_id"/>
-              <attribute id="vcsapplication_id"/>
+              <attribute id="application_id"/>
             </attributes>
             <filter><![CDATA[]]></filter>
             <disabled>false</disabled>
@@ -587,14 +578,14 @@ your private key goes here
           <extkey_attcode>contact_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-        <field id="vcsapplication_id" xsi:type="AttributeExternalKey">
-          <sql>vcsapplication_id</sql>
+        <field id="application_id" xsi:type="AttributeExternalKey">
+          <sql>application_id</sql>
           <target_class>VCSApplication</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <field id="vcswebhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcsapplication_id</extkey_attcode>
+        <field id="application_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>application_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
       </fields>
@@ -605,7 +596,7 @@ your private key goes here
             <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
           </items>
@@ -615,7 +606,7 @@ your private key goes here
             <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
           </items>
@@ -625,7 +616,7 @@ your private key goes here
             <item id="contact_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
           </items>
@@ -648,7 +639,7 @@ your private key goes here
         <naming>
           <attributes>
             <attribute id="document_name"/>
-            <attribute id="vcswapplication_name"/>
+            <attribute id="application_name"/>
           </attributes>
         </naming>
         <style>
@@ -657,14 +648,14 @@ your private key goes here
         <reconciliation>
           <attributes>
             <attribute id="document_id"/>
-            <attribute id="vcsapplication_id"/>
+            <attribute id="application_id"/>
           </attributes>
         </reconciliation>
         <uniqueness_rules>
           <rule id="no_duplicate">
             <attributes>
               <attribute id="document_id"/>
-              <attribute id="vcsapplication_id"/>
+              <attribute id="application_id"/>
             </attributes>
             <filter><![CDATA[]]></filter>
             <disabled>false</disabled>
@@ -683,14 +674,14 @@ your private key goes here
           <extkey_attcode>document_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-        <field id="vcsapplication_id" xsi:type="AttributeExternalKey">
-          <sql>vcsapplication_id</sql>
+        <field id="application_id" xsi:type="AttributeExternalKey">
+          <sql>application_id</sql>
           <target_class>VCSApplication</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <field id="vcsapplication_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcsapplication_id</extkey_attcode>
+        <field id="application_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>application_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
       </fields>
@@ -701,17 +692,17 @@ your private key goes here
             <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
           </items>
         </details>
         <search>
           <items>
-            <item id="document_id">
+            <item id="ument_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
           </items>
@@ -721,7 +712,7 @@ your private key goes here
             <item id="document_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
           </items>
@@ -745,7 +736,7 @@ your private key goes here
         </obsolescence>
         <naming>
           <attributes>
-            <attribute id="vcsapplication_name"/>
+            <attribute id="application_name"/>
             <attribute id="automation_name"/>
           </attributes>
         </naming>
@@ -755,14 +746,14 @@ your private key goes here
         </style>
         <reconciliation>
           <attributes>
-            <attribute id="vcsapplication_id"/>
+            <attribute id="application_id"/>
             <attribute id="automation_id"/>
           </attributes>
         </reconciliation>
         <uniqueness_rules>
           <rule id="no_duplicate">
             <attributes>
-              <attribute id="vcsapplication_id"/>
+              <attribute id="application_id"/>
               <attribute id="automation_id"/>
             </attributes>
             <filter><![CDATA[]]></filter>
@@ -773,14 +764,14 @@ your private key goes here
       </properties>
       <fields>
         <!-- application -->
-        <field id="vcsapplication_id" xsi:type="AttributeExternalKey">
-          <sql>vcsapplication_id</sql>
+        <field id="application_id" xsi:type="AttributeExternalKey">
+          <sql>application_id</sql>
           <target_class>VCSApplication</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <field id="vcsapplication_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcsapplication_id</extkey_attcode>
+        <field id="application_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>application_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
         <!-- automation -->
@@ -862,7 +853,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
             <item id="status">
@@ -889,7 +880,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
             <item id="status">
@@ -911,7 +902,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
             <item id="status">
@@ -933,7 +924,7 @@ your private key goes here
             <item id="automation_id">
               <rank>10</rank>
             </item>
-            <item id="vcsapplication_id">
+            <item id="application_id">
               <rank>20</rank>
             </item>
           </items>
@@ -1220,7 +1211,7 @@ your private key goes here
         <field id="webhooks_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
           <ext_key_to_me>automation_id</ext_key_to_me>
-          <ext_key_to_remote>vcsapplication_id</ext_key_to_remote>
+          <ext_key_to_remote>application_id</ext_key_to_remote>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <with_php_computation>true</with_php_computation>
@@ -1891,11 +1882,7 @@ JS
               </dashlet>
               <dashlet id="11" xsi:type="DashletBadge">
                 <rank>1</rank>
-                <class>VCSConnector</class>
-              </dashlet>
-              <dashlet id="12" xsi:type="DashletBadge">
-                <rank>2</rank>
-                <class>VCSWebhook</class>
+                <class>VCSApplication</class>
               </dashlet>
             </dashlets>
           </cell>

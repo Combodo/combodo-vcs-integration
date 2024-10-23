@@ -52,7 +52,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	/**
 	 * Create authorization request header.
 	 *
-	 * @param DBObject $oApplication VCS Webhook
+	 * @param DBObject $oApplication VCS Application
 	 *
 	 * @return array header elements array
 	 * @throws \CoreException
@@ -166,7 +166,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	/**
 	 * Get app installation authorization header.
 	 *
-	 * @param DBObject $oApplication VCS Webhook
+	 * @param DBObject $oApplication VCS Application
 	 * @param string $sType Authentication type
 	 *
 	 * @return string
@@ -246,7 +246,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * https://docs.github.com/en/rest/apps/apps?apiVersion=2022-11-28#get-a-repository-installation-for-the-authenticated-app
 	 * GET /repos/{owner}/{repo}/installation
 	 *
-	 * @param DBObject $oApplication VCS Webhook
+	 * @param DBObject $oApplication VCS Application
 	 *
 	 * @return array
 	 * @throws \CoreException
