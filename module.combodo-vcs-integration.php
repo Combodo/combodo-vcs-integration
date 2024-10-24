@@ -85,8 +85,8 @@ if (!class_exists('VCSIntegrationInstaller')) {
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// Load event data in typology
-			if (version_compare($sPreviousVersion, $sCurrentVersion, '!=')) {
+			// Load structure data
+			if (utils::IsNullOrEmptyString($sPreviousVersion)) {
 				$oDataLoader = new XMLDataLoader();
 
 				CMDBObject::SetTrackInfo("Initialization");
