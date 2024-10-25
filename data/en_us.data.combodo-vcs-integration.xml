@@ -30,12 +30,12 @@
 	</VCSEvent>
 	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="1">
 		<provider>github</provider>
-		<name>Commits into user request</name>
+		<name>Commits into ticket</name>
 		<scope_var>commits</scope_var>
-		<object_class>UserRequest</object_class>
+		<object_class>Ticket</object_class>
 		<object_att_code>private_log</object_att_code>
 		<object_ref_att_code>ref</object_ref_att_code>
-		<ref_regex_pattern>(R-\d{6})</ref_regex_pattern>
+		<ref_regex_pattern>([R|I|C|P]-\d{6})</ref_regex_pattern>
 		<ref_regex_subject_data>message</ref_regex_subject_data>
 		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] by [[pusher->name]]<br>
 [[ref]]
@@ -51,12 +51,12 @@
 	</VCSLogAttributeAutomation>
 	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="2">
 		<provider>github</provider>
-		<name>Pull requests into user request</name>
+		<name>Pull requests into ticket</name>
 		<scope_var></scope_var>
-		<object_class>UserRequest</object_class>
+		<object_class>Ticket</object_class>
 		<object_att_code>private_log</object_att_code>
 		<object_ref_att_code>ref</object_ref_att_code>
-		<ref_regex_pattern>(R-\d{6})</ref_regex_pattern>
+		<ref_regex_pattern>([R|I|C|P]-\d{6})</ref_regex_pattern>
 		<ref_regex_subject_data>pull_request->title</ref_regex_subject_data>
 		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] by [[sender->login]]<br>
 [[pull_request->head->ref]] ➡️ [[pull_request->base->ref]]

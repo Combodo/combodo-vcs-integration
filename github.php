@@ -106,6 +106,7 @@ ModuleHelper::LogInfo("Receiving GitHub Event #" . $sDeliveryId, [
 	'sender' => $sSenderLogin,
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,
+	'type' => $sType
 ]);
 
 // handle webhook
