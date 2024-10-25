@@ -1492,12 +1492,12 @@ your private key goes here
         // Make sure events and webhooks share the same provider
         $sProvider = $this->Get('provider');
         $olnkVCSAutomationToVCSEventsList = $this->Get('events_list');
-        if ($olnkVCSAutomationToVCSEventsList->Count() == 0) {
-        	if (!ContextTag::Check('Setup')) {
-        		$this->m_aCheckIssues[] = Dict::Format('UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected');
-        		return;
-        	}
-        }
+//        if ($olnkVCSAutomationToVCSEventsList->Count() == 0) {
+//        	if (!ContextTag::Check('Setup')) {
+//        		$this->m_aCheckIssues[] = Dict::Format('UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected');
+//        		return;
+//        	}
+//        }
         while ($oLnk = $olnkVCSAutomationToVCSEventsList->Fetch()) {
             if ($oLnk->Get('event_provider') != $sProvider) {
                 $this->m_aCheckIssues[] = Dict::Format('UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent', $oLnk->Get('event_name'));
