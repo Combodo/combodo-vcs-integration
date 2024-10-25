@@ -37,10 +37,10 @@
 		<object_ref_att_code>ref</object_ref_att_code>
 		<ref_regex_pattern>([R|I|C|P]-\d{6})</ref_regex_pattern>
 		<ref_regex_subject_data>message</ref_regex_subject_data>
-		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] by [[pusher->name]]<br>
-[[ref]]
+		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] par [[pusher->name]]<br>
+[[@substring ref 11]]
 [[@separator]]
-[[@count commits commit commits]] concernant ce ticket.
+[[@count commits commit commits]] about this ticket.
 <ul>
 [[@for commits]]
 <li>[[author->username]] <a href="[[url]]" target="_blank" >#[[@substring id 0 7]]</a></li>

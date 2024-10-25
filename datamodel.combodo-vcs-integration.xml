@@ -1134,6 +1134,15 @@ your private key goes here
             <item id="vcswebhook_id">
               <rank>20</rank>
             </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="condition_1">
+              <rank>40</rank>
+            </item>
+            <item id="condition_2">
+              <rank>41</rank>
+            </item>
           </items>
         </list>
       </presentation>
