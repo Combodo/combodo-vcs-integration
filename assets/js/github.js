@@ -117,7 +117,7 @@ const iTopGithubWorker = new function(){
                 const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
                 oGitHubInfo.innerHTML = data.data.status_field_html;
 
-                CombodoToast.OpenSuccessToast('Webhook configuration Checked successfully');
+                CombodoToast.OpenSuccessToast('Webhook configuration&nbsp;&nbsp;' + data.data.status_field_html, {escapeMarkup: false});
             }
 
             return data.data.errors === undefined;

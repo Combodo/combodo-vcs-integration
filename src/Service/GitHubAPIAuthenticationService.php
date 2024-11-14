@@ -360,7 +360,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 			// now > expiration_date
 			return $oDateNow->getTimestamp() > $oDateExpiration->getTimestamp();
 		}
-		catch(Exception){
+		catch(Exception $e){
 
 			return true;
 		}
