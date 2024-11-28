@@ -501,9 +501,9 @@ your private key goes here
                       return (OPT_ATT_READONLY | $sFlagsFromParent);
                   }
 
-                  if($sAttCode === 'name' && $this->Get('status') !== 'error'){
-                      return (OPT_ATT_READONLY | $sFlagsFromParent);
-                  }
+//                  if($sAttCode === 'name' && $this->Get('status') !== 'error'){
+//                      return (OPT_ATT_READONLY | $sFlagsFromParent);
+//                  }
 
                   if($sAttCode === 'configuration' && utils::IsNullOrEmptyString($this->Get('configuration'))){
                       return (OPT_ATT_HIDDEN | $sFlagsFromParent);
