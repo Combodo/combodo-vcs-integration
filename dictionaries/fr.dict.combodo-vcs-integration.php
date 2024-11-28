@@ -40,14 +40,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSConnector/Attribute:webhooks_list+' => 'Liste des webhooks utilisant le connecteur',
 
 	// CLASS VCSWebhook
-	'Class:VCSWebhook' => 'Webhook',
+	'Class:VCSWebhook' => 'VCS Webhook',
 	'Class:VCSWebhook+' => 'Webhook du système de gestion de versions',
     'Class:VCSWebhook/Attribute:type' => 'Type',
     'Class:VCSWebhook/Attribute:type+' => 'Type du webhook',
     'Class:VCSWebhook/Attribute:type/Value:repository' => 'Dépôt',
     'Class:VCSWebhook/Attribute:type/Value:organization' => 'Organisation',
 	'Class:VCSWebhook/Attribute:name' => 'Etiquette',
-	'Class:VCSWebhook/Attribute:name+' => 'Etiquette libre dévrivant le webhook',
+	'Class:VCSWebhook/Attribute:name+' => 'Etiquette libre décrivant le webhook',
 	'Class:VCSWebhook/Attribute:connector_id' => 'Connecteur API',
 	'Class:VCSWebhook/Attribute:connector_id+' => 'Connecteur utilisé pour les appels API',
 	'Class:VCSWebhook/Attribute:url' => 'URL',
@@ -76,7 +76,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VCSWebhook/UI:Button:synchronize_configuration' => 'Synchroniser',
 	'Class:VCSWebhook/UI:Button:check_configuration' => 'Vérifier la synchronisation',
 	'Class:VCSWebhook/UI:Button:open' => 'Ouvrir sur GitHub',
-	'Class:VCSWebhook/UI:Button:revoke_token' => 'Regénérer le jetton d\'accès',
+	'Class:VCSWebhook/UI:Button:revoke_token' => 'Regénérer le jeton d\'accès',
 
 	// CLASS lnkContactToVCSWebhook
 	'Class:lnkContactToVCSWebhook' => 'Lien Contact / Webhook',
@@ -93,6 +93,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkDocumentToVCSWebhook/Attribute:document_id+' => '',
 	'Class:lnkDocumentToVCSWebhook/Attribute:vcswebhook_id' => 'Webhook',
 	'Class:lnkDocumentToVCSWebhook/Attribute:vcswebhook_id+' => '',
+
+	// CLASS lnkVCSAutomationToVCSEvent
+	'Class:lnkVCSAutomationToVCSEvent' => 'Link Automation To VCS Event',
+	'Class:lnkVCSAutomationToVCSEvent+' => '',
+	'Class:lnkVCSAutomationToVCSEvent/Attribute:automation_id' => 'Automation',
+	'Class:lnkVCSAutomationToVCSEvent/Attribute:automation_id+' => 'VCS Automation',
+	'Class:lnkVCSAutomationToVCSEvent/Attribute:event_id' => 'Event',
+	'Class:lnkVCSAutomationToVCSEvent/Attribute:event_id+' => 'VCS Event',
 
 	// CLASS lnkVCSAutomationToVCSWebhook
 	'Class:lnkVCSAutomationToVCSWebhook' => 'Lien Automatisme / Webhook',
