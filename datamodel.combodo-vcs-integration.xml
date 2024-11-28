@@ -1631,7 +1631,7 @@ your private key goes here
 		            $oPage->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/css/global.scss');
 		            $sRenderedText = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig');
 		            $oPage->add_ready_script(<<<JS
-    $('[data-attribute-label="Template"]').after(`$sRenderedText`);
+    $('[data-attribute-code="template"]').after(`$sRenderedText`);
 JS
 		            );
 	            }
@@ -1969,7 +1969,7 @@ JS
 		            $oPage->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/css/global.scss');
 		            $sRenderedText = \Combodo\iTop\VCSManagement\Service\TemplatingService::GetInstance()->RenderTemplate('templating_help.html.twig');
 		            $oPage->add_ready_script(<<<JS
-    $('[data-attribute-label="Template"]').after(`$sRenderedText`);
+    $('[data-attribute-code="template"]').after(`$sRenderedText`);
 JS
 		            );
 	            }
