@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-vcs-integration/0.2.2',
+	'combodo-vcs-integration/1.0.0',
 	array(
 		// Identification
 		//
