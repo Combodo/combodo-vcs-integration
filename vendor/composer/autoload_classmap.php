@@ -21,4 +21,6 @@ return array(
     'Combodo\\iTop\\VCSManagement\\Service\\GitHubManager' => $baseDir . '/src/Service/GitHubManager.php',
     'Combodo\\iTop\\VCSManagement\\Service\\TemplatingService' => $baseDir . '/src/Service/TemplatingService.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'FastVolt\\Helper\\Libs\\Markdown\\ParseMarkdown' => $vendorDir . '/fastvolt/markdown/src/Libs/Markdown/ParseMarkdown.php',
+    'FastVolt\\Helper\\Markdown' => $vendorDir . '/fastvolt/markdown/src/Markdown.php',
 );

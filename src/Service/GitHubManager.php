@@ -25,7 +25,7 @@ use VCSWebhook;
 class GitHubManager
 {
 	/** @var string regex for host replacement */
-	static private string $REGEX_HOST_REPLACEMENT = '#(https?)://([\.\-\w]+)/#';
+	static private string $REGEX_HOST_REPLACEMENT = '#(https?)://([\.\-\w]+(:\d+)?)/#';
 
 	/** @var GitHubManager|null Singleton */
 	static private ?GitHubManager $oSingletonInstance = null;

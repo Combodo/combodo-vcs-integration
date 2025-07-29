@@ -4,9 +4,13 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit4f86a4499d29b29a3d2615dbbd39e1d0
+class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
 {
     public static $prefixLengthsPsr4 = array (
+        'F' => 
+        array (
+            'FastVolt\\Helper\\' => 16,
+        ),
         'C' => 
         array (
             'Combodo\\iTop\\VCSManagement\\' => 27,
@@ -14,6 +18,10 @@ class ComposerStaticInit4f86a4499d29b29a3d2615dbbd39e1d0
     );
 
     public static $prefixDirsPsr4 = array (
+        'FastVolt\\Helper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fastvolt/markdown/src',
+        ),
         'Combodo\\iTop\\VCSManagement\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -36,14 +44,16 @@ class ComposerStaticInit4f86a4499d29b29a3d2615dbbd39e1d0
         'Combodo\\iTop\\VCSManagement\\Service\\GitHubManager' => __DIR__ . '/../..' . '/src/Service/GitHubManager.php',
         'Combodo\\iTop\\VCSManagement\\Service\\TemplatingService' => __DIR__ . '/../..' . '/src/Service/TemplatingService.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'FastVolt\\Helper\\Libs\\Markdown\\ParseMarkdown' => __DIR__ . '/..' . '/fastvolt/markdown/src/Libs/Markdown/ParseMarkdown.php',
+        'FastVolt\\Helper\\Markdown' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit4f86a4499d29b29a3d2615dbbd39e1d0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit4f86a4499d29b29a3d2615dbbd39e1d0::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit4f86a4499d29b29a3d2615dbbd39e1d0::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$classMap;
 
         }, null, ClassLoader::class);
     }

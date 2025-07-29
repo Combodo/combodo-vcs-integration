@@ -171,6 +171,15 @@ class AutomationManager
 		$sCondition = $oLnkAutomationToRepository->Get('condition_' . $iConditionNumber);
 		if(!utils::IsNullOrEmptyString($sCondition)){
 			$aMatch = [];
+
+            $res = preg_match('/NOT_NULL\((.*)\)/', $sCondition, $aMatch);
+            if($res === 1){
+                $val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
+                if($val === 'null'){
+                    return false;
+                }
+            }
+
 			$res = preg_match('/([>\w-]+)=(.*)/', $sCondition, $aMatch);
 			if($res === 1){
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
