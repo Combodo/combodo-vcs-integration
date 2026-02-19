@@ -8,8 +8,10 @@ namespace Combodo\iTop\VCSManagement\Service;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
+use DateTimeImmutable;
 use DBObject;
 use Exception;
+use FastVolt\Helper\Markdown;
 
 /**
  * Message templating service.
@@ -17,12 +19,14 @@ use Exception;
  */
 class TemplatingService
 {
+
 	private static string $DEFAULT_SEPARATOR_COLOR = '#91618e42';
 	private static string $DEFAULT_TEXT_COLOR = '#b83280';
 
 	/** @var string regex */
-	private static string $REGEX_FOR_STATEMENT = "/\[\[@for\s+(\w+)\]\]([.\s\S]*)\[\[@endfor\]\]/";
-	private static string $REGEX_EVENT_STATEMENT = "/\[\[event\]\]/";
+	private static string $REGEX_FOR_STATEMENT = "/\[\[@for\s+([\>\w-]+)\]\]([.\s\S]*?)\[\[@endfor\]\]/";
+	private static string $REGEX_IF_STATEMENT = "/\[\[@if\s+([\>\w-]+)==([\w|]+)\]\]([.\s\S]*?)\[\[@endif\]\]/";
+    private static string $REGEX_EVENT_STATEMENT = "/\[\[event\]\]/";
 	private static string $REGEX_HYPERLINK_STATEMENT = "/\[\[@hyperlink\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
 	private static string $REGEX_BUTTON_STATEMENT = "/\[\[@button\s+([\>\w-]+)\s+as\s+([\>\w\s-]+)\]\]/";
 	private static string $REGEX_MAILTO_STATEMENT = "/\[\[@mailto\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
@@ -31,6 +35,8 @@ class TemplatingService
 	private static string $REGEX_COUNT_STATEMENT = "/\[\[@count\s+([\>\w-]+)\s+(\w+)\s+(\w+)\]\]/";
 	private static string $REGEX_SEPARATOR_STATEMENT = "/\[\[@separator(\s+([#|\w]+))?\]\]/";
 	private static string $REGEX_TEXT_STATEMENT = "/\[\[@text\s+([\>\w-]+)(\s+([#|\w]+))?\]\]/";
+    private static string $REGEX_MARKDOWN_STATEMENT = "/\[\[@markdown\s+([\>\w-]+)\]\]/";
+    private static string $REGEX_DATE_STATEMENT = "/\[\[@date\s+([\>\w-]+)\]\]/";
 	private static string $REGEX_DATA = "/\[\[([\>\w-]+)\]\]/";
 
 	/** @var TemplatingService|null Singleton */
@@ -63,11 +69,19 @@ class TemplatingService
 	 */
 	public function ParseTemplate(string $sTemplate, string $sEvent, array $aPayload) : string
 	{
+        \IssueLog::Error('ParseTemplate');
+
 		// parse @for
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_FOR_STATEMENT,
 			fn ($matches) => $this->CallBackFor($aPayload, $sEvent, $matches),
 			$sTemplate);
+
+        // parse @if
+        $sTemplate = preg_replace_callback(
+            self::$REGEX_IF_STATEMENT,
+            fn ($matches) => $this->CallBackIf($aPayload, $sEvent, $matches),
+            $sTemplate);
 
 		// parse @event
 		$sTemplate = preg_replace_callback(
@@ -111,6 +125,18 @@ class TemplatingService
 			fn ($matches) => $this->CallBackText($aPayload, $matches),
 			$sTemplate);
 
+        // parse @markdown
+        $sTemplate = preg_replace_callback(
+            self::$REGEX_MARKDOWN_STATEMENT,
+            fn ($matches) => $this->CallBackMarkdown($aPayload, $matches),
+            $sTemplate);
+
+        // parse @date
+        $sTemplate = preg_replace_callback(
+            self::$REGEX_DATE_STATEMENT,
+            fn ($matches) => $this->CallBackDate($aPayload, $matches),
+            $sTemplate);
+
 		// parse @separator
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_SEPARATOR_STATEMENT,
@@ -124,10 +150,15 @@ class TemplatingService
 			$sTemplate);
 
 		// finally parse data
-		return preg_replace_callback(
+        $sTemplate = preg_replace_callback(
 			self::$REGEX_DATA,
 			fn ($matches) => ModuleHelper::ExtractDataFromArray($aPayload, $matches[1]),
 			$sTemplate);
+
+
+        \IssueLog::Error($sTemplate);
+
+        return $sTemplate;
 	}
 
 	/**
@@ -156,6 +187,36 @@ class TemplatingService
 
 		return rtrim($sLoopText);
 	}
+
+    /**
+     * Parse @if statement.
+     *
+     * @param array $aPayload
+     * @param string $sEvent
+     * @param array $aMatch
+     *
+     * @return string
+     */
+    private function CallBackIf(array $aPayload, string $sEvent, array $aMatch) : string
+    {
+        // data
+        $data = $aMatch[1];
+        $condition = $aMatch[2];
+        $template = $aMatch[3];
+
+        \IssueLog::Error('CallBackIf', null, [$template, $data, $condition]);
+
+        // prepare template
+        $template = ltrim($template);
+        $sLoopText = '';
+
+        $oData = ModuleHelper::ExtractDataFromArray($aPayload, $data);
+        if(preg_match("#$condition#", $oData)){
+            $sLoopText = $this->ParseTemplate($template, $sEvent, $aPayload);
+        }
+
+        return $sLoopText;
+    }
 
 	/**
 	 * Parse @hyperlink statement.
@@ -266,6 +327,52 @@ class TemplatingService
 
 		return "<span style=\"color:$sTextColor\">$data</span>";
 	}
+
+    /**
+     * Parse @markdown statement.
+     *
+     * @param array $aPayload
+     * @param array $aMatch
+     *
+     * @return string
+     */
+    private function CallBackMarkdown(array $aPayload, array $aMatch) : string
+    {
+        // data
+        $sDataText = $aMatch[1];
+
+        // prepare template
+        $data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataText);
+
+        // markdown processing
+        $markdown = new Markdown(false);
+        $data = nl2br($data);
+        $markdown->setContent($data);
+
+        return $markdown->toHtml();
+    }
+
+    /**
+     * Parse @date statement.
+     *
+     * @param array $aPayload
+     * @param array $aMatch
+     *
+     * @return string
+     */
+    private function CallBackDate(array $aPayload, array $aMatch) : string
+    {
+        // data
+        $sDataText = $aMatch[1];
+
+        // prepare template
+        $data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataText);
+
+        // date processing
+        $date = new DateTimeImmutable($data);
+
+        return $date->format('d M H:i');
+    }
 
 	/**
 	 * Parse @separator statement.

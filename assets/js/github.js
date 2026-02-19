@@ -7,7 +7,7 @@
  * GitHub integration endpoints.
  *
  */
-const iTopGithubWorker = new function(){
+const iTopGithubWorker = new function () {
 
     // endpoint
     const ROUTER_BASE_URL = '../pages/ajax.render.php';
@@ -23,7 +23,7 @@ const iTopGithubWorker = new function(){
      *
      * @param webhook_reference
      */
-    function SynchronizeWebhook(webhook_reference){
+    function SynchronizeWebhook(webhook_reference) {
         iTopGithubWorker.SynchronizeWebhookConfiguration(webhook_reference);
     }
 
@@ -32,12 +32,11 @@ const iTopGithubWorker = new function(){
      *
      * @param repository_reference
      */
-    async function GetRepositoryInfo(repository_reference)
-    {
-        try{
+    async function GetRepositoryInfo(repository_reference) {
+        try {
 
             // reset each metrics values...
-            document.querySelectorAll('[data-role="ibo-pill"][data-github-data]').forEach(function(e){
+            document.querySelectorAll('[data-role="ibo-pill"][data-github-data]').forEach(function (e) {
                 e.querySelector('.ibo-dashlet-header-dynamic--count').innerHTML = '-';
             });
 
@@ -46,15 +45,14 @@ const iTopGithubWorker = new function(){
             const data = await response.json();
 
             // check errors
-            if(CheckErrors('Unable to get repository information', data)){
+            if (CheckErrors('Unable to get repository information', data)) {
 
                 // update template
                 const oGitHubInfo = document.querySelector('#github_info');
                 oGitHubInfo.innerHTML = data['data']['template'];
             }
 
-        }
-        catch(error){
+        } catch (error) {
 
             // log
             console.error(error);
@@ -67,16 +65,16 @@ const iTopGithubWorker = new function(){
      *
      * @param webhook_reference
      */
-    async function SynchronizeWebhookConfiguration(webhook_reference){
+    async function SynchronizeWebhookConfiguration(webhook_reference) {
 
-        try{
+        try {
 
             // endpoint call
             const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_SYNCHRONIZE_WEBHOOK_CONFIGURATION}&webhook_id=` + webhook_reference);
             const data = await response.json();
 
             // check errors
-            if(CheckErrors('Unable to synchronize webhook configuration', data)) {
+            if (CheckErrors('Unable to synchronize webhook configuration', data)) {
 
                 // update webhook status
                 const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
@@ -86,8 +84,7 @@ const iTopGithubWorker = new function(){
             }
 
             return data.data.errors === undefined;
-        }
-        catch(error){
+        } catch (error) {
 
             // log
             console.error(error);
@@ -102,16 +99,16 @@ const iTopGithubWorker = new function(){
      *
      * @param webhook_reference
      */
-    async function CheckWebhookConfigurationSynchro(webhook_reference){
+    async function CheckWebhookConfigurationSynchro(webhook_reference) {
 
-        try{
+        try {
 
             // endpoint call
             const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO}&webhook_id=` + webhook_reference);
             const data = await response.json();
 
             // check errors
-            if(CheckErrors('Unable to synchronize webhook configuration', data)) {
+            if (CheckErrors('Unable to synchronize webhook configuration', data)) {
 
                 // update webhook status
                 const oGitHubInfo = document.querySelector('[data-role="ibo-field"][data-attribute-code="status"] .ibo-field--value');
@@ -121,8 +118,7 @@ const iTopGithubWorker = new function(){
             }
 
             return data.data.errors === undefined;
-        }
-        catch(error){
+        } catch (error) {
 
             // log
             console.error(error);
@@ -138,23 +134,22 @@ const iTopGithubWorker = new function(){
      *
      * @param webhook_reference
      */
-    async function RegenerateAccessToken(webhook_reference){
+    async function RegenerateAccessToken(webhook_reference) {
 
-        try{
+        try {
 
             // endpoint call
             const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_REGENERATE_ACCESS_TOKEN}&webhook_id=` + webhook_reference);
             const data = await response.json();
 
             // check errors
-            if(CheckErrors('Unable to revoke token', data)) {
+            if (CheckErrors('Unable to revoke token', data)) {
 
                 CombodoToast.OpenSuccessToast('Token successfully revoked');
             }
 
             return data.data.errors === undefined;
-        }
-        catch(error){
+        } catch (error) {
 
             // log
             console.error(error);
@@ -172,9 +167,9 @@ const iTopGithubWorker = new function(){
      * @param data ajax data
      * @returns {boolean}
      */
-    function CheckErrors(title, data){
+    function CheckErrors(title, data) {
         // handle errors
-        if(data.data.errors !== undefined){
+        if (data.data.errors !== undefined) {
             ShowErrors(title, data.data.errors)
             return false
         }
@@ -187,7 +182,7 @@ const iTopGithubWorker = new function(){
      * @param title modal title
      * @param errors errors array
      */
-    function ShowErrors(title, errors){
+    function ShowErrors(title, errors) {
 
         // prepare message
         let sErrorMessage = '<div class="combodo-vcs-integration--informative-modal">';
@@ -196,7 +191,7 @@ const iTopGithubWorker = new function(){
         sErrorMessage += '<strong>' + title + '</strong><br><br>';
 
         // multiple errors
-        if(errors.length > 1){
+        if (errors.length > 1) {
             sErrorMessage += `${errors.length} Errors:<br>`;
         }
 
@@ -219,7 +214,7 @@ const iTopGithubWorker = new function(){
      *
      * @param url
      */
-    function OpenUrl(url){
+    function OpenUrl(url) {
         window.open(url, '_blank');
     }
 
