@@ -70,7 +70,7 @@ class ModuleHelper
 	 *
 	 * @return void
 	 */
-	static public function LogDebug(string $sMessage, array $aContext = null) : void
+	static public function LogDebug(string $sMessage, ?array $aContext = null) : void
 	{
 		IssueLog::Debug(ModuleHelper::MODULE_NAME . ' ' . $sMessage, null, $aContext);
 	}
@@ -83,7 +83,7 @@ class ModuleHelper
 	 *
 	 * @return void
 	 */
-	static public function LogInfo(string $sMessage, array $aContext = null) : void
+	static public function LogInfo(string $sMessage, ?array $aContext = null) : void
 	{
 		IssueLog::Info(ModuleHelper::MODULE_NAME . ' ' . $sMessage, null, $aContext);
 	}
