@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-	<VCSEvent alias="VCSEvent" id="1">
-		<name>create</name>
-		<provider>github</provider>
-	</VCSEvent>
-	<VCSEvent alias="VCSEvent" id="2">
-		<name>push</name>
-		<provider>github</provider>
-	</VCSEvent>
-	<VCSEvent alias="VCSEvent" id="3">
-		<name>issues</name>
-		<provider>github</provider>
-	</VCSEvent>
-	<VCSEvent alias="VCSEvent" id="4">
-		<name>pull_request</name>
-		<provider>github</provider>
-	</VCSEvent>
-	<VCSEvent alias="VCSEvent" id="5">
-		<name>milestone</name>
-		<provider>github</provider>
-	</VCSEvent>
-	<VCSEvent alias="VCSEvent" id="6">
-		<name>fork</name>
-		<provider>github</provider>
-	</VCSEvent>
-	<VCSEvent alias="VCSEvent" id="7">
-		<name>delete</name>
-		<provider>github</provider>
-	</VCSEvent>
-	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="1">
-		<provider>github</provider>
-		<name>Commits into ticket</name>
-		<scope_var>commits</scope_var>
-		<object_class>Ticket</object_class>
-		<object_att_code>private_log</object_att_code>
-		<object_ref_att_code>ref</object_ref_att_code>
-		<ref_regex_pattern>([R|I|C|P]-\d{6})</ref_regex_pattern>
-		<ref_regex_subject_data>message</ref_regex_subject_data>
-		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] par [[pusher->name]]<br>
+    <VCSEvent alias="VCSEvent" id="1">
+        <name>create</name>
+        <provider>github</provider>
+    </VCSEvent>
+    <VCSEvent alias="VCSEvent" id="2">
+        <name>push</name>
+        <provider>github</provider>
+    </VCSEvent>
+    <VCSEvent alias="VCSEvent" id="3">
+        <name>issues</name>
+        <provider>github</provider>
+    </VCSEvent>
+    <VCSEvent alias="VCSEvent" id="4">
+        <name>pull_request</name>
+        <provider>github</provider>
+    </VCSEvent>
+    <VCSEvent alias="VCSEvent" id="5">
+        <name>milestone</name>
+        <provider>github</provider>
+    </VCSEvent>
+    <VCSEvent alias="VCSEvent" id="6">
+        <name>fork</name>
+        <provider>github</provider>
+    </VCSEvent>
+    <VCSEvent alias="VCSEvent" id="7">
+        <name>delete</name>
+        <provider>github</provider>
+    </VCSEvent>
+    <VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="1">
+        <provider>github</provider>
+        <name>Commits into ticket</name>
+        <scope_var>commits</scope_var>
+        <object_class>Ticket</object_class>
+        <object_att_code>private_log</object_att_code>
+        <object_ref_att_code>ref</object_ref_att_code>
+        <ref_regex_pattern>([R|I|C|P]-\d{6})</ref_regex_pattern>
+        <ref_regex_subject_data>message</ref_regex_subject_data>
+        <template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] par [[pusher->name]]<br>
 [[@substring ref 11]]
 [[@separator]]
 [[@count commits commit commits]] about this ticket.
@@ -48,62 +48,62 @@
 </ul>
 [[@separator]]
 [[@button compare as Compare on GitHub]]]]></template>
-	</VCSLogAttributeAutomation>
-	<VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="2">
-		<provider>github</provider>
-		<name>Pull requests into ticket</name>
-		<scope_var></scope_var>
-		<object_class>Ticket</object_class>
-		<object_att_code>private_log</object_att_code>
-		<object_ref_att_code>ref</object_ref_att_code>
-		<ref_regex_pattern>([R|I|C|P]-\d{6})</ref_regex_pattern>
-		<ref_regex_subject_data>pull_request->title</ref_regex_subject_data>
-		<template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] by [[sender->login]]<br>
+    </VCSLogAttributeAutomation>
+    <VCSLogAttributeAutomation alias="VCSLogAttributeAutomation" id="2">
+        <provider>github</provider>
+        <name>Pull requests into ticket</name>
+        <scope_var></scope_var>
+        <object_class>Ticket</object_class>
+        <object_att_code>private_log</object_att_code>
+        <object_ref_att_code>ref</object_ref_att_code>
+        <ref_regex_pattern>([R|I|C|P]-\d{6})</ref_regex_pattern>
+        <ref_regex_subject_data>pull_request->title</ref_regex_subject_data>
+        <template><![CDATA[<strong>[[event]]</strong> on [[@text repository->name]] by [[sender->login]]<br>
 [[pull_request->head->ref]] ➡️ [[pull_request->base->ref]]
 [[@separator]]
 Action: [[@text action]]
 [[@separator]]
 [[@button pull_request->html_url as Open on GitHub]]]]></template>
-	</VCSLogAttributeAutomation>
-	<VCSLogJournalAutomation alias="VCSLogJournalAutomation" id="3">
-		<provider>github</provider>
-		<name>All events tracking</name>
-		<template>[[event]] by [[sender->login]]</template>
-	</VCSLogJournalAutomation>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="1">
-		<automation_id>1</automation_id>
-		<event_id>2</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="2">
-		<automation_id>2</automation_id>
-		<event_id>4</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="3">
-		<automation_id>3</automation_id>
-		<event_id>1</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="4">
-		<automation_id>3</automation_id>
-		<event_id>2</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="5">
-		<automation_id>3</automation_id>
-		<event_id>3</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="6">
-		<automation_id>3</automation_id>
-		<event_id>4</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="7">
-		<automation_id>3</automation_id>
-		<event_id>5</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="8">
-		<automation_id>3</automation_id>
-		<event_id>6</event_id>
-	</lnkVCSAutomationToVCSEvent>
-	<lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="9">
-		<automation_id>3</automation_id>
-		<event_id>7</event_id>
-	</lnkVCSAutomationToVCSEvent>
+    </VCSLogAttributeAutomation>
+    <VCSLogJournalAutomation alias="VCSLogJournalAutomation" id="3">
+        <provider>github</provider>
+        <name>All events tracking</name>
+        <template>[[event]] by [[sender->login]]</template>
+    </VCSLogJournalAutomation>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="1">
+        <automation_id>1</automation_id>
+        <event_id>2</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="2">
+        <automation_id>2</automation_id>
+        <event_id>4</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="3">
+        <automation_id>3</automation_id>
+        <event_id>1</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="4">
+        <automation_id>3</automation_id>
+        <event_id>2</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="5">
+        <automation_id>3</automation_id>
+        <event_id>3</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="6">
+        <automation_id>3</automation_id>
+        <event_id>4</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="7">
+        <automation_id>3</automation_id>
+        <event_id>5</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="8">
+        <automation_id>3</automation_id>
+        <event_id>6</event_id>
+    </lnkVCSAutomationToVCSEvent>
+    <lnkVCSAutomationToVCSEvent alias="lnkVCSAutomationToVCSEvent" id="9">
+        <automation_id>3</automation_id>
+        <event_id>7</event_id>
+    </lnkVCSAutomationToVCSEvent>
 </Set>

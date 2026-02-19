@@ -1,144 +1,145 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
-  <constants>
-  </constants>
-  <classes>
-    <!--
-    /* VCS Connector *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSConnector" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_connector</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-          <complementary_attributes>
-            <attribute id="provider"/>
-          </complementary_attributes>
-        </naming>
-        <display_template/>
-        <style>
-          <icon>assets/img/icons8-cloud-connection-code-fork.svg</icon>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <!-- name -->
-        <field id="name" xsi:type="AttributeString">
-          <sql>name</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- provider -->
-        <field id="provider" xsi:type="AttributeEnum">
-          <values>
-            <value id="github">
-              <code>github</code>
-            </value>
-          </values>
-          <sql>provider</sql>
-          <default_value>github</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <!-- mode -->
-        <field id="mode" xsi:type="AttributeEnum">
-          <values>
-            <value id="personal">
-              <code>personal</code>
-              <rank>1</rank>
-            </value>
-            <value id="app_repository">
-              <code>app_repository</code>
-              <rank>2</rank>
-            </value>
-            <value id="app_user">
-              <code>app_user</code>
-              <rank>3</rank>
-            </value>
-            <value id="app_organization">
-              <code>app_organization</code>
-              <rank>4</rank>
-            </value>
-          </values>
-          <sql>mode</sql>
-          <default_value>app_organization</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <sort_type>rank</sort_type>
-          <display_style>list</display_style>
-        </field>
-        <!-- mode personal access token -->
-        <field id="personal_access_token" xsi:type="AttributeString">
-          <sql>personal_access_token</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <dependencies>
-            <attribute id="mode"/>
-          </dependencies>
-        </field>
-        <!-- mode organization -->
-        <field id="app_organization_name" xsi:type="AttributeString">
-          <sql>app_organization_name</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- mode user -->
-        <field id="app_user_name" xsi:type="AttributeString">
-          <sql>app_user_name</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- mode repository -->
-        <field id="app_repository_name" xsi:type="AttributeString">
-          <sql>app_repository_name</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="app_repository_owner" xsi:type="AttributeString">
-          <sql>app_repository_owner</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- app id -->
-        <field id="app_id" xsi:type="AttributeString">
-          <sql>app_id</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <dependencies>
-            <attribute id="mode"/>
-          </dependencies>
-        </field>
-        <!-- app private key -->
-        <field id="app_private_key" xsi:type="AttributeLongText">
-          <sql>app_private_key</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <dependencies>
-            <attribute id="mode"/>
-          </dependencies>
-          <default_value><![CDATA[-----BEGIN RSA PRIVATE KEY-----
+    <constants>
+    </constants>
+    <classes>
+        <!--
+        /* VCS Connector *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="VCSConnector" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_connector</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                    <complementary_attributes>
+                        <attribute id="provider"/>
+                    </complementary_attributes>
+                </naming>
+                <display_template/>
+                <style>
+                    <icon>assets/img/icons8-cloud-connection-code-fork.svg</icon>
+                </style>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="id"/>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- name -->
+                <field id="name" xsi:type="AttributeString">
+                    <sql>name</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- provider -->
+                <field id="provider" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="github">
+                            <code>github</code>
+                        </value>
+                    </values>
+                    <sql>provider</sql>
+                    <default_value>github</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <!-- mode -->
+                <field id="mode" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="personal">
+                            <code>personal</code>
+                            <rank>1</rank>
+                        </value>
+                        <value id="app_repository">
+                            <code>app_repository</code>
+                            <rank>2</rank>
+                        </value>
+                        <value id="app_user">
+                            <code>app_user</code>
+                            <rank>3</rank>
+                        </value>
+                        <value id="app_organization">
+                            <code>app_organization</code>
+                            <rank>4</rank>
+                        </value>
+                    </values>
+                    <sql>mode</sql>
+                    <default_value>app_organization</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <sort_type>rank</sort_type>
+                    <display_style>list</display_style>
+                </field>
+                <!-- mode personal access token -->
+                <field id="personal_access_token" xsi:type="AttributeString">
+                    <sql>personal_access_token</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <dependencies>
+                        <attribute id="mode"/>
+                    </dependencies>
+                </field>
+                <!-- mode organization -->
+                <field id="app_organization_name" xsi:type="AttributeString">
+                    <sql>app_organization_name</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- mode user -->
+                <field id="app_user_name" xsi:type="AttributeString">
+                    <sql>app_user_name</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- mode repository -->
+                <field id="app_repository_name" xsi:type="AttributeString">
+                    <sql>app_repository_name</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <field id="app_repository_owner" xsi:type="AttributeString">
+                    <sql>app_repository_owner</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- app id -->
+                <field id="app_id" xsi:type="AttributeString">
+                    <sql>app_id</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <dependencies>
+                        <attribute id="mode"/>
+                    </dependencies>
+                </field>
+                <!-- app private key -->
+                <field id="app_private_key" xsi:type="AttributeLongText">
+                    <sql>app_private_key</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <dependencies>
+                        <attribute id="mode"/>
+                    </dependencies>
+                    <default_value><![CDATA[-----BEGIN RSA PRIVATE KEY-----
 your private key goes here
 -----END RSA PRIVATE KEY-----]]></default_value>
-        </field>
-        <!-- webhooks -->
-        <field id="webhooks_list" xsi:type="AttributeLinkedSet">
-        <linked_class>VCSWebhook</linked_class>
-        <ext_key_to_me>connector_id</ext_key_to_me>
-        <edit_mode>actions</edit_mode>
-        </field>
-        </fields>
-      <methods>
-        <!-- GetInitialStateAttributeFlags -->
-        <method id="GetInitialStateAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </field>
+                <!-- webhooks -->
+                <field id="webhooks_list" xsi:type="AttributeLinkedSet">
+                    <linked_class>VCSWebhook</linked_class>
+                    <ext_key_to_me>connector_id</ext_key_to_me>
+                    <edit_mode>actions</edit_mode>
+                </field>
+            </fields>
+            <methods>
+                <!-- GetInitialStateAttributeFlags -->
+                <method id="GetInitialStateAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
               {
                   $sMode = $this->Get('mode');
@@ -160,15 +161,17 @@ your private key goes here
 
                   return $iFlag | parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
               }
-          ]]>
+          
+                        ]]>
           </code>
-        </method>
-        <!-- GetAttributeFlags -->
-        <method id="GetAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </method>
+                <!-- GetAttributeFlags -->
+                <method id="GetAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
               public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
               {
                   $sMode = $this->Get('mode');
@@ -190,287 +193,291 @@ your private key goes here
 
                   return $iFlag | parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
               }
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="fieldset:Class:VCSConnector:connector">
-              <rank>10</rank>
-              <items>
-                <item id="name">
-                  <rank>10</rank>
-                </item>
-                <item id="provider">
-                  <rank>20</rank>
-                </item>
-<!--                <item id="mode">-->
-<!--                  <rank>40</rank>-->
-<!--                </item>-->
-              </items>
-            </item>
-            <item id="fieldset:Class:VCSConnector:app_organization">
-              <rank>20</rank>
-              <items>
-                <item id="app_organization_name">
-                  <rank>10</rank>
-                </item>
-              </items>
-            </item>
-<!--            <item id="fieldset:VCSConnector:personal_access_token">-->
-<!--              <rank>20</rank>-->
-<!--              <items>-->
-<!--                <item id="personal_access_token" _delta="define">-->
-<!--                  <rank>10</rank>-->
-<!--                </item>-->
-<!--              </items>-->
-<!--            </item>-->
-            <item id="fieldset:Class:VCSConnector:application">
-              <rank>30</rank>
-              <items>
-                <item id="app_id">
-                  <rank>10</rank>
-                </item>
-                <item id="app_private_key">
-                  <rank>20</rank>
-                </item>
-              </items>
-            </item>
-            <item id="webhooks_list">
-              <rank>40</rank>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSWebhook" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_webhook</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <format>%1$s</format>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-          <complementary_attributes>
-            <attribute id="url"/>
-          </complementary_attributes>
-        </naming>
-        <fields_semantic>
-          <state_attribute>status</state_attribute>
-        </fields_semantic>
-        <display_template/>
-        <style>
-          <icon>assets/img/icons8-repository-code-fork.svg</icon>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <!-- type -->
-        <field id="type" xsi:type="AttributeEnum">
-          <values>
-            <value id="repository">
-              <code>repository</code>
-            </value>
-            <value id="organization">
-              <code>organization</code>
-            </value>
-          </values>
-          <sql>type</sql>
-          <default_value>organization</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>radio_horizontal</display_style>
-        </field>
-        <!-- name -->
-        <field id="name" xsi:type="AttributeString">
-          <sql>name</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- connector -->
-        <field id="connector_id" xsi:type="AttributeExternalKey">
-          <sql>connector_id</sql>
-          <target_class>VCSConnector</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <!-- connector_provider -->
-        <field id="connector_provider" xsi:type="AttributeExternalField">
-          <extkey_attcode>connector_id</extkey_attcode>
-          <target_attcode>provider</target_attcode>
-        </field>
-        <!-- url -->
-        <field id="url" xsi:type="AttributeString">
-          <sql>url</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- secret -->
-        <field id="secret" xsi:type="AttributeEncryptedString">
-          <sql>secret</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- status -->
-        <field id="status" xsi:type="AttributeEnum">
-          <values>
-            <value id="error">
-              <code>error</code>
-              <style>
-                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
-              </style>
-            </value>
-            <value id="unsynchronized">
-              <code>unsynchronized</code>
-              <style>
-                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
-              </style>
-            </value>
-            <value id="active">
-              <code>active</code>
-              <style>
-                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
-              </style>
-            </value>
-            <value id="inactive">
-              <code>inactive</code>
-              <style>
-                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
-              </style>
-            </value>
-          </values>
-          <sql>status</sql>
-          <default_value>unsynchronized</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <!-- event count -->
-        <field id="event_count" xsi:type="AttributeInteger">
-          <sql>event_count</sql>
-          <default_value>0</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <tracking_level>none</tracking_level>
-        </field>
-        <!-- last event date -->
-        <field id="last_event_date" xsi:type="AttributeDateTime">
-          <sql>last_event_date</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>none</tracking_level>
-        </field>
-        <!-- events log -->
-        <field id="events_log" xsi:type="AttributeCaseLog">
-          <sql>events_log</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- configuration -->
-        <field id="configuration" xsi:type="AttributeLongText">
-          <sql>configuration</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- contacts_list -->
-        <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkContactToVCSWebhook</linked_class>
-          <ext_key_to_me>vcswebhook_id</ext_key_to_me>
-          <ext_key_to_remote>contact_id</ext_key_to_remote>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <with_php_computation>false</with_php_computation>
-          <duplicates/>
-        </field>
-        <!-- documents_list -->
-        <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkDocumentToVCSWebhook</linked_class>
-          <ext_key_to_me>vcswebhook_id</ext_key_to_me>
-          <ext_key_to_remote>document_id</ext_key_to_remote>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <with_php_computation>true</with_php_computation>
-          <duplicates/>
-        </field>
-        <!-- automations_list -->
-        <field id="automations_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
-          <ext_key_to_me>vcswebhook_id</ext_key_to_me>
-          <ext_key_to_remote>automation_id</ext_key_to_remote>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <with_php_computation>true</with_php_computation>
-          <duplicates/>
-        </field>
-        <!-- external_data -->
-        <field id="external_data" xsi:type="AttributeLongText">
-          <sql>external_data</sql>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>none</tracking_level>
-        </field>
-      </fields>
-      <methods>
-        <!-- PrefillCreationForm -->
-        <method id="PrefillCreationForm">
-          <static>false</static>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="fieldset:Class:VCSConnector:connector">
+                            <rank>10</rank>
+                            <items>
+                                <item id="name">
+                                    <rank>10</rank>
+                                </item>
+                                <item id="provider">
+                                    <rank>20</rank>
+                                </item>
+                                <!--                <item id="mode">-->
+                                <!--                  <rank>40</rank>-->
+                                <!--                </item>-->
+                            </items>
+                        </item>
+                        <item id="fieldset:Class:VCSConnector:app_organization">
+                            <rank>20</rank>
+                            <items>
+                                <item id="app_organization_name">
+                                    <rank>10</rank>
+                                </item>
+                            </items>
+                        </item>
+                        <!--            <item id="fieldset:VCSConnector:personal_access_token">-->
+                        <!--              <rank>20</rank>-->
+                        <!--              <items>-->
+                        <!--                <item id="personal_access_token" _delta="define">-->
+                        <!--                  <rank>10</rank>-->
+                        <!--                </item>-->
+                        <!--              </items>-->
+                        <!--            </item>-->
+                        <item id="fieldset:Class:VCSConnector:application">
+                            <rank>30</rank>
+                            <items>
+                                <item id="app_id">
+                                    <rank>10</rank>
+                                </item>
+                                <item id="app_private_key">
+                                    <rank>20</rank>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="webhooks_list">
+                            <rank>40</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="VCSWebhook" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_webhook</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <format>%1$s</format>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                    <complementary_attributes>
+                        <attribute id="url"/>
+                    </complementary_attributes>
+                </naming>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
+                <display_template/>
+                <style>
+                    <icon>assets/img/icons8-repository-code-fork.svg</icon>
+                </style>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="id"/>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- type -->
+                <field id="type" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="repository">
+                            <code>repository</code>
+                        </value>
+                        <value id="organization">
+                            <code>organization</code>
+                        </value>
+                    </values>
+                    <sql>type</sql>
+                    <default_value>organization</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>radio_horizontal</display_style>
+                </field>
+                <!-- name -->
+                <field id="name" xsi:type="AttributeString">
+                    <sql>name</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- connector -->
+                <field id="connector_id" xsi:type="AttributeExternalKey">
+                    <sql>connector_id</sql>
+                    <target_class>VCSConnector</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <!-- connector_provider -->
+                <field id="connector_provider" xsi:type="AttributeExternalField">
+                    <extkey_attcode>connector_id</extkey_attcode>
+                    <target_attcode>provider</target_attcode>
+                </field>
+                <!-- url -->
+                <field id="url" xsi:type="AttributeString">
+                    <sql>url</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- secret -->
+                <field id="secret" xsi:type="AttributeEncryptedString">
+                    <sql>secret</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- status -->
+                <field id="status" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="error">
+                            <code>error</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                            </style>
+                        </value>
+                        <value id="unsynchronized">
+                            <code>unsynchronized</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                            </style>
+                        </value>
+                        <value id="active">
+                            <code>active</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                            </style>
+                        </value>
+                        <value id="inactive">
+                            <code>inactive</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                            </style>
+                        </value>
+                    </values>
+                    <sql>status</sql>
+                    <default_value>unsynchronized</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <!-- event count -->
+                <field id="event_count" xsi:type="AttributeInteger">
+                    <sql>event_count</sql>
+                    <default_value>0</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <tracking_level>none</tracking_level>
+                </field>
+                <!-- last event date -->
+                <field id="last_event_date" xsi:type="AttributeDateTime">
+                    <sql>last_event_date</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <tracking_level>none</tracking_level>
+                </field>
+                <!-- events log -->
+                <field id="events_log" xsi:type="AttributeCaseLog">
+                    <sql>events_log</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- configuration -->
+                <field id="configuration" xsi:type="AttributeLongText">
+                    <sql>configuration</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- contacts_list -->
+                <field id="contacts_list" xsi:type="AttributeLinkedSetIndirect">
+                    <linked_class>lnkContactToVCSWebhook</linked_class>
+                    <ext_key_to_me>vcswebhook_id</ext_key_to_me>
+                    <ext_key_to_remote>contact_id</ext_key_to_remote>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                    <with_php_computation>false</with_php_computation>
+                    <duplicates/>
+                </field>
+                <!-- documents_list -->
+                <field id="documents_list" xsi:type="AttributeLinkedSetIndirect">
+                    <linked_class>lnkDocumentToVCSWebhook</linked_class>
+                    <ext_key_to_me>vcswebhook_id</ext_key_to_me>
+                    <ext_key_to_remote>document_id</ext_key_to_remote>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                    <with_php_computation>true</with_php_computation>
+                    <duplicates/>
+                </field>
+                <!-- automations_list -->
+                <field id="automations_list" xsi:type="AttributeLinkedSetIndirect">
+                    <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
+                    <ext_key_to_me>vcswebhook_id</ext_key_to_me>
+                    <ext_key_to_remote>automation_id</ext_key_to_remote>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                    <with_php_computation>true</with_php_computation>
+                    <duplicates/>
+                </field>
+                <!-- external_data -->
+                <field id="external_data" xsi:type="AttributeLongText">
+                    <sql>external_data</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <tracking_level>none</tracking_level>
+                </field>
+            </fields>
+            <methods>
+                <!-- PrefillCreationForm -->
+                <method id="PrefillCreationForm">
+                    <static>false</static>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
     public function PrefillCreationForm(&$aContextParam)
     {
         $oGitHubManager = \Combodo\iTop\VCSManagement\Service\GitHubManager::GetInstance();
         $this->Set('secret', $oGitHubManager->GenerateSecret(15,15,5,7));
         parent::PrefillCreationForm($aContextParam);
     }
-            ]]></code>
-        </method>
-        <!-- GetInitialStateAttributeFlags -->
-        <method id="GetInitialStateAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+            
+                        ]]></code>
+                </method>
+                <!-- GetInitialStateAttributeFlags -->
+                <method id="GetInitialStateAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
               {
                   $sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
@@ -480,15 +487,17 @@ your private key goes here
                   }
                   return $sFlagsFromParent;
               }
-          ]]>
+          
+                        ]]>
           </code>
-        </method>
-        <!-- GetAttributeFlags -->
-        <method id="GetAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </method>
+                <!-- GetAttributeFlags -->
+                <method id="GetAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
               public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
               {
                   $sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
@@ -511,534 +520,538 @@ your private key goes here
 
                   return $sFlagsFromParent;
               }
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-        <!-- GetConnector -->
-        <method id="GetConnector">
-          <static>false</static>
-          <type>Custom</type>
-          <code><![CDATA[
+                </method>
+                <!-- GetConnector -->
+                <method id="GetConnector">
+                    <static>false</static>
+                    <type>Custom</type>
+                    <code><![CDATA[
+                        
     public function GetConnector()
     {
         return MetaModel::GetObject(VCSConnector::class, $this->Get('connector_id'));
     }
-            ]]></code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <!--            <item id="type">-->
-            <!--              <rank>10</rank>-->
-            <!--            </item>-->
-            <item id="name">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="connector_id">
-              <rank>40</rank>
-            </item>
-            <item id="connector_provider">
-              <rank>50</rank>
-            </item>
-            <item id="url">
-              <rank>60</rank>
-            </item>
-            <item id="secret">
-              <rank>70</rank>
-            </item>
-            <item id="last_event_date">
-              <rank>80</rank>
-            </item>
-            <item id="automations_list">
-              <rank>90</rank>
-            </item>
-            <item id="contacts_list">
-              <rank>100</rank>
-            </item>
-            <item id="documents_list">
-              <rank>110</rank>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="type">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="type">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="type">
-              <rank>10</rank>
-            </item>
-            <item id="connector_id">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="last_event_date">
-              <rank>40</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* VCS WebhookPayload *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSWebhookPayload" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_webhookpayload</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <format>%1$s - %2$s - %3$s</format>
-          <attributes>
-            <attribute id="provider"/>
-            <attribute id="type"/>
-            <attribute id="webhook_name"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <style>
-          <icon>assets/img/icons8-repository-code-fork.svg</icon>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <!-- provider -->
-        <field id="provider" xsi:type="AttributeEnum">
-          <values>
-            <value id="github">
-              <code>github</code>
-            </value>
-          </values>
-          <sql>provider</sql>
-          <default_value>github</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <!-- type -->
-        <field id="type" xsi:type="AttributeString">
-          <sql>type</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- webhook -->
-        <field id="webhook_id" xsi:type="AttributeExternalKey">
-          <sql>webhook_id</sql>
-          <target_class>VCSWebhook</target_class>
-          <is_null_allowed>true</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="webhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>webhook_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <!-- configuration -->
-        <field id="payload" xsi:type="AttributeLongText">
-          <sql>payload</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-            <item id="type">
-              <rank>20</rank>
-            </item>
-            <item id="webhook_id">
-              <rank>30</rank>
-            </item>
-            <item id="payload">
-              <rank>40</rank>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-            <item id="type">
-              <rank>20</rank>
-            </item>
-            <item id="webhook_id">
-              <rank>30</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-            <item id="type">
-              <rank>20</rank>
-            </item>
-            <item id="webhook_id">
-              <rank>30</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-            <item id="type">
-              <rank>20</rank>
-            </item>
-            <item id="webhook_id">
-              <rank>30</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* Link Contact To VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="lnkContactToVCSWebhook" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkcontacttovcswebhook</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="contact_name"/>
-            <attribute id="vcswebhook_name"/>
-          </attributes>
-        </naming>
-        <style>
-          <icon/>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="contact_id"/>
-            <attribute id="vcswebhook_name"/>
-          </attributes>
-        </reconciliation>
-        <uniqueness_rules>
-          <rule id="no_duplicate">
-            <attributes>
-              <attribute id="contact_id"/>
-              <attribute id="vcswebhook_id"/>
-            </attributes>
-            <filter><![CDATA[]]></filter>
-            <disabled>false</disabled>
-            <is_blocking>true</is_blocking>
-          </rule>
-        </uniqueness_rules>
-      </properties>
-      <fields>
-        <field id="contact_id" xsi:type="AttributeExternalKey">
-          <sql>contact_id</sql>
-          <target_class>Contact</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="contact_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>contact_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
-          <sql>vcswebhook_id</sql>
-          <target_class>VCSWebhook</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="vcswebhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcswebhook_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="contact_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="contact_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="contact_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* Link Document To VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="lnkDocumentToVCSWebhook" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkdocumenttovcswebhook</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="document_name"/>
-            <attribute id="vcswebhook_name"/>
-          </attributes>
-        </naming>
-        <style>
-          <icon/>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="document_id"/>
-            <attribute id="vcswebhook_id"/>
-          </attributes>
-        </reconciliation>
-        <uniqueness_rules>
-          <rule id="no_duplicate">
-            <attributes>
-              <attribute id="document_id"/>
-              <attribute id="vcswebhook_id"/>
-            </attributes>
-            <filter><![CDATA[]]></filter>
-            <disabled>false</disabled>
-            <is_blocking>true</is_blocking>
-          </rule>
-        </uniqueness_rules>
-      </properties>
-      <fields>
-        <field id="document_id" xsi:type="AttributeExternalKey">
-          <sql>document_id</sql>
-          <target_class>Document</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="document_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>document_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
-          <sql>vcswebhook_id</sql>
-          <target_class>VCSWebhook</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="vcswebhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcswebhook_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="document_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="document_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="document_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* Link VCS Webhook To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="lnkVCSAutomationToVCSWebhook" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkvcsautomationtovcswebhook</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <attributes>
-            <attribute id="vcswebhook_name"/>
-            <attribute id="automation_name"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <style>
-          <icon>assets/img/icons8-cloud-connection-code-fork-automation.svg</icon>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="vcswebhook_id"/>
-            <attribute id="automation_id"/>
-          </attributes>
-        </reconciliation>
-        <uniqueness_rules>
-          <rule id="no_duplicate">
-            <attributes>
-              <attribute id="vcswebhook_id"/>
-              <attribute id="automation_id"/>
-            </attributes>
-            <filter><![CDATA[]]></filter>
-            <disabled>false</disabled>
-            <is_blocking>true</is_blocking>
-          </rule>
-        </uniqueness_rules>
-      </properties>
-      <fields>
-        <!-- webhook -->
-        <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
-          <sql>vcswebhook_id</sql>
-          <target_class>VCSWebhook</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="vcswebhook_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>vcswebhook_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <!-- automation -->
-        <field id="automation_id" xsi:type="AttributeExternalKey">
-          <sql>automation_id</sql>
-          <target_class>VCSAutomation</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <!-- automation::name -->
-        <field id="automation_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>automation_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <!-- status -->
-        <field id="status" xsi:type="AttributeEnum">
-          <values>
-            <value id="active">
-              <code>active</code>
-              <style>
-                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
-              </style>
-            </value>
-            <value id="inactive">
-              <code>inactive</code>
-              <style>
-                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
-                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
-              </style>
-            </value>
-          </values>
-          <sql>status</sql>
-          <default_value>active</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <!-- condition 1 -->
-        <field id="condition_1" xsi:type="AttributeString">
-          <sql>condition_1</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- condition 2 -->
-        <field id="condition_2" xsi:type="AttributeString">
-          <sql>condition_2</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- condition 3 -->
-        <field id="condition_3" xsi:type="AttributeString">
-          <sql>condition_3</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-      </fields>
-      <methods>
-        <!-- IsConditionUnsetOrUnmet -->
-        <method id="IsConditionUnsetOrMet">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+            
+                        ]]></code>
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <!--            <item id="type">-->
+                        <!--              <rank>10</rank>-->
+                        <!--            </item>-->
+                        <item id="name">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                        <item id="connector_id">
+                            <rank>40</rank>
+                        </item>
+                        <item id="connector_provider">
+                            <rank>50</rank>
+                        </item>
+                        <item id="url">
+                            <rank>60</rank>
+                        </item>
+                        <item id="secret">
+                            <rank>70</rank>
+                        </item>
+                        <item id="last_event_date">
+                            <rank>80</rank>
+                        </item>
+                        <item id="automations_list">
+                            <rank>90</rank>
+                        </item>
+                        <item id="contacts_list">
+                            <rank>100</rank>
+                        </item>
+                        <item id="documents_list">
+                            <rank>110</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="type">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="type">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="type">
+                            <rank>10</rank>
+                        </item>
+                        <item id="connector_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                        <item id="last_event_date">
+                            <rank>40</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* VCS WebhookPayload *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="VCSWebhookPayload" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_webhookpayload</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <format>%1$s - %2$s - %3$s</format>
+                    <attributes>
+                        <attribute id="provider"/>
+                        <attribute id="type"/>
+                        <attribute id="webhook_name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <style>
+                    <icon>assets/img/icons8-repository-code-fork.svg</icon>
+                </style>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="id"/>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- provider -->
+                <field id="provider" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="github">
+                            <code>github</code>
+                        </value>
+                    </values>
+                    <sql>provider</sql>
+                    <default_value>github</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <!-- type -->
+                <field id="type" xsi:type="AttributeString">
+                    <sql>type</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- webhook -->
+                <field id="webhook_id" xsi:type="AttributeExternalKey">
+                    <sql>webhook_id</sql>
+                    <target_class>VCSWebhook</target_class>
+                    <is_null_allowed>true</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="webhook_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>webhook_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+                <!-- configuration -->
+                <field id="payload" xsi:type="AttributeLongText">
+                    <sql>payload</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+            </fields>
+            <methods/>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                        <item id="type">
+                            <rank>20</rank>
+                        </item>
+                        <item id="webhook_id">
+                            <rank>30</rank>
+                        </item>
+                        <item id="payload">
+                            <rank>40</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                        <item id="type">
+                            <rank>20</rank>
+                        </item>
+                        <item id="webhook_id">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                        <item id="type">
+                            <rank>20</rank>
+                        </item>
+                        <item id="webhook_id">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                        <item id="type">
+                            <rank>20</rank>
+                        </item>
+                        <item id="webhook_id">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* Link Contact To VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="lnkContactToVCSWebhook" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <is_link>1</is_link>
+                <category>bizmodel</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>lnkcontacttovcswebhook</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <naming>
+                    <attributes>
+                        <attribute id="contact_name"/>
+                        <attribute id="vcswebhook_name"/>
+                    </attributes>
+                </naming>
+                <style>
+                    <icon/>
+                </style>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="contact_id"/>
+                        <attribute id="vcswebhook_name"/>
+                    </attributes>
+                </reconciliation>
+                <uniqueness_rules>
+                    <rule id="no_duplicate">
+                        <attributes>
+                            <attribute id="contact_id"/>
+                            <attribute id="vcswebhook_id"/>
+                        </attributes>
+                        <filter><![CDATA[]]></filter>
+                        <disabled>false</disabled>
+                        <is_blocking>true</is_blocking>
+                    </rule>
+                </uniqueness_rules>
+            </properties>
+            <fields>
+                <field id="contact_id" xsi:type="AttributeExternalKey">
+                    <sql>contact_id</sql>
+                    <target_class>Contact</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="contact_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>contact_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+                <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
+                    <sql>vcswebhook_id</sql>
+                    <target_class>VCSWebhook</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="vcswebhook_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>vcswebhook_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+            </fields>
+            <methods/>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="contact_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </details>
+                <search>
+                    <items>
+                        <item id="contact_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="contact_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* Link Document To VCS Webhook *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="lnkDocumentToVCSWebhook" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <is_link>1</is_link>
+                <category>bizmodel</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>lnkdocumenttovcswebhook</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <naming>
+                    <attributes>
+                        <attribute id="document_name"/>
+                        <attribute id="vcswebhook_name"/>
+                    </attributes>
+                </naming>
+                <style>
+                    <icon/>
+                </style>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="document_id"/>
+                        <attribute id="vcswebhook_id"/>
+                    </attributes>
+                </reconciliation>
+                <uniqueness_rules>
+                    <rule id="no_duplicate">
+                        <attributes>
+                            <attribute id="document_id"/>
+                            <attribute id="vcswebhook_id"/>
+                        </attributes>
+                        <filter><![CDATA[]]></filter>
+                        <disabled>false</disabled>
+                        <is_blocking>true</is_blocking>
+                    </rule>
+                </uniqueness_rules>
+            </properties>
+            <fields>
+                <field id="document_id" xsi:type="AttributeExternalKey">
+                    <sql>document_id</sql>
+                    <target_class>Document</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="document_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>document_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+                <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
+                    <sql>vcswebhook_id</sql>
+                    <target_class>VCSWebhook</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="vcswebhook_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>vcswebhook_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+            </fields>
+            <methods/>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="document_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </details>
+                <search>
+                    <items>
+                        <item id="document_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="document_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* Link VCS Webhook To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="lnkVCSAutomationToVCSWebhook" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <is_link>1</is_link>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>lnkvcsautomationtovcswebhook</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <attributes>
+                        <attribute id="vcswebhook_name"/>
+                        <attribute id="automation_name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <style>
+                    <icon>assets/img/icons8-cloud-connection-code-fork-automation.svg</icon>
+                </style>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="vcswebhook_id"/>
+                        <attribute id="automation_id"/>
+                    </attributes>
+                </reconciliation>
+                <uniqueness_rules>
+                    <rule id="no_duplicate">
+                        <attributes>
+                            <attribute id="vcswebhook_id"/>
+                            <attribute id="automation_id"/>
+                        </attributes>
+                        <filter><![CDATA[]]></filter>
+                        <disabled>false</disabled>
+                        <is_blocking>true</is_blocking>
+                    </rule>
+                </uniqueness_rules>
+            </properties>
+            <fields>
+                <!-- webhook -->
+                <field id="vcswebhook_id" xsi:type="AttributeExternalKey">
+                    <sql>vcswebhook_id</sql>
+                    <target_class>VCSWebhook</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="vcswebhook_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>vcswebhook_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+                <!-- automation -->
+                <field id="automation_id" xsi:type="AttributeExternalKey">
+                    <sql>automation_id</sql>
+                    <target_class>VCSAutomation</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <!-- automation::name -->
+                <field id="automation_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>automation_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+                <!-- status -->
+                <field id="status" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="active">
+                            <code>active</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                            </style>
+                        </value>
+                        <value id="inactive">
+                            <code>inactive</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                            </style>
+                        </value>
+                    </values>
+                    <sql>status</sql>
+                    <default_value>active</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <!-- condition 1 -->
+                <field id="condition_1" xsi:type="AttributeString">
+                    <sql>condition_1</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- condition 2 -->
+                <field id="condition_2" xsi:type="AttributeString">
+                    <sql>condition_2</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- condition 3 -->
+                <field id="condition_3" xsi:type="AttributeString">
+                    <sql>condition_3</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+            </fields>
+            <methods>
+                <!-- IsConditionUnsetOrUnmet -->
+                <method id="IsConditionUnsetOrMet">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
                 public function IsConditionUnsetOrMet(array $aPayload)
                 {
                     // services
@@ -1050,434 +1063,440 @@ your private key goes here
 
                     return $bIsCondition1Met && $bIsCondition2Met && $bIsCondition3Met;
                 }
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="fieldset:Class:lnkVCSAutomationToVCSWebhook:condition">
-              <rank>40</rank>
-              <items>
-                <item id="condition_1">
-                  <rank>10</rank>
-                </item>
-                <item id="condition_2">
-                  <rank>20</rank>
-                </item>
-                <item id="condition_3">
-                  <rank>30</rank>
-                </item>
-              </items>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="condition_1">
-              <rank>40</rank>
-            </item>
-            <item id="condition_2">
-              <rank>41</rank>
-            </item>
-            <item id="condition_3">
-              <rank>42</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="condition_1">
-              <rank>40</rank>
-            </item>
-            <item id="condition_2">
-              <rank>41</rank>
-            </item>
-            <item id="condition_3">
-              <rank>42</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="vcswebhook_id">
-              <rank>20</rank>
-            </item>
-            <item id="status">
-              <rank>30</rank>
-            </item>
-            <item id="condition_1">
-              <rank>40</rank>
-            </item>
-            <item id="condition_2">
-              <rank>41</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* VCS Event *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSEvent" _delta="define">
-      <parent>Typology</parent>
-      <properties>
-        <category>bizmodel,searchable,configmgmt</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_event</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-        </naming>
-        <icon/>
-        <reconciliation>
-          <attributes>
-            <attribute id="name"/>
-            <attribute id="provider"/>
-         </attributes>
-        </reconciliation>
-        <uniqueness_rules>
-          <rule id="name">
-            <attributes>
-              <attribute id="name"/>
-              <attribute id="provider"/>
-            </attributes>
-            <filter/>
-            <disabled>false</disabled>
-            <is_blocking>true</is_blocking>
-          </rule>
-        </uniqueness_rules>
-      </properties>
-      <fields>
-        <field id="provider" xsi:type="AttributeEnum">
-          <values>
-            <value id="github">
-              <code>github</code>
-            </value>
-          </values>
-          <sql>provider</sql>
-          <default_value>github</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <field id="automations_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkVCSAutomationToVCSEvent</linked_class>
-          <ext_key_to_me>event_id</ext_key_to_me>
-          <ext_key_to_remote>automation_id</ext_key_to_remote>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="automations_list">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-            <item id="name">
-              <rank>30</rank>
-            </item>
-          </items>
-        </details>
-        <list>
-          <items>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </list>
-        <default_search>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-            <item id="name">
-              <rank>20</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-            <item id="name">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-      </presentation>
-    </class>
-    <!--
-    /* Link VCS Event To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="lnkVCSAutomationToVCSEvent" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkvcsautomationtovcsevent</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <attributes>
-            <attribute id="automation_name"/>
-            <attribute id="event_name"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <style/>
-        <reconciliation>
-          <attributes>
-            <attribute id="automation_id"/>
-            <attribute id="event_id"/>
-          </attributes>
-        </reconciliation>
-        <uniqueness_rules>
-          <rule id="no_duplicate">
-            <attributes>
-              <attribute id="automation_id"/>
-              <attribute id="event_id"/>
-            </attributes>
-            <filter><![CDATA[]]></filter>
-            <disabled>false</disabled>
-            <is_blocking>true</is_blocking>
-          </rule>
-        </uniqueness_rules>
-      </properties>
-      <fields>
-        <!-- event -->
-        <field id="event_id" xsi:type="AttributeExternalKey">
-          <sql>event_id</sql>
-          <target_class>VCSEvent</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="event_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>event_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="event_provider" xsi:type="AttributeExternalField">
-          <extkey_attcode>event_id</extkey_attcode>
-          <target_attcode>provider</target_attcode>
-        </field>
-        <!-- automation -->
-        <field id="automation_id" xsi:type="AttributeExternalKey">
-          <sql>automation_id</sql>
-          <target_class>VCSAutomation</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <!-- automation::name -->
-        <field id="automation_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>automation_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="event_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="event_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="event_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="automation_id">
-              <rank>10</rank>
-            </item>
-            <item id="event_id">
-              <rank>20</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSAutomation" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <category>bizmodel,searchable</category>
-        <abstract>true</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_automation</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <format>%1$s</format>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <style>
-          <icon>assets/img/icons8-cloud-connection-code-fork-automation.svg</icon>
-        </style>
-        <reconciliation>
-          <attributes>
-            <attribute id="id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <!-- provider -->
-        <field id="provider" xsi:type="AttributeEnum">
-          <values>
-            <value id="github">
-              <code>github</code>
-            </value>
-          </values>
-          <sql>provider</sql>
-          <default_value>github</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <!-- events_list -->
-        <field id="events_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkVCSAutomationToVCSEvent</linked_class>
-          <ext_key_to_me>automation_id</ext_key_to_me>
-          <ext_key_to_remote>event_id</ext_key_to_remote>
-          <display_style>property</display_style>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-        </field>
-        <!-- name -->
-        <field id="name" xsi:type="AttributeString">
-          <sql>name</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- scope var -->
-        <field id="scope_var" xsi:type="AttributeString">
-          <sql>scope_var</sql>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <!-- webhooks_list -->
-        <field id="webhooks_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
-          <ext_key_to_me>automation_id</ext_key_to_me>
-          <ext_key_to_remote>vcswebhook_id</ext_key_to_remote>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <with_php_computation>true</with_php_computation>
-          <duplicates/>
-        </field>
-      </fields>
-      <methods>
-        <!-- HandleEvent -->
-        <method id="HandleEvent">
-          <static>false</static>
-          <access>public</access>
-          <type>Custom</type>
-          <arguments>
-            <argument>event</argument>
-            <argument>payload</argument>
-            <argument>scopeData</argument>
-            <argument>automationData</argument>
-          </arguments>
-          <code>
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                        <item id="fieldset:Class:lnkVCSAutomationToVCSWebhook:condition">
+                            <rank>40</rank>
+                            <items>
+                                <item id="condition_1">
+                                    <rank>10</rank>
+                                </item>
+                                <item id="condition_2">
+                                    <rank>20</rank>
+                                </item>
+                                <item id="condition_3">
+                                    <rank>30</rank>
+                                </item>
+                            </items>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                        <item id="condition_1">
+                            <rank>40</rank>
+                        </item>
+                        <item id="condition_2">
+                            <rank>41</rank>
+                        </item>
+                        <item id="condition_3">
+                            <rank>42</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                        <item id="condition_1">
+                            <rank>40</rank>
+                        </item>
+                        <item id="condition_2">
+                            <rank>41</rank>
+                        </item>
+                        <item id="condition_3">
+                            <rank>42</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="vcswebhook_id">
+                            <rank>20</rank>
+                        </item>
+                        <item id="status">
+                            <rank>30</rank>
+                        </item>
+                        <item id="condition_1">
+                            <rank>40</rank>
+                        </item>
+                        <item id="condition_2">
+                            <rank>41</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* VCS Event *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="VCSEvent" _delta="define">
+            <parent>Typology</parent>
+            <properties>
+                <category>bizmodel,searchable,configmgmt</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_event</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <naming>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                </naming>
+                <icon/>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="name"/>
+                        <attribute id="provider"/>
+                    </attributes>
+                </reconciliation>
+                <uniqueness_rules>
+                    <rule id="name">
+                        <attributes>
+                            <attribute id="name"/>
+                            <attribute id="provider"/>
+                        </attributes>
+                        <filter/>
+                        <disabled>false</disabled>
+                        <is_blocking>true</is_blocking>
+                    </rule>
+                </uniqueness_rules>
+            </properties>
+            <fields>
+                <field id="provider" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="github">
+                            <code>github</code>
+                        </value>
+                    </values>
+                    <sql>provider</sql>
+                    <default_value>github</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <field id="automations_list" xsi:type="AttributeLinkedSetIndirect">
+                    <linked_class>lnkVCSAutomationToVCSEvent</linked_class>
+                    <ext_key_to_me>event_id</ext_key_to_me>
+                    <ext_key_to_remote>automation_id</ext_key_to_remote>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                </field>
+            </fields>
+            <methods/>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="automations_list">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                        <item id="name">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </details>
+                <list>
+                    <items>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </list>
+                <default_search>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                        <item id="name">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                        <item id="name">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+            </presentation>
+        </class>
+        <!--
+        /* Link VCS Event To VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="lnkVCSAutomationToVCSEvent" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <is_link>1</is_link>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>lnkvcsautomationtovcsevent</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <attributes>
+                        <attribute id="automation_name"/>
+                        <attribute id="event_name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <style/>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="automation_id"/>
+                        <attribute id="event_id"/>
+                    </attributes>
+                </reconciliation>
+                <uniqueness_rules>
+                    <rule id="no_duplicate">
+                        <attributes>
+                            <attribute id="automation_id"/>
+                            <attribute id="event_id"/>
+                        </attributes>
+                        <filter><![CDATA[]]></filter>
+                        <disabled>false</disabled>
+                        <is_blocking>true</is_blocking>
+                    </rule>
+                </uniqueness_rules>
+            </properties>
+            <fields>
+                <!-- event -->
+                <field id="event_id" xsi:type="AttributeExternalKey">
+                    <sql>event_id</sql>
+                    <target_class>VCSEvent</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="event_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>event_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+                <field id="event_provider" xsi:type="AttributeExternalField">
+                    <extkey_attcode>event_id</extkey_attcode>
+                    <target_attcode>provider</target_attcode>
+                </field>
+                <!-- automation -->
+                <field id="automation_id" xsi:type="AttributeExternalKey">
+                    <sql>automation_id</sql>
+                    <target_class>VCSAutomation</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <!-- automation::name -->
+                <field id="automation_name" xsi:type="AttributeExternalField">
+                    <extkey_attcode>automation_id</extkey_attcode>
+                    <target_attcode>name</target_attcode>
+                </field>
+            </fields>
+            <methods/>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="event_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="event_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="event_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="automation_id">
+                            <rank>10</rank>
+                        </item>
+                        <item id="event_id">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* VCS Automation *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="VCSAutomation" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>true</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_automation</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <format>%1$s</format>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <style>
+                    <icon>assets/img/icons8-cloud-connection-code-fork-automation.svg</icon>
+                </style>
+                <reconciliation>
+                    <attributes>
+                        <attribute id="id"/>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- provider -->
+                <field id="provider" xsi:type="AttributeEnum">
+                    <values>
+                        <value id="github">
+                            <code>github</code>
+                        </value>
+                    </values>
+                    <sql>provider</sql>
+                    <default_value>github</default_value>
+                    <is_null_allowed>false</is_null_allowed>
+                    <display_style>list</display_style>
+                </field>
+                <!-- events_list -->
+                <field id="events_list" xsi:type="AttributeLinkedSetIndirect">
+                    <linked_class>lnkVCSAutomationToVCSEvent</linked_class>
+                    <ext_key_to_me>automation_id</ext_key_to_me>
+                    <ext_key_to_remote>event_id</ext_key_to_remote>
+                    <display_style>property</display_style>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                </field>
+                <!-- name -->
+                <field id="name" xsi:type="AttributeString">
+                    <sql>name</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- scope var -->
+                <field id="scope_var" xsi:type="AttributeString">
+                    <sql>scope_var</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+                <!-- webhooks_list -->
+                <field id="webhooks_list" xsi:type="AttributeLinkedSetIndirect">
+                    <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
+                    <ext_key_to_me>automation_id</ext_key_to_me>
+                    <ext_key_to_remote>vcswebhook_id</ext_key_to_remote>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                    <with_php_computation>true</with_php_computation>
+                    <duplicates/>
+                </field>
+            </fields>
+            <methods>
+                <!-- HandleEvent -->
+                <method id="HandleEvent">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>scopeData</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
             <![CDATA[
+                        
 
 
 	            abstract public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []);
 
 
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-        <!-- HandleScopeEnd -->
-        <method id="HandleScopeEnd">
-          <static>false</static>
-          <access>public</access>
-          <type>Custom</type>
-          <arguments>
-            <argument>event</argument>
-            <argument>payload</argument>
-            <argument>automationData</argument>
-          </arguments>
-          <code>
+                </method>
+                <!-- HandleScopeEnd -->
+                <method id="HandleScopeEnd">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
             <![CDATA[
+                        
 
 	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
 
 	            }
 
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-        <method id="PrefillSearchForm">
-          <code><![CDATA[ public function PrefillSearchForm(&$aContextParam)
+                </method>
+                <method id="PrefillSearchForm">
+                    <code><![CDATA[
+                         public function PrefillSearchForm(&$aContextParam)
 {
 	if ($aContextParam['dest_class'] == 'VCSWebhook') {
 		$aContextParam['filter']->ResetCondition();
@@ -1487,14 +1506,16 @@ your private key goes here
 		$aContextParam['filter']->AddCondition('provider', $aContextParam['source_obj']->Get('provider'));
     }
 }
-]]></code>
-        </method>
-        <method id="DoCheckToWrite">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function DoCheckToWrite()
+
+                        ]]></code>
+                </method>
+                <method id="DoCheckToWrite">
+                    <comment/>
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        	public function DoCheckToWrite()
     {
         parent::DoCheckToWrite();
 
@@ -1521,87 +1542,89 @@ your private key goes here
                 }
             }
         }
-	}]]></code>
-        </method>
-      </methods>
-      <presentation>
-        <default_search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-            <item id="events_list">
-              <rank>30</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* VCS Log journal Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSLogJournalAutomation" _delta="define">
-      <parent>VCSAutomation</parent>
-      <properties>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_log_journal_automation</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <format>%1$s</format>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <reconciliation>
-          <attributes>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <!-- template -->
-        <field id="template" xsi:type="AttributeLongText">
-          <sql>template</sql>
-          <height>300px</height>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-      </fields>
-      <methods>
-        <!-- HandleEvent -->
-        <method id="HandleEvent">
-          <static>false</static>
-          <access>public</access>
-          <type>Custom</type>
-          <arguments>
-            <argument>event</argument>
-            <argument>payload</argument>
-            <argument>scopeData</argument>
-            <argument>automationData</argument>
-          </arguments>
-          <code>
+	}
+                        ]]></code>
+                </method>
+            </methods>
+            <presentation>
+                <default_search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                        <item id="events_list">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* VCS Log journal Automation *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="VCSLogJournalAutomation" _delta="define">
+            <parent>VCSAutomation</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_log_journal_automation</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <format>%1$s</format>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <reconciliation>
+                    <attributes>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- template -->
+                <field id="template" xsi:type="AttributeLongText">
+                    <sql>template</sql>
+                    <height>300px</height>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
+            </fields>
+            <methods>
+                <!-- HandleEvent -->
+                <method id="HandleEvent">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>scopeData</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
             <![CDATA[
+                        
 	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     $bScopeData = !empty($this->Get('scope_var'));
@@ -1613,15 +1636,17 @@ your private key goes here
                     // log parsed template
                    \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo($sText);
 	            }
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-        <!-- DisplayBareRelations -->
-        <method id="DisplayBareRelations">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </method>
+                <!-- DisplayBareRelations -->
+                <method id="DisplayBareRelations">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
             public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
             {
             	parent::DisplayBareRelations($oPage, $bEditMode);
@@ -1636,173 +1661,175 @@ JS
 		            );
 	            }
             }
-              ]]></code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="col:col1">
-              <rank>10</rank>
-              <items>
-                <item id="fieldset:Class:VCSLogJournalAutomation:automation">
-                  <rank>10</rank>
-                  <items>
-                    <item id="name">
-                      <rank>10</rank>
-                    </item>
-                    <item id="provider">
-                      <rank>20</rank>
-                    </item>
-                    <item id="events_list">
-                      <rank>30</rank>
-                    </item>
-                    <item id="scope_var">
-                      <rank>40</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="col:col2">
-              <rank>20</rank>
-              <items>
-                <item id="fieldset:Class:VCSLogJournalAutomation:message">
-                  <rank>10</rank>
-                  <items>
-                    <item id="template">
-                      <rank>10</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="webhooks_list">
-              <rank>30</rank>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-    <!--
-    /* VCS Log Attribute Automation *///////////////////////////////////////////////////////////////////////////////////////////////
-    -->
-    <class id="VCSLogAttributeAutomation" _delta="define">
-      <parent>VCSAutomation</parent>
-      <properties>
-        <category>bizmodel,searchable</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>vcs_log_attribute_automation</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <obsolescence>
-        </obsolescence>
-        <naming>
-          <format>%1$s</format>
-          <attributes>
-            <attribute id="name"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <reconciliation>
-          <attributes>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <!-- Object class -->
-        <field id="object_class" xsi:type="AttributeClass">
-          <sql>object_class</sql>
-          <is_null_allowed>false</is_null_allowed>
-          <class_category>searchable</class_category>
-          <more_values>true</more_values>
-        </field>
-        <!-- Object Target Attribute -->
-        <field id="object_att_code" xsi:type="AttributeClassAttCodeSet">
-          <class_field>object_class</class_field>
-          <sql>object_att_code</sql>
-          <is_null_allowed>false</is_null_allowed>
-          <dependencies>
-            <attribute id="object_class"></attribute>
-          </dependencies>
-          <max_items>1</max_items>
-          <attribute_definition_list>AttributeCaseLog,AttributeText</attribute_definition_list>
-        </field>
-        <!-- reference regex pattern -->
-        <field id="ref_regex_pattern" xsi:type="AttributeString">
-          <sql>regex</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- reference regex subject data -->
-        <field id="ref_regex_subject_data" xsi:type="AttributeString">
-          <sql>data</sql>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- template -->
-        <field id="template" xsi:type="AttributeText">
-          <sql>template</sql>
-          <height>300px</height>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <!-- Object Ref Attribute -->
-        <field id="object_ref_att_code" xsi:type="AttributeClassAttCodeSet">
-          <class_field>object_class</class_field>
-          <sql>object_ref_att_code</sql>
-          <is_null_allowed>false</is_null_allowed>
-          <dependencies>
-            <attribute id="object_class"></attribute>
-          </dependencies>
-          <max_items>1</max_items>
-          <attribute_definition_list>AttributeString</attribute_definition_list>
-        </field>
-        <!-- Group  -->
-        <field id="group_messages" xsi:type="AttributeBoolean">
-          <sql>group_messages</sql>
-          <default_value>1</default_value>
-        </field>
-      </fields>
-      <methods>
-        <!-- HandleEvent -->
-        <method id="HandleEvent">
-          <static>false</static>
-          <access>public</access>
-          <type>Custom</type>
-          <arguments>
-            <argument>event</argument>
-            <argument>payload</argument>
-            <argument>scopeData</argument>
-            <argument>automationData</argument>
-          </arguments>
-          <code>
+              
+                        ]]></code>
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="col:col1">
+                            <rank>10</rank>
+                            <items>
+                                <item id="fieldset:Class:VCSLogJournalAutomation:automation">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="name">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="provider">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="events_list">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="scope_var">
+                                            <rank>40</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col2">
+                            <rank>20</rank>
+                            <items>
+                                <item id="fieldset:Class:VCSLogJournalAutomation:message">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="template">
+                                            <rank>10</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="webhooks_list">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+        <!--
+        /* VCS Log Attribute Automation *///////////////////////////////////////////////////////////////////////////////////////////////
+        -->
+        <class id="VCSLogAttributeAutomation" _delta="define">
+            <parent>VCSAutomation</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_log_attribute_automation</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <format>%1$s</format>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <reconciliation>
+                    <attributes>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- Object class -->
+                <field id="object_class" xsi:type="AttributeClass">
+                    <sql>object_class</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <class_category>searchable</class_category>
+                    <more_values>true</more_values>
+                </field>
+                <!-- Object Target Attribute -->
+                <field id="object_att_code" xsi:type="AttributeClassAttCodeSet">
+                    <class_field>object_class</class_field>
+                    <sql>object_att_code</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <dependencies>
+                        <attribute id="object_class"></attribute>
+                    </dependencies>
+                    <max_items>1</max_items>
+                    <attribute_definition_list>AttributeCaseLog,AttributeText</attribute_definition_list>
+                </field>
+                <!-- reference regex pattern -->
+                <field id="ref_regex_pattern" xsi:type="AttributeString">
+                    <sql>regex</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- reference regex subject data -->
+                <field id="ref_regex_subject_data" xsi:type="AttributeString">
+                    <sql>data</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- template -->
+                <field id="template" xsi:type="AttributeText">
+                    <sql>template</sql>
+                    <height>300px</height>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- Object Ref Attribute -->
+                <field id="object_ref_att_code" xsi:type="AttributeClassAttCodeSet">
+                    <class_field>object_class</class_field>
+                    <sql>object_ref_att_code</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <dependencies>
+                        <attribute id="object_class"></attribute>
+                    </dependencies>
+                    <max_items>1</max_items>
+                    <attribute_definition_list>AttributeString</attribute_definition_list>
+                </field>
+                <!-- Group  -->
+                <field id="group_messages" xsi:type="AttributeBoolean">
+                    <sql>group_messages</sql>
+                    <default_value>1</default_value>
+                </field>
+            </fields>
+            <methods>
+                <!-- HandleEvent -->
+                <method id="HandleEvent">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>scopeData</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
             <![CDATA[
+                        
 
 
 	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
@@ -1874,21 +1901,23 @@ JS
 
 	            }
 
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-        <!-- HandleEvent -->
-        <method id="HandleEvent">
-          <static>false</static>
-          <access>public</access>
-          <type>Custom</type>
-          <arguments>
-            <argument>event</argument>
-            <argument>payload</argument>
-            <argument>automationData</argument>
-          </arguments>
-          <code>
+                </method>
+                <!-- HandleEvent -->
+                <method id="HandleEvent">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
             <![CDATA[
+                        
 	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
 
                     foreach($aAutomationData as $aItem){
@@ -1904,21 +1933,23 @@ JS
                         $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
                     }
 	            }
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-        <!-- LogMessage -->
-        <method id="LogMessage">
-          <static>false</static>
-          <access>public</access>
-          <type>Custom</type>
-          <arguments>
-            <argument>event</argument>
-            <argument>payload</argument>
-            <argument>automationData</argument>
-          </arguments>
-          <code>
+                </method>
+                <!-- LogMessage -->
+                <method id="LogMessage">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
             <![CDATA[
+                        
 	            public function LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef){
 
                         // get value
@@ -1951,15 +1982,17 @@ JS
                         // update object
                         $oObject->DBUpdate();
 	            }
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-        <!-- DisplayBareRelations -->
-        <method id="DisplayBareRelations">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[
+                </method>
+                <!-- DisplayBareRelations -->
+                <method id="DisplayBareRelations">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+                        
             public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
             {
             	parent::DisplayBareRelations($oPage, $bEditMode);
@@ -1974,211 +2007,212 @@ JS
 		            );
 	            }
             }
-            ]]>
+            
+                        ]]>
           </code>
-        </method>
-      </methods>
-      <presentation>
-        <details>
-          <items>
-            <item id="col:col1">
-              <rank>10</rank>
-              <items>
-                <item id="fieldset:Class:VCSLogAttributeAutomation:automation">
-                  <rank>10</rank>
-                  <items>
-                    <item id="name">
-                      <rank>10</rank>
-                    </item>
-                    <item id="provider">
-                      <rank>20</rank>
-                    </item>
-                    <item id="events_list">
-                      <rank>30</rank>
-                    </item>
-                    <item id="scope_var">
-                      <rank>40</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Class:VCSLogAttributeAutomation:target">
-                  <rank>20</rank>
-                  <items>
-                    <item id="object_class">
-                      <rank>10</rank>
-                    </item>
-                    <item id="object_att_code">
-                      <rank>30</rank>
-                    </item>
-                    <item id="group_messages">
-                      <rank>60</rank>
-                    </item>
-                  </items>
-                </item>
-                <item id="fieldset:Class:VCSLogAttributeAutomation:reference">
-                  <rank>30</rank>
-                  <items>
-                    <item id="object_ref_att_code">
-                      <rank>10</rank>
-                    </item>
-                    <item id="ref_regex_subject_data">
-                      <rank>20</rank>
-                    </item>
-                    <item id="ref_regex_pattern">
-                      <rank>30</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="col:col2">
-              <rank>20</rank>
-              <items>
-                <item id="fieldset:Class:VCSLogAttributeAutomation:message">
-                  <rank>10</rank>
-                  <items>
-                    <item id="template">
-                      <rank>10</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="webhooks_list">
-              <rank>30</rank>
-            </item>
-         </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-              <rank>20</rank>
-            </item>
-          </items>
-        </default_search>
-        <search>
-          <items>
-            <item id="name">
-              <rank>10</rank>
-            </item>
-            <item id="provider">
-              <rank>20</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="provider">
-              <rank>10</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
-  </classes>
-  <menus>
-    <menu id="ConfigurationTools:VCSManagement" xsi:type="DashboardMenuNode" _delta="define">
-      <rank>200</rank>
-      <parent>ConfigurationTools</parent>
-      <definition>
-        <layout>DashboardLayoutOneCol</layout>
-        <title>Menu:ConfigurationTools:VCSManagement</title>
-        <cells>
-          <cell id="1">
-            <rank>1</rank>
-            <dashlets>
-              <dashlet id="10" xsi:type="DashletHeaderStatic">
-                <rank>0</rank>
-                <title>Menu:VCSIntegration:General</title>
-                <icon>combodo-vcs-integration/assets/img/icons8-code-fork.svg</icon>
-              </dashlet>
-              <dashlet id="11" xsi:type="DashletBadge">
-                <rank>1</rank>
-                <class>VCSConnector</class>
-              </dashlet>
-              <dashlet id="12" xsi:type="DashletBadge">
-                <rank>2</rank>
-                <class>VCSWebhook</class>
-              </dashlet>
-            </dashlets>
-          </cell>
-          <cell id="2">
-            <rank>2</rank>
-            <dashlets>
-              <dashlet id="20" xsi:type="DashletHeaderStatic">
-                <rank>0</rank>
-                <title>Menu:VCSIntegration:Automation</title>
-                <icon>combodo-vcs-integration/assets/img/icons8-automation.svg</icon>
-              </dashlet>
-              <dashlet id="21" xsi:type="DashletBadge">
-                <rank>1</rank>
-                <class>VCSEvent</class>
-              </dashlet>
-              <dashlet id="22" xsi:type="DashletBadge">
-                <rank>2</rank>
-                <class>VCSLogJournalAutomation</class>
-              </dashlet>
-              <dashlet id="23" xsi:type="DashletBadge">
-                <rank>3</rank>
-                <class>VCSLogAttributeAutomation</class>
-              </dashlet>
-            </dashlets>
-          </cell>
-        </cells>
-      </definition>
-    </menu>
-    <menu id="Typology" xsi:type="DashboardMenuNode" _created_in="itop-config-mgmt" _delta="if_exists">
-      <definition>
-        <cells>
-          <cell id="0">
-            <dashlets>
-              <dashlet id="vcs-events-badge" xsi:type="DashletBadge" _delta="define">
-                <rank>5.1</rank>
-                <class>VCSEvent</class>
-              </dashlet>
-            </dashlets>
-          </cell>
-        </cells>
-      </definition>
-    </menu>
-  </menus>
-  <user_rights>
-    <groups>
-      <group id="VCS" _delta="define">
-        <classes>
-          <class id="Document"/>
-          <class id="VCSAutomation"/>
-          <class id="VCSConnector"/>
-          <class id="VCSEvent"/>
-          <class id="VCSWebhook"/>
-        </classes>
-      </group>
-    </groups>
-    <profiles>
-      <profile id="170" _delta="define">
-        <name>VCS Manager</name>
-        <description>Person in charge of Version Control System management </description>
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="col:col1">
+                            <rank>10</rank>
+                            <items>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:automation">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="name">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="provider">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="events_list">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="scope_var">
+                                            <rank>40</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:target">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="object_class">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="object_att_code">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="group_messages">
+                                            <rank>60</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:reference">
+                                    <rank>30</rank>
+                                    <items>
+                                        <item id="object_ref_att_code">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="ref_regex_subject_data">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="ref_regex_pattern">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col2">
+                            <rank>20</rank>
+                            <items>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:message">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="template">
+                                            <rank>10</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="webhooks_list">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+    </classes>
+    <menus>
+        <menu id="ConfigurationTools:VCSManagement" xsi:type="DashboardMenuNode" _delta="define">
+            <rank>200</rank>
+            <parent>ConfigurationTools</parent>
+            <definition>
+                <layout>DashboardLayoutOneCol</layout>
+                <title>Menu:ConfigurationTools:VCSManagement</title>
+                <cells>
+                    <cell id="1">
+                        <rank>1</rank>
+                        <dashlets>
+                            <dashlet id="10" xsi:type="DashletHeaderStatic">
+                                <rank>0</rank>
+                                <title>Menu:VCSIntegration:General</title>
+                                <icon>combodo-vcs-integration/assets/img/icons8-code-fork.svg</icon>
+                            </dashlet>
+                            <dashlet id="11" xsi:type="DashletBadge">
+                                <rank>1</rank>
+                                <class>VCSConnector</class>
+                            </dashlet>
+                            <dashlet id="12" xsi:type="DashletBadge">
+                                <rank>2</rank>
+                                <class>VCSWebhook</class>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                    <cell id="2">
+                        <rank>2</rank>
+                        <dashlets>
+                            <dashlet id="20" xsi:type="DashletHeaderStatic">
+                                <rank>0</rank>
+                                <title>Menu:VCSIntegration:Automation</title>
+                                <icon>combodo-vcs-integration/assets/img/icons8-automation.svg</icon>
+                            </dashlet>
+                            <dashlet id="21" xsi:type="DashletBadge">
+                                <rank>1</rank>
+                                <class>VCSEvent</class>
+                            </dashlet>
+                            <dashlet id="22" xsi:type="DashletBadge">
+                                <rank>2</rank>
+                                <class>VCSLogJournalAutomation</class>
+                            </dashlet>
+                            <dashlet id="23" xsi:type="DashletBadge">
+                                <rank>3</rank>
+                                <class>VCSLogAttributeAutomation</class>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                </cells>
+            </definition>
+        </menu>
+        <menu id="Typology" xsi:type="DashboardMenuNode" _created_in="itop-config-mgmt" _delta="if_exists">
+            <definition>
+                <cells>
+                    <cell id="0">
+                        <dashlets>
+                            <dashlet id="vcs-events-badge" xsi:type="DashletBadge" _delta="define">
+                                <rank>5.1</rank>
+                                <class>VCSEvent</class>
+                            </dashlet>
+                        </dashlets>
+                    </cell>
+                </cells>
+            </definition>
+        </menu>
+    </menus>
+    <user_rights>
         <groups>
-          <group id="VCS">
-            <actions>
-              <action id="action:write">allow</action>
-              <action id="action:bulk write">allow</action>
-              <action id="action:delete">allow</action>
-              <action id="action:bulk delete">allow</action>
-             </actions>
-          </group>
-          <group id="*">
-            <actions>
-              <action id="action:read">allow</action>
-              <action id="action:bulk read">allow</action>
-            </actions>
-          </group>
-         </groups>
-      </profile>
-    </profiles>
-  </user_rights>
+            <group id="VCS" _delta="define">
+                <classes>
+                    <class id="Document"/>
+                    <class id="VCSAutomation"/>
+                    <class id="VCSConnector"/>
+                    <class id="VCSEvent"/>
+                    <class id="VCSWebhook"/>
+                </classes>
+            </group>
+        </groups>
+        <profiles>
+            <profile id="170" _delta="define">
+                <name>VCS Manager</name>
+                <description>Person in charge of Version Control System management</description>
+                <groups>
+                    <group id="VCS">
+                        <actions>
+                            <action id="action:write">allow</action>
+                            <action id="action:bulk write">allow</action>
+                            <action id="action:delete">allow</action>
+                            <action id="action:bulk delete">allow</action>
+                        </actions>
+                    </group>
+                    <group id="*">
+                        <actions>
+                            <action id="action:read">allow</action>
+                            <action id="action:bulk read">allow</action>
+                        </actions>
+                    </group>
+                </groups>
+            </profile>
+        </profiles>
+    </user_rights>
 </itop_design>
