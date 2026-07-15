@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -6,7 +7,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('EN US', 'English', 'English', [
 	// MENU elements
 	'Menu:ConfigurationTools:VCSManagement' => 'VCS configuration',
 	'Menu:VCSIntegration:General' => 'General',
@@ -42,10 +43,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CLASS VCSWebhook
 	'Class:VCSWebhook' => 'VCS Webhook',
 	'Class:VCSWebhook+' => 'Version Control System Webhook',
-    'Class:VCSWebhook/Attribute:type' => 'Type',
-    'Class:VCSWebhook/Attribute:type+' => 'Type of webhook',
-    'Class:VCSWebhook/Attribute:type/Value:repository' => 'Repository',
-    'Class:VCSWebhook/Attribute:type/Value:organization' => 'Organization',
+	'Class:VCSWebhook/Attribute:type' => 'Type',
+	'Class:VCSWebhook/Attribute:type+' => 'Type of webhook',
+	'Class:VCSWebhook/Attribute:type/Value:repository' => 'Repository',
+	'Class:VCSWebhook/Attribute:type/Value:organization' => 'Organization',
 	'Class:VCSWebhook/Attribute:name' => 'Label',
 	'Class:VCSWebhook/Attribute:name+' => 'Label describing the webhook',
 	'Class:VCSWebhook/Attribute:connector_id' => 'API Connector',
@@ -121,23 +122,23 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkVCSAutomationToVCSWebhook/Attribute:vcswebhook_id' => 'Webhook',
 	'Class:lnkVCSAutomationToVCSWebhook/Attribute:vcswebhook_id+' => 'VCS Webhook',
 
-    // CLASS VCSWebhookPayload
-    'Class:VCSWebhookPayload' => 'VCS Webhook Payload',
-    'Class:VCSWebhookPayload+' => 'Payload received from a VCS Webhook',
-    'Class:VCSWebhookPayload/name' => '%1$s - %2$s - %3$s',
-    'Class:VCSWebhookPayload/Attribute:provider' => 'Provider',
-    'Class:VCSWebhookPayload/Attribute:provider+' => '',
-    'Class:VCSWebhookPayload/Attribute:provider/Value:github' => 'GitHub',
-    'Class:VCSWebhookPayload/Attribute:type' => 'Type',
-    'Class:VCSWebhookPayload/Attribute:type+' => '',
-    'Class:VCSWebhookPayload/Attribute:webhook_id' => 'Webhook',
-    'Class:VCSWebhookPayload/Attribute:webhook_id+' => '',
-    'Class:VCSWebhookPayload/Attribute:webhook_name' => 'Webhook name',
-    'Class:VCSWebhookPayload/Attribute:webhook_name+' => '',
-    'Class:VCSWebhookPayload/Attribute:payload' => 'Payload',
-    'Class:VCSWebhookPayload/Attribute:payload+' => '',
+	// CLASS VCSWebhookPayload
+	'Class:VCSWebhookPayload' => 'VCS Webhook Payload',
+	'Class:VCSWebhookPayload+' => 'Payload received from a VCS Webhook',
+	'Class:VCSWebhookPayload/name' => '%1$s - %2$s - %3$s',
+	'Class:VCSWebhookPayload/Attribute:provider' => 'Provider',
+	'Class:VCSWebhookPayload/Attribute:provider+' => '',
+	'Class:VCSWebhookPayload/Attribute:provider/Value:github' => 'GitHub',
+	'Class:VCSWebhookPayload/Attribute:type' => 'Type',
+	'Class:VCSWebhookPayload/Attribute:type+' => '',
+	'Class:VCSWebhookPayload/Attribute:webhook_id' => 'Webhook',
+	'Class:VCSWebhookPayload/Attribute:webhook_id+' => '',
+	'Class:VCSWebhookPayload/Attribute:webhook_name' => 'Webhook name',
+	'Class:VCSWebhookPayload/Attribute:webhook_name+' => '',
+	'Class:VCSWebhookPayload/Attribute:payload' => 'Payload',
+	'Class:VCSWebhookPayload/Attribute:payload+' => '',
 
-    // CLASS VCSEvent
+	// CLASS VCSEvent
 	'Class:VCSEvent' => 'VCS Event',
 	'Class:VCSEvent+' => 'Event that can be triggered by a VCS on its webhooks',
 	'Class:VCSEvent/Attribute:name+' => 'VCS Event name - Must exactly match the VCS event',
@@ -210,5 +211,4 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected' => 'An automation needs to be linked to, at least, one event!',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent' => 'The event %1$s cannot be used for the automation as it belongs to a different provider!',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForWebhooks' => 'The webhook %1$s cannot use that automation as it belongs to a different provider!',
-));
-
+]);

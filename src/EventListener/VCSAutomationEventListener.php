@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -38,46 +39,44 @@ class VCSAutomationEventListener implements iEventServiceSetup
 	}
 
 	/** @inheritdoc  */
-	public function RegisterEventsAndListeners() : void
+	public function RegisterEventsAndListeners(): void
 	{
-        // EVENT_DB_AFTER_WRITE
-        EventService::RegisterListener(
-            EVENT_DB_AFTER_WRITE,
-            [$this, 'OnDBAfterWrite'],
-            'VCSAutomation'
-        );
+		// EVENT_DB_AFTER_WRITE
+		EventService::RegisterListener(
+			EVENT_DB_AFTER_WRITE,
+			[$this, 'OnDBAfterWrite'],
+			'VCSAutomation'
+		);
 
-    }
+	}
 
-    /**
-     * OnDBAfterWrite.
-     *
-     * @param \Combodo\iTop\Service\Events\EventData $oEventData
-     *
-     * @return void
-     */
-    public function OnDBAfterWrite(EventData $oEventData): void
-    {
-        try{
-            // retrieve Automation
-            $oAutomation = $oEventData->GetEventData()['object'];
-            $olnkVCSAutomationToVCSWebhooksSet = $oAutomation->Get('webhooks_list');
-            while ($olnkVCSAutomationToVCSWebhook = $olnkVCSAutomationToVCSWebhooksSet->Fetch()) {
-                $oWebhook = MetaModel::GetObject('VCSWebhook', $olnkVCSAutomationToVCSWebhook->Get('vcswebhook_id'));
-                if (!is_null($oWebhook)) {
-                    $this->oGitHubManager->UpdateVCSWebhook($oWebhook);
-                }
-            }
-        }
-        catch(Exception $e){
+	/**
+	 * OnDBAfterWrite.
+	 *
+	 * @param \Combodo\iTop\Service\Events\EventData $oEventData
+	 *
+	 * @return void
+	 */
+	public function OnDBAfterWrite(EventData $oEventData): void
+	{
+		try {
+			// retrieve Automation
+			$oAutomation = $oEventData->GetEventData()['object'];
+			$olnkVCSAutomationToVCSWebhooksSet = $oAutomation->Get('webhooks_list');
+			while ($olnkVCSAutomationToVCSWebhook = $olnkVCSAutomationToVCSWebhooksSet->Fetch()) {
+				$oWebhook = MetaModel::GetObject('VCSWebhook', $olnkVCSAutomationToVCSWebhook->Get('vcswebhook_id'));
+				if (!is_null($oWebhook)) {
+					$this->oGitHubManager->UpdateVCSWebhook($oWebhook);
+				}
+			}
+		} catch (Exception $e) {
 
-            // log
-            ExceptionLog::LogException($e, [
-                'happened on' => 'OnDBAfterWrite in VCSAutomationEventListener.php',
-                'error message' => $e->getMessage(),
-            ]);
-        }
-    }
-
+			// log
+			ExceptionLog::LogException($e, [
+				'happened on' => 'OnDBAfterWrite in VCSAutomationEventListener.php',
+				'error message' => $e->getMessage(),
+			]);
+		}
+	}
 
 }

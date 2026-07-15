@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -37,7 +38,7 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	}
 
 	/** @inheritdoc  */
-	public function RegisterEventsAndListeners() : void
+	public function RegisterEventsAndListeners(): void
 	{
 		// EVENT_DB_AFTER_WRITE
 		EventService::RegisterListener(
@@ -59,7 +60,7 @@ class VCSWebhookEventListener implements iEventServiceSetup
 			[$this, 'OnDBAfterDelete'],
 			'VCSWebhook'
 		);
-    }
+	}
 
 	/**
 	 * OnDBAfterWrite.
@@ -70,7 +71,7 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	 */
 	public function OnDBAfterWrite(EventData $oEventData): void
 	{
-		try{
+		try {
 
 			// retrieve webhook
 			$oWebhook = $oEventData->GetEventData()['object'];
@@ -80,8 +81,7 @@ class VCSWebhookEventListener implements iEventServiceSetup
 
 			// update web hook url (may have changed with module configuration)
 			$this->oGitHubManager->UpdateVCSWebhook($oWebhook, array_key_exists('secret', $aChanges));
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 			// log
 			ExceptionLog::LogException($e, [
@@ -100,7 +100,7 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	 */
 	public function OnDBLinksChanged(EventData $oEventData): void
 	{
-		try{
+		try {
 
 			// retrieve webhook
 			$oWebhook = $oEventData->GetEventData()['object'];
@@ -110,8 +110,7 @@ class VCSWebhookEventListener implements iEventServiceSetup
 
 			// auto synchronize
 			$this->oGitHubManager->PerformWebhookAutoSynchronization($oWebhook);
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 			// log exception
 			ExceptionLog::LogException($e, [
@@ -130,15 +129,14 @@ class VCSWebhookEventListener implements iEventServiceSetup
 	 */
 	public function OnDBAfterDelete(EventData $oEventData): void
 	{
-		try{
+		try {
 
 			// retrieve webhook
 			$oWebhook = $oEventData->GetEventData()['object'];
 
 			// delete synchronization
 			$this->oGitHubManager->DeleteWebhookSynchronization($oWebhook);
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 			// log exception
 			ExceptionLog::LogException($e, [

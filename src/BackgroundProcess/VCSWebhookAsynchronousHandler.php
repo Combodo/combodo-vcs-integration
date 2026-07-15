@@ -27,15 +27,15 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 	private static int $iPERIODICITY = 300;
 
 	/** @inheritDoc * */
-	public function GetPeriodicity() : int
+	public function GetPeriodicity(): int
 	{
 		// periodicity from module configuration
 		$sInterval = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_ASYNCHRONOUS_HANDLER_INTERVAL);
-		if ($sInterval !== null){
-			try{
+		if ($sInterval !== null) {
+			try {
 				return intval($sInterval);
+			} catch (Exception) {
 			}
-			catch(Exception){}
 		}
 
 		return self::$iPERIODICITY;
@@ -44,46 +44,46 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 	/** @inheritDoc *
 	 * @throws \Exception
 	 */
-	public function Process($iUnixTimeLimit) : void
+	public function Process($iUnixTimeLimit): void
 	{
-        // get automation instance
-        $oAutomationInstance = AutomationManager::GetInstance();
+		// get automation instance
+		$oAutomationInstance = AutomationManager::GetInstance();
 
-        // search webhooks
-        $oDbObjectSet = new DBObjectSet(DBSearch::FromOQL('SELECT VCSWebhookPayload'));
+		// search webhooks
+		$oDbObjectSet = new DBObjectSet(DBSearch::FromOQL('SELECT VCSWebhookPayload'));
 		$aDbObjectSet = $oDbObjectSet->ToArray();
-        ksort($aDbObjectSet);
+		ksort($aDbObjectSet);
 
 		// log
 		ModuleHelper::LogDebug('Asynchronous webhook handler execution', [
-			'payloads count' => count($aDbObjectSet)
+			'payloads count' => count($aDbObjectSet),
 		]);
 
 		// iterate through payloads
-        foreach ($aDbObjectSet as $iKey => $oWebhookPayload) {
+		foreach ($aDbObjectSet as $iKey => $oWebhookPayload) {
 
 			try {
-                if ($oWebhookPayload->Get('provider') == 'github') {
-                    /** @var VCSWebhook $oWebhook */
-                    $oWebhook = MetaModel::GetObject('VCSWebhook', $oWebhookPayload->Get('webhook_id'));
-	                $iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
-                    $oWebhookPayload->DBDelete();
+				if ($oWebhookPayload->Get('provider') == 'github') {
+					/** @var VCSWebhook $oWebhook */
+					$oWebhook = MetaModel::GetObject('VCSWebhook', $oWebhookPayload->Get('webhook_id'));
+					$iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
+					$oWebhookPayload->DBDelete();
 
-	                // increment events count and last date
-	                $oWebhook->DBIncrement('event_count');
-	                $oWebhook->Set('last_event_date', time());
-	                $oWebhook->DBUpdate();
+					// increment events count and last date
+					$oWebhook->DBIncrement('event_count');
+					$oWebhook->Set('last_event_date', time());
+					$oWebhook->DBUpdate();
 
-	                // log
-	                ModuleHelper::LogDebug('Processing payload Ref:' . $iKey, [
+					// log
+					ModuleHelper::LogDebug('Processing payload Ref:'.$iKey, [
 						'VCSWebhookPayload' => $iKey,
-		                'VCSWebhook' => $oWebhookPayload->Get('webhook_id'),
-		                'provider' => $oWebhookPayload->Get('provider'),
-		                'event type' => $oWebhookPayload->Get('type'),
-		                'automations triggered count' => $iAutomationsTriggeredCount,
-	                ]);
-                }
-            } catch (Exception $e) {
+						'VCSWebhook' => $oWebhookPayload->Get('webhook_id'),
+						'provider' => $oWebhookPayload->Get('provider'),
+						'event type' => $oWebhookPayload->Get('type'),
+						'automations triggered count' => $iAutomationsTriggeredCount,
+					]);
+				}
+			} catch (Exception $e) {
 				// trace
 				ExceptionLog::LogException($e, [
 					'happened on' => 'Process in VCSWebhookAsynchronousHandler.php',
@@ -91,13 +91,13 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 					'error message' => $e->getMessage(),
 				]);
 			}
-            if (time() >= $iUnixTimeLimit) {
-	            // log
-	            ModuleHelper::LogDebug('Asynchronous webhook handler stopped (execution time limit)', [
-		            'time limit' => $iUnixTimeLimit,
-	            ]);
-                break;
-            }
+			if (time() >= $iUnixTimeLimit) {
+				// log
+				ModuleHelper::LogDebug('Asynchronous webhook handler stopped (execution time limit)', [
+					'time limit' => $iUnixTimeLimit,
+				]);
+				break;
+			}
 		}
 	}
 }

@@ -27,7 +27,6 @@
   <img src="https://img.shields.io/badge/maintained-yes-blue" alt="Maintained: Yes" />
 </p>
 
-
 ## 🚀 Installation
 
 ```sh
@@ -61,7 +60,6 @@ echo $markdown->toHtml();
 
 <br>
 
-
 ## 📄 Convert Markdown File to Raw HTML
 
 > ***sample.md:***
@@ -79,7 +77,6 @@ echo $markdown->toHtml();
 
 [A LINK](https://github.com/fastvolt)
 ```
-
 
 > ***index.php:***
 
@@ -163,6 +160,7 @@ echo $markdown->toHtml();
 ## ⚙️ Advanced Use Case
 
 ### Inline Markdown
+
 ```php
 $markdown = Markdown::new();
 
@@ -182,15 +180,18 @@ echo $markdown->toHtml();
 <br>
 
 ### Example #1
+
 Combine multiple markdown files, contents and compile them in multiple directories:
 
 > ***Header.md***
+
 ```md
 # Blog Title  
 ### Here is the Blog Sub-title
 ```
 
 > ***Footer.md***
+
 ```md
 ### Thanks for Visiting My BlogPage
 ```
@@ -247,23 +248,23 @@ if ($markdown) {
 
 <br>
 
-## Supported Formatting Symbols 
+## Supported Formatting Symbols
 
-| Markdown Syntax              | Description                 | Example Syntax                           | Rendered Output                        |
-|-----------------------------|-----------------------------|-------------------------------------------|----------------------------------------|
-| `#` to `######`             | Headings (H1–H6)            | `## Heading 2`                            | <h2>Heading 2</h2>                     |
-| `**text**` or `__text__`    | Bold                        | `**bold**`                                | <strong>bold</strong>                  |
-| `*text*` or `_text_`        | Italic                      | `*italic*`                                | <em>italic</em>                        |
-| `~~text~~`                  | Strikethrough               | `~~strike~~`                              | <del>strike</del>                      |
-| `` `code` ``                | Inline code                 | `` `echo` ``                              | <code>echo</code>                      |
-| <code>```<br>code block<br>```</code> | Code block              | ```` ```php\n echo "Hi"; \n``` ````       | `<pre><code>...</code></pre>`          |
-| `-`, `+`, or `*`            | Unordered list              | `- Item 1`<br>`* Item 2`                  | `<ul><li>Item</li></ul>`              |
-| `1.` `2.`                   | Ordered list                | `1. Item`<br>`2. Item`                    | `<ol><li>Item</li></ol>`              |
-| `[text](url)`               | Hyperlink                   | `[GitHub](https://github.com)`           | <a href="https://github.com">GitHub</a> |
-| `> blockquote`              | Blockquote                  | `> This is a quote`                      | <blockquote>This is a quote</blockquote> |
-| `---`, `***`, `___`         | Horizontal Rule             | `---`                                     | `<hr>`                                |
-| `![alt](image.jpg)`         | Image                       | `![Logo](logo.png)`                      | `<img src="logo.png" alt="Logo">`     |
-| `\`                         | Escape special character    | `\*not italic\*`                          | *not italic* (as text)                |
+| Markdown Syntax                       | Description              | Example Syntax                      | Rendered Output                          |
+|---------------------------------------|--------------------------|-------------------------------------|------------------------------------------|
+| `#` to `######`                       | Headings (H1–H6)         | `## Heading 2`                      | <h2>Heading 2</h2>                       |
+| `**text**` or `__text__`              | Bold                     | `**bold**`                          | <strong>bold</strong>                    |
+| `*text*` or `_text_`                  | Italic                   | `*italic*`                          | <em>italic</em>                          |
+| `~~text~~`                            | Strikethrough            | `~~strike~~`                        | <del>strike</del>                        |
+| `` `code` ``                          | Inline code              | `` `echo` ``                        | <code>echo</code>                        |
+| <code>```<br>code block<br>```</code> | Code block               | ```` ```php\n echo "Hi"; \n``` ```` | `<pre><code>...</code></pre>`            |
+| `-`, `+`, or `*`                      | Unordered list           | `- Item 1`<br>`* Item 2`            | `<ul><li>Item</li></ul>`                 |
+| `1.` `2.`                             | Ordered list             | `1. Item`<br>`2. Item`              | `<ol><li>Item</li></ol>`                 |
+| `[text](url)`                         | Hyperlink                | `[GitHub](https://github.com)`      | <a href="https://github.com">GitHub</a>  |
+| `> blockquote`                        | Blockquote               | `> This is a quote`                 | <blockquote>This is a quote</blockquote> |
+| `---`, `***`, `___`                   | Horizontal Rule          | `---`                               | `<hr>`                                   |
+| `![alt](image.jpg)`                   | Image                    | `![Logo](logo.png)`                 | `<img src="logo.png" alt="Logo">`        |
+| `\`                                   | Escape special character | `\*not italic\*`                    | *not italic* (as text)                   |
 
 <br>
 
@@ -275,7 +276,8 @@ PHP 8.1 or newer.
 
 ## ℹ️ Notes
 
-> This library is an extended and simplified version of the excellent [Parsedown](https://github.com/erusev/parsedown/) by Erusev.
+> This library is an extended and simplified version of the excellent [Parsedown](https://github.com/erusev/parsedown/)
+> by Erusev.
 
 <br>
 

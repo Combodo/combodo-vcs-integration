@@ -12,30 +12,27 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 // Temporary workaround to make sure mandatory parameters are provided
 if (!array_key_exists('transaction_id', $_REQUEST)) {
-    $_REQUEST['transaction_id'] = utils::GetNewTransactionId();
+	$_REQUEST['transaction_id'] = utils::GetNewTransactionId();
 }
 if (!array_key_exists('HTTP_REFERER', $_SERVER)) {
-    $_SERVER['HTTP_REFERER'] = 'https://github.com/';
+	$_SERVER['HTTP_REFERER'] = 'https://github.com/';
 }
 
-set_error_handler(function($severity, $message, $file, $line) {
+set_error_handler(function ($severity, $message, $file, $line) {
 	throw new \ErrorException($message, 0, $severity, $file, $line);
 });
 
-set_exception_handler(function($e) {
+set_exception_handler(function ($e) {
 	header('HTTP/1.1 500 Internal Server Error');
-	echo "Error on line {$e->getLine()}: " . htmlSpecialChars($e->getMessage());
+	echo "Error on line {$e->getLine()}: ".htmlSpecialChars($e->getMessage());
 	die();
 });
 
 // retrieve VCS webhook
-try
-{
+try {
 	/** @var VCSWebhook $oWebhook */
 	$oWebhook = MetaModel::GetObject('VCSWebhook', $_GET['webhook']);
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
 	ExceptionLog::LogException($e, [
 		'happened when' => 'Receiving github webhook in GitHub.php',
 		'error message' => 'Webhook not found',
@@ -47,19 +44,19 @@ catch (Exception $e)
 // get webhook secret
 $sHookSecret = $oWebhook->Get('secret');
 
-$sRawPost = NULL;
+$sRawPost = null;
 
 $res = parse_url($_SERVER['REQUEST_URI']);
 echo json_encode($res);
 
-if ($sHookSecret !== NULL) {
+if ($sHookSecret !== null) {
 	if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
 		throw new \Exception("HTTP header 'X-Hub-Signature' is missing.");
 	} elseif (!extension_loaded('hash')) {
 		throw new \Exception("Missing 'hash' extension to check the secret code validity.");
 	}
-	list($algo, $hash) = explode('=', $_SERVER['HTTP_X_HUB_SIGNATURE'], 2) + array('', '');
-	if (!in_array($algo, hash_algos(), TRUE)) {
+	list($algo, $hash) = explode('=', $_SERVER['HTTP_X_HUB_SIGNATURE'], 2) + ['', ''];
+	if (!in_array($algo, hash_algos(), true)) {
 		throw new \Exception("Hash algorithm '$algo' is not supported.");
 	}
 	$sRawPost = file_get_contents('php://input');
@@ -101,12 +98,12 @@ $aPayload = json_decode($json, true);
 $sSenderLogin = $aPayload['sender']['login'];
 
 // Log in log system
-ModuleHelper::LogInfo("Receiving GitHub Event #" . $sDeliveryId, [
+ModuleHelper::LogInfo("Receiving GitHub Event #".$sDeliveryId, [
 	'webhook id' => $_GET['webhook'],
 	'sender' => $sSenderLogin,
 	'delivery' => $sDeliveryId,
 	'uuid' => $sUuid,
-	'type' => $sType
+	'type' => $sType,
 ]);
 
 // handle webhook

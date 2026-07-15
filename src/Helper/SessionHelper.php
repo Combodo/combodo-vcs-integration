@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -30,9 +31,9 @@ class SessionHelper
 	 *
 	 * @return string
 	 */
-	static private function GetVarName(string $sSessionVar, string $sRepository) : string
+	private static function GetVarName(string $sSessionVar, string $sRepository): string
 	{
-		return  $sSessionVar . "[$sRepository]";
+		return  $sSessionVar."[$sRepository]";
 	}
 
 	/**
@@ -43,10 +44,10 @@ class SessionHelper
 	 *
 	 * @return mixed
 	 */
-	static public function GetVar(string $sSessionVar, string $sRepository) : mixed
+	public static function GetVar(string $sSessionVar, string $sRepository): mixed
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
-		if(array_key_exists($sVarName, self::$aStaticVars))		{
+		if (array_key_exists($sVarName, self::$aStaticVars)) {
 			return self::$aStaticVars[$sVarName];
 		}
 		return Session::Get($sVarName);
@@ -61,7 +62,7 @@ class SessionHelper
 	 *
 	 * @return void
 	 */
-	static public function SetVar(string $sSessionVar, string $sRepository, mixed $oValue) : void
+	public static function SetVar(string $sSessionVar, string $sRepository, mixed $oValue): void
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
 		self::$aStaticVars[$sVarName] = $oValue;
@@ -76,15 +77,14 @@ class SessionHelper
 	 *
 	 * @return bool
 	 */
-	static public function IsSetVar(string $sSessionVar, string $sRepository) : bool
+	public static function IsSetVar(string $sSessionVar, string $sRepository): bool
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
-		if(array_key_exists($sVarName, self::$aStaticVars))		{
+		if (array_key_exists($sVarName, self::$aStaticVars)) {
 			return true;
 		}
 		return Session::IsSet($sVarName);
 	}
-
 
 	/**
 	 * Unset a session var.
@@ -94,10 +94,10 @@ class SessionHelper
 	 *
 	 * @return void
 	 */
-	static public function UnsetVar(string $sSessionVar, string $sRepository) : void
+	public static function UnsetVar(string $sSessionVar, string $sRepository): void
 	{
 		$sVarName = self::GetVarName($sSessionVar, $sRepository);
-		if(array_key_exists($sVarName, self::$aStaticVars))		{
+		if (array_key_exists($sVarName, self::$aStaticVars)) {
 			unset(self::$aStaticVars[$sVarName]);
 		}
 		Session::Unset($sVarName);

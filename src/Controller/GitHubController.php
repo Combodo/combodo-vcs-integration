@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -34,8 +35,7 @@ class GitHubController extends AbstractController
 		$oPage = new JsonPage();
 		$aData = [];
 
-		try
-		{
+		try {
 
 			// services injection
 			$oGitHubManager = GitHubManager::GetInstance();
@@ -46,7 +46,7 @@ class GitHubController extends AbstractController
 
 			// get webhook info
 			$aWebhookInfoResult = $oGitHubManager->UpdateExternalData($oWebhook);
-			foreach($aWebhookInfoResult['errors'] as $sError){
+			foreach ($aWebhookInfoResult['errors'] as $sError) {
 				$aData['errors'][] = $sError;
 			}
 			$oWebhook->DBUpdate();
@@ -54,8 +54,7 @@ class GitHubController extends AbstractController
 			// get webhook info template
 			$aExternalData = json_decode($oWebhook->Get('external_data'), true);
 			$aData['template'] = $oTemplatingService->RenderGitHubInfoTemplate($oWebhook, $aExternalData);
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 			// error handling
 			ExceptionLog::LogException($e, [
@@ -80,7 +79,7 @@ class GitHubController extends AbstractController
 		$oPage = new JsonPage();
 		$aData = [];
 
-		try{
+		try {
 
 			// services injection
 			$oGitHubManager = GitHubManager::GetInstance();
@@ -90,15 +89,14 @@ class GitHubController extends AbstractController
 
 			// synchronize webhook
 			$aSynchronizationResult = $oGitHubManager->SynchronizeWebhook($oWebhook);
-			foreach($aSynchronizationResult['errors'] as $sError){
+			foreach ($aSynchronizationResult['errors'] as $sError) {
 				$aData['errors'][] = $sError;
 			}
 			$oWebhook->DBUpdate();
 
 			// append webhook status field html
 			$oGitHubManager->AppendWebhookStatusFieldHtml($oWebhook, $aData);
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 			// error handling
 			ExceptionLog::LogException($e, [
@@ -123,7 +121,7 @@ class GitHubController extends AbstractController
 		$oPage = new JsonPage();
 		$aData = [];
 
-		try{
+		try {
 
 			// services injection
 			$oGitHubManager  = GitHubManager::GetInstance();
@@ -133,15 +131,14 @@ class GitHubController extends AbstractController
 
 			// test GitHub webhook existence
 			$aCheckWebhookWebhookSynchroResult = $oGitHubManager->UpdateWebhookStatus($oWebhook);
-			foreach($aCheckWebhookWebhookSynchroResult['errors'] as $sError){
+			foreach ($aCheckWebhookWebhookSynchroResult['errors'] as $sError) {
 				$aData['errors'][] = $sError;
 			}
 			$oWebhook->DBUpdate();
 
 			// append webhook status field html
 			$oGitHubManager->AppendWebhookStatusFieldHtml($oWebhook, $aData);
-		}
-		catch(Exception  $e){
+		} catch (Exception  $e) {
 
 			ExceptionLog::LogException($e, [
 				'happened on' => 'OperationCheckWebhookConfigurationSynchro in GitHubController.php',
@@ -165,7 +162,7 @@ class GitHubController extends AbstractController
 		$oPage = new JsonPage();
 		$aData = [];
 
-		try{
+		try {
 
 			// services injection
 			$oGitHubManager  = GitHubManager::GetInstance();
@@ -178,12 +175,10 @@ class GitHubController extends AbstractController
 
 			// revoke token
 			$oGitHubApiAuthenticationService->RegenerateAccessToken($oConnector);
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 			$aData['errors'][] = $e->getMessage();
 		}
-
 
 		return $oPage->SetData($aData);
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -32,7 +33,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	private static string $AUTHENTICATION_MODE_APP_ORGANIZATION_INSTALLATION_TOKEN = 'app_organization';
 
 	/** @var GitHubAPIAuthenticationService|null Singleton */
-	static private ?GitHubAPIAuthenticationService $oSingletonInstance = null;
+	private static ?GitHubAPIAuthenticationService $oSingletonInstance = null;
 
 	/**
 	 * GetInstance.
@@ -57,14 +58,13 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array header elements array
 	 * @throws \CoreException
 	 */
-	public function CreateAuthorizationHeader(DBObject $oWebhook) : array
+	public function CreateAuthorizationHeader(DBObject $oWebhook): array
 	{
 		$oConnector = $oWebhook->GetConnector();
 		$sMode = $oConnector->Get('mode');
 
 		// get authorization header
-		$sAuthorizationHeader = match ($sMode)
-		{
+		$sAuthorizationHeader = match ($sMode) {
 			self::$AUTHENTICATION_MODE_PERSONAL_TOKEN => self::GetPersonalTokenAuthorizationHeader($oConnector),
 			self::$AUTHENTICATION_MODE_APP_REPOSITORY_INSTALLATION_TOKEN,
 			self::$AUTHENTICATION_MODE_APP_USER_INSTALLATION_TOKEN,
@@ -75,7 +75,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 		return [
 			'Accept' => 'application/vnd.github+json',
 			'Authorization' => $sAuthorizationHeader,
-			'X-GitHub-Api-Version' => self::$API_VERSION
+			'X-GitHub-Api-Version' => self::$API_VERSION,
 		];
 	}
 
@@ -87,12 +87,12 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array header elements array
 	 * @throws \CoreException
 	 */
-	private function CreateAppAuthorizationHeader(DBObject $oConnector) : array
+	private function CreateAppAuthorizationHeader(DBObject $oConnector): array
 	{
 		return [
 			'Accept' => 'application/vnd.github+json',
 			'Authorization' =>  self::GetAppAuthorizationHeader($oConnector),
-			'X-GitHub-Api-Version' => self::$API_VERSION
+			'X-GitHub-Api-Version' => self::$API_VERSION,
 		];
 	}
 
@@ -105,9 +105,9 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	private function GetAppAuthorizationHeader(DBObject $oConnector) : string
+	private function GetAppAuthorizationHeader(DBObject $oConnector): string
 	{
-		return 'Bearer ' . self::CreateAppJWT($oConnector);
+		return 'Bearer '.self::CreateAppJWT($oConnector);
 	}
 
 	/**
@@ -130,10 +130,10 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 			'iat' => time() - 60,
 			'exp' => time() + self::$LIFETIME,
 			'iss' => $sAppId,
-			'alg' => self::$JWT_ALGORITHM
+			'alg' => self::$JWT_ALGORITHM,
 		];
 
-		return ModuleHelper::CallFunctionWithoutDisplayingPHPErrors(function() use ($aPayload,$sAppPrivateKey) {
+		return ModuleHelper::CallFunctionWithoutDisplayingPHPErrors(function () use ($aPayload, $sAppPrivateKey) {
 			return JWT::encode($aPayload, $sAppPrivateKey, self::$JWT_ALGORITHM);
 		});
 	}
@@ -147,9 +147,9 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	private function GetPersonalTokenAuthorizationHeader(DBObject $oConnector) : string
+	private function GetPersonalTokenAuthorizationHeader(DBObject $oConnector): string
 	{
-		return 'Bearer ' . $oConnector->Get('personal_access_token');
+		return 'Bearer '.$oConnector->Get('personal_access_token');
 	}
 
 	/**
@@ -159,9 +159,9 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 *
 	 * @return string
 	 */
-	private function GetConnectorSessionName(DBObject $oConnector) : string
+	private function GetConnectorSessionName(DBObject $oConnector): string
 	{
-		return 'connectors_' . $oConnector->GetKey();
+		return 'connectors_'.$oConnector->GetKey();
 	}
 
 	/**
@@ -175,13 +175,13 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @throws \CoreException
 	 * @throws \DateMalformedStringException
 	 */
-	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oConnector, DBObject $oWebhook, string $sType) : string
+	private function GetAppInstallationAccessTokenAuthorizationHeader(DBObject $oConnector, DBObject $oWebhook, string $sType): string
 	{
 		$sName = $this->GetConnectorSessionName($oConnector);
 
 		// no session token or expired
-		if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName)
-		|| self::IsCurrentAppInstallationTokenExpired($sName) ){
+		if (!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName)
+		|| self::IsCurrentAppInstallationTokenExpired($sName)) {
 
 			// app installation ID
 			$sInstallationId = SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sName) ?
@@ -194,21 +194,20 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 			// log
 			ModuleHelper::LogDebug('Create new application access token', [
 				'VCSConnector' => $oConnector->GetKey(),
-				'expires at' => $aResponse['expires_at']
+				'expires at' => $aResponse['expires_at'],
 			]);
 
 			// store it in session
 			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sName, $sInstallationId);
 			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName, $sAppInstallationAccessToken);
 			SessionHelper::SetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sName, $aResponse['expires_at']);
-		}
-		else{
+		} else {
 
 			// get session app installation access token
 			$sAppInstallationAccessToken = SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN, $sName);
 		}
 
-		return 'Bearer ' . $sAppInstallationAccessToken;
+		return 'Bearer '.$sAppInstallationAccessToken;
 	}
 
 	/**
@@ -218,7 +217,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 *
 	 * @return void
 	 */
-	public function RegenerateAccessToken(DBObject $oConnector) : void
+	public function RegenerateAccessToken(DBObject $oConnector): void
 	{
 		$sName = $this->GetConnectorSessionName($oConnector);
 		SessionHelper::UnsetVar(SessionHelper::$SESSION_APP_INSTALLATION_ID, $sName);
@@ -234,9 +233,9 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array
 	 * @throws \CoreException
 	 */
-	private function GetAppInstallation(DBObject $oConnector, DBObject $oWebhook, string $sType) : array
+	private function GetAppInstallation(DBObject $oConnector, DBObject $oWebhook, string $sType): array
 	{
-		return match($sType){
+		return match($sType) {
 			self::$AUTHENTICATION_MODE_APP_REPOSITORY_INSTALLATION_TOKEN => $this->GetRepositoryAppInstallation($oConnector, $oWebhook),
 			self::$AUTHENTICATION_MODE_APP_USER_INSTALLATION_TOKEN => $this->GetUSerAppInstallation($oConnector),
 			self::$AUTHENTICATION_MODE_APP_ORGANIZATION_INSTALLATION_TOKEN => $this->GetOrganizationAppInstallation($oConnector),
@@ -255,7 +254,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array
 	 * @throws \CoreException
 	 */
-	private function GetRepositoryAppInstallation(DBObject $oConnector, DBObject $oWebhook) : array
+	private function GetRepositoryAppInstallation(DBObject $oConnector, DBObject $oWebhook): array
 	{
 		// retrieve useful settings
 		$sRepositoryName = $oConnector->Get('app_repository_name');
@@ -263,7 +262,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET',  $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/installation"), $this->CreateAppAuthorizationHeader($oConnector));
+		$request = new Request('GET', $this->GetAPIUri("/repos/$sOwner/$sRepositoryName/installation"), $this->CreateAppAuthorizationHeader($oConnector));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -280,14 +279,14 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array
 	 * @throws \CoreException
 	 */
-	private function GetUserAppInstallation(DBObject $oConnector) : array
+	private function GetUserAppInstallation(DBObject $oConnector): array
 	{
 		// retrieve useful settings
 		$sUser = $oConnector->Get('app_user_name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET',  $this->GetAPIUri("/repos/$sUser/installation"), $this->CreateAppAuthorizationHeader($oConnector));
+		$request = new Request('GET', $this->GetAPIUri("/repos/$sUser/installation"), $this->CreateAppAuthorizationHeader($oConnector));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -304,14 +303,14 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array
 	 * @throws \CoreException
 	 */
-	private function GetOrganizationAppInstallation(DBObject $oConnector) : array
+	private function GetOrganizationAppInstallation(DBObject $oConnector): array
 	{
 		// retrieve useful settings
 		$sOrganization = $oConnector->Get('app_organization_name');
 
 		// API call
 		$client = new Client();
-		$request = new Request('GET',  $this->GetAPIUri("/orgs/$sOrganization/installation"), $this->CreateAppAuthorizationHeader($oConnector));
+		$request = new Request('GET', $this->GetAPIUri("/orgs/$sOrganization/installation"), $this->CreateAppAuthorizationHeader($oConnector));
 		$res = $client->sendAsync($request)->wait();
 
 		return json_decode($res->getBody(), true);
@@ -329,7 +328,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return array Application installation access token.
 	 * @throws \CoreException
 	 */
-	private function CreateApplicationInstallationAccessToken(DBObject $oConnector, string $InstallationId) : array
+	private function CreateApplicationInstallationAccessToken(DBObject $oConnector, string $InstallationId): array
 	{
 		// API call
 		$client = new Client();
@@ -346,21 +345,21 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * @return bool
 	 * @throws \DateMalformedStringException
 	 */
-	static public function IsCurrentAppInstallationTokenExpired(string $sRepository): bool
+	public static function IsCurrentAppInstallationTokenExpired(string $sRepository): bool
 	{
-		try{
+		try {
 			// no session var
-			if(!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository))
+			if (!SessionHelper::IsSetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository)) {
 				return true;
+			}
 
 			// compute dates
-			$oDateNow = new DateTime('now',  new DateTimeZone('Z'));
+			$oDateNow = new DateTime('now', new DateTimeZone('Z'));
 			$oDateExpiration = new DateTime(SessionHelper::GetVar(SessionHelper::$SESSION_APP_INSTALLATION_ACCESS_TOKEN_EXPIRATION_DATE, $sRepository));
 
 			// now > expiration_date
 			return $oDateNow->getTimestamp() > $oDateExpiration->getTimestamp();
-		}
-		catch(Exception $e){
+		} catch (Exception $e) {
 
 			return true;
 		}

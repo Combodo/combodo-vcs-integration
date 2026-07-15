@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+<?php
+
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
@@ -22,25 +24,21 @@ use utils;
 class VCSPopupMenu implements iPopupMenuExtension
 {
 	/** @inheritdoc  */
-	public static function EnumItems($iMenuId, $param) : array
+	public static function EnumItems($iMenuId, $param): array
 	{
-		$aResult = array();
-		switch($iMenuId) // type of menu in which to add menu items
-		{
+		$aResult = [];
+		switch ($iMenuId) { // type of menu in which to add menu items
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 
 				// allowed profiles for github actions
 				$bAllowedProfile = UserRights::HasProfile('Administrator') || UserRights::HasProfile('VCS Manager');
 
-				if(get_class($param) ===  'VCSWebhook' && $bAllowedProfile)
-				{
+				if (get_class($param) ===  'VCSWebhook' && $bAllowedProfile) {
 					$sConnectorId = null;
-					try{
+					try {
 						$sConnectorId = $param->Get('connector_id');
-					}
-					catch(Exception $e)
-					{
+					} catch (Exception $e) {
 						// log
 						ExceptionLog::LogException($e, [
 							'happened_ n' => 'EnumItems in VCSPopupMenu.php',
@@ -48,33 +46,38 @@ class VCSPopupMenu implements iPopupMenuExtension
 						]);
 					}
 
-					if($sConnectorId !== null)
-					{
+					if ($sConnectorId !== null) {
 						// add separator
 						$oSeparator = new SeparatorPopupMenuItem();
 						$aResult[] = $oSeparator;
 
 						// synchronize webhook
-						$oItem = new JSPopupMenuItem('GitHubSynchronizeWebhook',
+						$oItem = new JSPopupMenuItem(
+							'GitHubSynchronizeWebhook',
 							Dict::S('Class:VCSWebhook/UI:Button:synchronize_configuration'),
 							'iTopGithubWorker.SynchronizeWebhook("'.$param->GetKey().'");',
-							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
+							['env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/js/github.js']
+						);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;
 
 						// check webhook configuration
-						$oItem = new JSPopupMenuItem('GitHubCheckWebhookSynchro',
+						$oItem = new JSPopupMenuItem(
+							'GitHubCheckWebhookSynchro',
 							Dict::S('Class:VCSWebhook/UI:Button:check_configuration'),
 							'iTopGithubWorker.CheckWebhookConfigurationSynchro("'.$param->GetKey().'");',
-							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
+							['env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/js/github.js']
+						);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;
 
 						// revoke token
-						$oItem = new JSPopupMenuItem('GitHubRevokeToken',
+						$oItem = new JSPopupMenuItem(
+							'GitHubRevokeToken',
 							Dict::S('Class:VCSWebhook/UI:Button:revoke_token'),
 							'iTopGithubWorker.RegenerateAccessToken("'.$param->GetKey().'");',
-							['env-' . utils::GetCurrentEnvironment() . '/combodo-vcs-integration/assets/js/github.js']);
+							['env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/js/github.js']
+						);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;
 					}

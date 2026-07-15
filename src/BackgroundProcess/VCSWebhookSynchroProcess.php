@@ -42,15 +42,15 @@ class VCSWebhookSynchroProcess implements iBackgroundProcess
 	}
 
 	/** @inheritDoc * */
-	public function GetPeriodicity() : int
+	public function GetPeriodicity(): int
 	{
 		// periodicity from module configuration
 		$sSynchroAUtoInterval = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_SYNCHRO_AUTO_INTERVAL);
-		if($sSynchroAUtoInterval !== null){
-			try{
+		if ($sSynchroAUtoInterval !== null) {
+			try {
 				return intval($sSynchroAUtoInterval);
+			} catch (Exception) {
 			}
-			catch(Exception){}
 		}
 
 		return self::$iPERIODICITY;
@@ -59,7 +59,7 @@ class VCSWebhookSynchroProcess implements iBackgroundProcess
 	/** @inheritDoc *
 	 * @throws \Exception
 	 */
-	public function Process($iUnixTimeLimit) : void
+	public function Process($iUnixTimeLimit): void
 	{
 		// search webhooks
 		$oDbObjectSearch = DBSearch::FromOQL('SELECT VCSWebhook');
@@ -69,10 +69,10 @@ class VCSWebhookSynchroProcess implements iBackgroundProcess
 		// iterate throw webhooks...
 		while ((time() < $iUnixTimeLimit) && ($oWebhook = $oDbObjectSet->Fetch())) {
 
-			try{
+			try {
 
 				// ignore webhook without connector
-				if($oWebhook->Get('connector_id') === 0){
+				if ($oWebhook->Get('connector_id') === 0) {
 					continue;
 				}
 
@@ -82,8 +82,7 @@ class VCSWebhookSynchroProcess implements iBackgroundProcess
 
 				// auto synchronize
 				$this->oGitHubManager->PerformWebhookAutoSynchronization($oWebhook);
-			}
-			catch(Exception $e){
+			} catch (Exception $e) {
 
 				// trace
 				ExceptionLog::LogException($e, [

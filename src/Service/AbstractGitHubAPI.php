@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -18,9 +19,9 @@ class AbstractGitHubAPI
 	 *
 	 * @return string
 	 */
-	protected function GetAPIUri(string $sResource) : string
+	protected function GetAPIUri(string $sResource): string
 	{
-		return static::$BASE_URL . $sResource;
+		return static::$BASE_URL.$sResource;
 	}
 
 }

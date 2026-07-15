@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Localized data
  *
@@ -6,7 +7,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-Dict::Add('FR FR', 'French', 'Français', array(
+Dict::Add('FR FR', 'French', 'Français', [
 	// MENU elements
 	'Menu:ConfigurationTools:VCSManagement' => 'Configuration des VCS',
 	'Menu:VCSIntegration:General' => 'Général',
@@ -42,10 +43,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// CLASS VCSWebhook
 	'Class:VCSWebhook' => 'VCS Webhook',
 	'Class:VCSWebhook+' => 'Webhook du système de gestion de versions',
-    'Class:VCSWebhook/Attribute:type' => 'Type',
-    'Class:VCSWebhook/Attribute:type+' => 'Type du webhook',
-    'Class:VCSWebhook/Attribute:type/Value:repository' => 'Dépôt',
-    'Class:VCSWebhook/Attribute:type/Value:organization' => 'Organisation',
+	'Class:VCSWebhook/Attribute:type' => 'Type',
+	'Class:VCSWebhook/Attribute:type+' => 'Type du webhook',
+	'Class:VCSWebhook/Attribute:type/Value:repository' => 'Dépôt',
+	'Class:VCSWebhook/Attribute:type/Value:organization' => 'Organisation',
 	'Class:VCSWebhook/Attribute:name' => 'Etiquette',
 	'Class:VCSWebhook/Attribute:name+' => 'Etiquette libre décrivant le webhook',
 	'Class:VCSWebhook/Attribute:connector_id' => 'Connecteur API',
@@ -121,23 +122,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkVCSAutomationToVCSWebhook/Attribute:webhook_id' => 'Webhook',
 	'Class:lnkVCSAutomationToVCSWebhook/Attribute:webhook_id+' => '',
 
-    // CLASS VCSWebhookPayload
-    'Class:VCSWebhookPayload' => 'Charge utile',
-    'Class:VCSWebhookPayload+' => 'Charge utile reçue d\'un Webhook',
-    'Class:VCSWebhookPayload/name' => '%1$s - %2$s - %3$s',
-    'Class:VCSWebhookPayload/Attribute:provider' => 'Fournisseur',
-    'Class:VCSWebhookPayload/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
-    'Class:VCSWebhookPayload/Attribute:provider/Value:github' => 'GitHub',
-    'Class:VCSWebhookPayload/Attribute:type' => 'Type',
-    'Class:VCSWebhookPayload/Attribute:type+' => '',
-    'Class:VCSWebhookPayload/Attribute:webhook_id' => 'Webhook',
-    'Class:VCSWebhookPayload/Attribute:webhook_id+' => '',
-    'Class:VCSWebhookPayload/Attribute:webhook_name' => 'Nom du webhook',
-    'Class:VCSWebhookPayload/Attribute:webhook_name+' => '',
-    'Class:VCSWebhookPayload/Attribute:payload' => 'Charge utile',
-    'Class:VCSWebhookPayload/Attribute:payload+' => '',
+	// CLASS VCSWebhookPayload
+	'Class:VCSWebhookPayload' => 'Charge utile',
+	'Class:VCSWebhookPayload+' => 'Charge utile reçue d\'un Webhook',
+	'Class:VCSWebhookPayload/name' => '%1$s - %2$s - %3$s',
+	'Class:VCSWebhookPayload/Attribute:provider' => 'Fournisseur',
+	'Class:VCSWebhookPayload/Attribute:provider+' => 'Fournisseur du système de gestion de versions',
+	'Class:VCSWebhookPayload/Attribute:provider/Value:github' => 'GitHub',
+	'Class:VCSWebhookPayload/Attribute:type' => 'Type',
+	'Class:VCSWebhookPayload/Attribute:type+' => '',
+	'Class:VCSWebhookPayload/Attribute:webhook_id' => 'Webhook',
+	'Class:VCSWebhookPayload/Attribute:webhook_id+' => '',
+	'Class:VCSWebhookPayload/Attribute:webhook_name' => 'Nom du webhook',
+	'Class:VCSWebhookPayload/Attribute:webhook_name+' => '',
+	'Class:VCSWebhookPayload/Attribute:payload' => 'Charge utile',
+	'Class:VCSWebhookPayload/Attribute:payload+' => '',
 
-    // CLASS VCSEvent
+	// CLASS VCSEvent
 	'Class:VCSEvent' => 'Evènement VCS',
 	'Class:VCSEvent+' => 'Evènement qu\'un système de gestion de versions peut déclencher sur l\'un de ses dépôts',
 	'Class:VCSEvent/Attribute:name+' => 'Nom de l\'évènement VCS - Il doit correspondre exactement à celui utilisé par le VCS',
@@ -210,5 +211,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:NoEventSelected' => 'Un atomatisme doit être lié à, au moins, un évènement !',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForEvent' => 'L\'évènement %1$s ne peut être associé à l\'automatisme car il n\'utilise pas le même fournisseur de VCS !',
 	'UI:VCSIntegration:Action:CreateOrUpdate:VCSAutomation:WrongProviderForWebhooks' => 'Le webhook %1$s ne peut être lié à l\'automatisme car il n\'utilise pas le même fournisseur de VCS !',
-));
-
+]);
