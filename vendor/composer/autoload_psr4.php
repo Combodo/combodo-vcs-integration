@@ -5,7 +5,7 @@
 $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
-return [
-	'FastVolt\\Helper\\' => [$vendorDir.'/fastvolt/markdown/src'],
-	'Combodo\\iTop\\VCSManagement\\' => [$baseDir.'/src'],
-];
+return array(
+    'FastVolt\\Helper\\' => array($vendorDir . '/fastvolt/markdown/src'),
+    'Combodo\\iTop\\VCSManagement\\' => array($baseDir . '/src'),
+);

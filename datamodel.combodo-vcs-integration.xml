@@ -2147,6 +2147,286 @@ JS
                 </list>
             </presentation>
         </class>
+
+
+        // specifique support-combodo
+
+        <class id="UserRequest" _delta="must_exist">
+            <fields>
+                <field id="pull_requests" xsi:type="Combodo\iTop\VCSManagement\Attribute\AttributeJSON" _delta="define">
+                    <sql>pull_requests</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <tracking_level>none</tracking_level>
+                </field>
+            </fields>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="col:col3">
+                            <rank>100</rank>
+                            <items>
+                                <item id="fieldset:pull_requests_overview" >
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="pull_requests">
+                                            <rank>10</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                    </items>
+                </details>
+            </presentation>
+        </class>
+
+
+        <class id="VCSPullRequestAutomation" _delta="define">
+            <parent>VCSAutomation</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_pull_request_automation</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <format>%1$s</format>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <reconciliation>
+                    <attributes>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- Object class -->
+                <field id="object_class" xsi:type="AttributeClass">
+                    <sql>object_class</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <class_category>searchable</class_category>
+                    <more_values>true</more_values>
+                </field>
+                <!-- Object Target Attribute -->
+                <field id="object_att_code" xsi:type="AttributeClassAttCodeSet">
+                    <class_field>object_class</class_field>
+                    <sql>object_att_code</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <dependencies>
+                        <attribute id="object_class"></attribute>
+                    </dependencies>
+                    <max_items>1</max_items>
+                    <attribute_definition_list>AttributeJSON</attribute_definition_list>
+                </field>
+                <!-- reference regex pattern -->
+                <field id="ref_regex_pattern" xsi:type="AttributeString">
+                    <sql>regex</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- reference regex subject data -->
+                <field id="ref_regex_subject_data" xsi:type="AttributeString">
+                    <sql>data</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- Object Ref Attribute -->
+                <field id="object_ref_att_code" xsi:type="AttributeClassAttCodeSet">
+                    <class_field>object_class</class_field>
+                    <sql>object_ref_att_code</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <dependencies>
+                        <attribute id="object_class"></attribute>
+                    </dependencies>
+                    <max_items>1</max_items>
+                    <attribute_definition_list>AttributeString</attribute_definition_list>
+                </field>
+            </fields>
+            <methods>
+                <!-- HandleEvent -->
+                <method id="HandleEvent">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>scopeData</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
+            <![CDATA[
+
+
+	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
+
+                    $sObjectClass = $this->Get('object_class');
+                    $sObjectRefAttCode = trim($this->Get('object_ref_att_code'));
+                    $sObjectAttCode = trim($this->Get('object_att_code'));
+                    $sRefRegexPattern = $this->Get('ref_regex_pattern');
+                    $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
+
+                    $bScopeData = !empty($this->Get('scope_var'));
+
+                                        // get object destination attribute
+                    $oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
+
+                    // retrieve payload subject data value
+                    $sRefSubjectDataValue = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($bScopeData ? $aScopeData : $aPayload, $sRefRegexSubjectData);
+
+                    // retrieve destination object
+		            $oObject = null;
+                    if(!utils::IsNullOrEmptyString($sRefRegexPattern)){
+                      $aMatch = [];
+                      preg_match("/$sRefRegexPattern/", $sRefSubjectDataValue, $aMatch);
+                      if(!empty($aMatch)){
+                          $sOQL = "SELECT $sObjectClass WHERE $sObjectRefAttCode=\"$aMatch[1]\"";
+                          $oObject = MetaModel::GetObjectFromOQL($sOQL, [], true);
+                      }
+                    }
+
+                    $fnGetValueByPath = function(array $data, string $path, $default = null) {
+                        $segments = explode('.', $path);
+                        $current = $data;
+
+                        foreach ($segments as $segment) {
+                            if (!is_array($current) || !array_key_exists($segment, $current)) {
+                                return $default;
+                            }
+                            $current = $current[$segment];
+                        }
+
+                        return $current;
+                    };
+
+                    $fnExtractUsedKeys = function (array $payload, array $usedKeys) use ($fnGetValueByPath): array {
+                        $result = [];
+                        foreach ($usedKeys as $path) {
+                            $result[$path] = $fnGetValueByPath($payload, $path);
+                        }
+                        return $result;
+                    };
+
+                    $aUsedKeys = [
+                    'number',
+                    'base.repo.full_name',
+                    'base.ref',
+                    'html_url',
+                    'state',
+                    'merged_at',
+                    'requested_reviewers',
+                    'assignee.login'];
+
+
+                    $aResult = $fnExtractUsedKeys($aPayload['pull_request'], $aUsedKeys);
+
+                    $aFinalResult = json_decode($oObject->Get($sObjectAttCode) ?? '{}', true);
+
+                    $aFinalResult[$aResult['number']] = $aResult;
+
+                    IssueLog::Error('VCSPullRequestAutomation');
+                    IssueLog::Error(json_encode($aResult));
+
+
+
+                    $oObject->Set($sObjectAttCode, json_encode($aFinalResult));
+                    $oObject->DBUpdate();
+	            }
+
+
+                        ]]>
+          </code>
+                </method>
+            </methods>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="col:col1">
+                            <rank>10</rank>
+                            <items>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:automation">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="name">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="provider">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="events_list">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="scope_var">
+                                            <rank>40</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:target">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="object_class">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="object_att_code">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:reference">
+                                    <rank>30</rank>
+                                    <items>
+                                        <item id="object_ref_att_code">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="ref_regex_subject_data">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="ref_regex_pattern">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="webhooks_list">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+
     </classes>
     <menus>
         <menu id="ConfigurationTools:VCSManagement" xsi:type="DashboardMenuNode" _delta="define">
@@ -2193,6 +2473,10 @@ JS
                             <dashlet id="23" xsi:type="DashletBadge">
                                 <rank>3</rank>
                                 <class>VCSLogAttributeAutomation</class>
+                            </dashlet>
+                            <dashlet id="24" xsi:type="DashletBadge">
+                                <rank>4</rank>
+                                <class>VCSPullRequestAutomation</class>
                             </dashlet>
                         </dashlets>
                     </cell>

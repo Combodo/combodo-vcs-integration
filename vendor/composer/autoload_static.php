@@ -6,55 +6,56 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
 {
-	public static $prefixLengthsPsr4 =  [
-		'F' =>
-		 [
-			'FastVolt\\Helper\\' => 16,
-		],
-		'C' =>
-		 [
-			'Combodo\\iTop\\VCSManagement\\' => 27,
-		],
-	];
+    public static $prefixLengthsPsr4 = array (
+        'F' =>
+        array (
+            'FastVolt\\Helper\\' => 16,
+        ),
+        'C' =>
+        array (
+            'Combodo\\iTop\\VCSManagement\\' => 27,
+        ),
+    );
 
-	public static $prefixDirsPsr4 =  [
-		'FastVolt\\Helper\\' =>
-		 [
-			0 => __DIR__.'/..'.'/fastvolt/markdown/src',
-		],
-		'Combodo\\iTop\\VCSManagement\\' =>
-		 [
-			0 => __DIR__.'/../..'.'/src',
-		],
-	];
+    public static $prefixDirsPsr4 = array (
+        'FastVolt\\Helper\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/fastvolt/markdown/src',
+        ),
+        'Combodo\\iTop\\VCSManagement\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src',
+        ),
+    );
 
-	public static $classMap =  [
-		'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => __DIR__.'/../..'.'/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
-		'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => __DIR__.'/../..'.'/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
-		'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => __DIR__.'/../..'.'/src/Controller/GitHubController.php',
-		'Combodo\\iTop\\VCSManagement\\EventListener\\VCSAutomationEventListener' => __DIR__.'/../..'.'/src/EventListener/VCSAutomationEventListener.php',
-		'Combodo\\iTop\\VCSManagement\\EventListener\\VCSWebhookEventListener' => __DIR__.'/../..'.'/src/EventListener/VCSWebhookEventListener.php',
-		'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => __DIR__.'/../..'.'/src/Helper/ModuleHelper.php',
-		'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => __DIR__.'/../..'.'/src/Helper/SessionHelper.php',
-		'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => __DIR__.'/../..'.'/src/Hook/VCSPopupMenu.php',
-		'Combodo\\iTop\\VCSManagement\\Service\\AbstractGitHubAPI' => __DIR__.'/../..'.'/src/Service/AbstractGitHubAPI.php',
-		'Combodo\\iTop\\VCSManagement\\Service\\AutomationManager' => __DIR__.'/../..'.'/src/Service/AutomationManager.php',
-		'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIAuthenticationService' => __DIR__.'/../..'.'/src/Service/GitHubAPIAuthenticationService.php',
-		'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIService' => __DIR__.'/../..'.'/src/Service/GitHubAPIService.php',
-		'Combodo\\iTop\\VCSManagement\\Service\\GitHubManager' => __DIR__.'/../..'.'/src/Service/GitHubManager.php',
-		'Combodo\\iTop\\VCSManagement\\Service\\TemplatingService' => __DIR__.'/../..'.'/src/Service/TemplatingService.php',
-		'Composer\\InstalledVersions' => __DIR__.'/..'.'/composer/InstalledVersions.php',
-		'FastVolt\\Helper\\Libs\\Markdown\\ParseMarkdown' => __DIR__.'/..'.'/fastvolt/markdown/src/Libs/Markdown/ParseMarkdown.php',
-		'FastVolt\\Helper\\Markdown' => __DIR__.'/..'.'/fastvolt/markdown/src/Markdown.php',
-	];
+    public static $classMap = array (
+        'Combodo\\iTop\\VCSManagement\\Attribute\\AttributeJSON' => __DIR__ . '/../..' . '/src/Attribute/AttributeJSON.php',
+        'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
+        'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
+        'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => __DIR__ . '/../..' . '/src/Controller/GitHubController.php',
+        'Combodo\\iTop\\VCSManagement\\EventListener\\VCSAutomationEventListener' => __DIR__ . '/../..' . '/src/EventListener/VCSAutomationEventListener.php',
+        'Combodo\\iTop\\VCSManagement\\EventListener\\VCSWebhookEventListener' => __DIR__ . '/../..' . '/src/EventListener/VCSWebhookEventListener.php',
+        'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => __DIR__ . '/../..' . '/src/Helper/ModuleHelper.php',
+        'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => __DIR__ . '/../..' . '/src/Helper/SessionHelper.php',
+        'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => __DIR__ . '/../..' . '/src/Hook/VCSPopupMenu.php',
+        'Combodo\\iTop\\VCSManagement\\Service\\AbstractGitHubAPI' => __DIR__ . '/../..' . '/src/Service/AbstractGitHubAPI.php',
+        'Combodo\\iTop\\VCSManagement\\Service\\AutomationManager' => __DIR__ . '/../..' . '/src/Service/AutomationManager.php',
+        'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIAuthenticationService' => __DIR__ . '/../..' . '/src/Service/GitHubAPIAuthenticationService.php',
+        'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIService' => __DIR__ . '/../..' . '/src/Service/GitHubAPIService.php',
+        'Combodo\\iTop\\VCSManagement\\Service\\GitHubManager' => __DIR__ . '/../..' . '/src/Service/GitHubManager.php',
+        'Combodo\\iTop\\VCSManagement\\Service\\TemplatingService' => __DIR__ . '/../..' . '/src/Service/TemplatingService.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'FastVolt\\Helper\\Libs\\Markdown\\ParseMarkdown' => __DIR__ . '/..' . '/fastvolt/markdown/src/Libs/Markdown/ParseMarkdown.php',
+        'FastVolt\\Helper\\Markdown' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown.php',
+    );
 
-	public static function getInitializer(ClassLoader $loader)
-	{
-		return \Closure::bind(function () use ($loader) {
-			$loader->prefixLengthsPsr4 = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$prefixLengthsPsr4;
-			$loader->prefixDirsPsr4 = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$prefixDirsPsr4;
-			$loader->classMap = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$classMap;
+    public static function getInitializer(ClassLoader $loader)
+    {
+        return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30::$classMap;
 
-		}, null, ClassLoader::class);
-	}
+        }, null, ClassLoader::class);
+    }
 }
