@@ -50,6 +50,7 @@ SetupWebPage::AddModule(
 		//
 		'settings' => [
 			'webhook_user_id' => null,
+			'contact_attribute_for_gihub_nickname' => null,
 		],
 	]
 );

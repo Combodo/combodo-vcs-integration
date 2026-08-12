@@ -25,7 +25,7 @@ class TemplatingService
 
 	/** @var string regex */
 	private static string $REGEX_FOR_STATEMENT = "/\[\[@for\s+([\>\w-]+)\]\]([.\s\S]*?)\[\[@endfor\]\]/";
-	private static string $REGEX_IF_STATEMENT = "/\[\[@if\s+([\>\w-]+)==([\w|]+)\]\]([.\s\S]*?)\[\[@endif\]\]/";
+	private static string $REGEX_IF_STATEMENT = "/\[\[@if\s+([\>\w-]+)\s*==\s*([\w|]+)\]\]([.\s\S]*?)(\[\[@else\]\]([.\s\S]*?))?\[\[@endif\]\]/";
 	private static string $REGEX_EVENT_STATEMENT = "/\[\[event\]\]/";
 	private static string $REGEX_HYPERLINK_STATEMENT = "/\[\[@hyperlink\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
 	private static string $REGEX_BUTTON_STATEMENT = "/\[\[@button\s+([\>\w-]+)\s+as\s+([\>\w\s-]+)\]\]/";
@@ -211,15 +211,15 @@ class TemplatingService
 		// data
 		$data = $aMatch[1];
 		$condition = $aMatch[2];
-		$template = $aMatch[3];
-
-		// prepare template
-		$template = ltrim($template);
-		$sLoopText = '';
+		$templateIf = ltrim($aMatch[3]);
+		$templateElse = ltrim($aMatch[5] ?? '');
+		\IssueLog::Error(var_export($aMatch, true));
 
 		$oData = ModuleHelper::ExtractDataFromArray($aPayload, $data);
 		if (preg_match("#$condition#", $oData)) {
-			$sLoopText = $this->ParseTemplate($template, $sEvent, $aPayload);
+			$sLoopText = $this->ParseTemplate($templateIf, $sEvent, $aPayload);
+		} elseif ('' !== $templateElse) {
+			$sLoopText = $this->ParseTemplate($templateElse, $sEvent, $aPayload);
 		}
 
 		return $sLoopText;

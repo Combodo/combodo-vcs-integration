@@ -1451,6 +1451,11 @@ your private key goes here
                     <sql>scope_var</sql>
                     <is_null_allowed>true</is_null_allowed>
                 </field>
+                <!-- nickname_var -->
+                <field id="nickname_var" xsi:type="AttributeString">
+                  <sql>nickname_var</sql>
+                  <is_null_allowed>true</is_null_allowed>
+                </field>
                 <!-- webhooks_list -->
                 <field id="webhooks_list" xsi:type="AttributeLinkedSetIndirect">
                     <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
@@ -1877,31 +1882,10 @@ JS
                     // retrieve payload subject data value
                     $sRefSubjectDataValue = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($bScopeData ? $aScopeData : $aPayload, $sRefRegexSubjectData);
 
-                    // retrieve destination object
-		            $oObject = null;
-                    if(!utils::IsNullOrEmptyString($sRefRegexPattern)){
-                      $aMatch = [];
-                      preg_match("/$sRefRegexPattern/", $sRefSubjectDataValue, $aMatch);
-                      if(!empty($aMatch)){
-                          $sOQL = "SELECT $sObjectClass WHERE $sObjectRefAttCode=\"$aMatch[1]\"";
-                          $oObject = MetaModel::GetObjectFromOQL($sOQL, [], true);
-                      }
-                    }
+                    // retrieve payload subject data value
+                    $oObject = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $sObjectClass, $bScopeData, $sRefRegexPattern, $sRefRegexSubjectData, $sObjectRefAttCode, $aPayload, $aScopeData);
 
-                    if($oObject === null){
-
-                        // output information (maybe normal)
-                        \Combodo\iTop\VCSManagement\Helper\ModuleHelper::LogInfo('HandleEvent error no object found', [
-                            'VCSAutomation' => $this->GetKey(),
-                            'object class' => $sObjectClass,
-                            'object reference attribute code' => $sObjectRefAttCode,
-                            'object attribute code' => $sObjectAttCode,
-                            'reference regex pattern' => $sRefRegexPattern,
-                            'reference regex subject data' => $sRefRegexSubjectData,
-                            'reference subject data value' => $sRefSubjectDataValue
-                        ]);
-                    }
-                    else{
+                    if($oObject !== null){
 
                         if($bScopeData && $bGroupMessages){
 
@@ -1919,6 +1903,7 @@ JS
                         }
                         else{
 
+
                             // log the message
                             $this->LogMessage($sEvent, $bScopeData ? $aScopeData : $aPayload, $oObject, $sObjectAttCode, $oAttDef);
 
@@ -1933,8 +1918,8 @@ JS
                         ]]>
           </code>
                 </method>
-                <!-- HandleEvent -->
-                <method id="HandleEvent">
+                <!-- HandleScopeEnd -->
+                <method id="HandleScopeEnd">
                     <static>false</static>
                     <access>public</access>
                     <type>Custom</type>
@@ -1958,6 +1943,9 @@ JS
                         // add context to payload
                         $aPayload[$this->Get('scope_var')] = $aItem['group_scope_data'];
 
+                        IssueLog::Error('TEST');
+IssueLog::Error(var_export($aPayload, true));
+
                         // log the message
                         $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
                     }
@@ -1979,6 +1967,7 @@ JS
                     </arguments>
                     <code>
             <![CDATA[
+
                         
                         
 	            public function LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef){
@@ -1992,11 +1981,18 @@ JS
 
                         // append text
                         if($oValue instanceof ormCaseLog){
+                            $sNicknameVar = $this->Get('nickname_var');
+                            IssueLog::Error("VCSLogAttributeAutomation::LogMessage - Searching user from contact nickname: $sNicknameVar");
 
-                            // retrieve webhook user and log
-                            $sWebhookUser = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::$PARAM_WEBHOOK_USER_ID, null);
-                            if($sWebhookUser !== null){
-                                $oValue->AddLogEntry($sText, '', $sWebhookUser);
+                            $oUser = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchUserFromContactNickname($sNicknameVar, $aPayload);
+                            if ($oUser !== null) {
+                                $iUserId = $oUser->Get('id');
+                            } else {
+                                // retrieve webhook user and log
+                                $iUserId = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::GetModuleSetting(\Combodo\iTop\VCSManagement\Helper\ModuleHelper::$PARAM_WEBHOOK_USER_ID, null);
+                            }
+                            if($iUserId !== null){
+                                $oValue->AddLogEntry($sText, '', $iUserId);
                             }
                             else{
                                 $oValue->AddLogEntry($sText, 'github');
@@ -2015,7 +2011,8 @@ JS
 	            }
             
                         
-                        ]]>
+
+                      ]]>
           </code>
                 </method>
                 <!-- DisplayBareRelations -->
@@ -2066,6 +2063,9 @@ JS
                                         </item>
                                         <item id="scope_var">
                                             <rank>40</rank>
+                                        </item>
+                                        <item id="nickname_var">
+                                            <rank>50</rank>
                                         </item>
                                     </items>
                                 </item>
@@ -2151,12 +2151,67 @@ JS
 
         // specifique support-combodo
 
+        <class id="lnkBugToPerson" _delta="define">
+            <parent>cmdbAbstractObject</parent>
+            <properties>
+              <is_link>1</is_link>
+              <category>bizmodel</category>
+              <abstract>false</abstract>
+              <key_type>autoincrement</key_type>
+              <db_table>lnkbugtoperson</db_table>
+              <db_key_field>id</db_key_field>
+              <db_final_class_field/>
+              <naming>
+                <attributes>
+                  <attribute id="bug_id"/>
+                  <attribute id="person_id"/>
+                </attributes>
+              </naming>
+              <style>
+              </style>
+              <reconciliation>
+              </reconciliation>
+            </properties>
+            <fields>
+              <field id="bug_id" xsi:type="AttributeExternalKey">
+                <sql>bug_id</sql>
+                <target_class>UserRequest</target_class>
+                <is_null_allowed>false</is_null_allowed>
+                <on_target_delete>DEL_AUTO</on_target_delete>
+              </field>
+              <field id="person_id" xsi:type="AttributeExternalKey">
+                <sql>person_id</sql>
+                <target_class>Person</target_class>
+                <is_null_allowed>false</is_null_allowed>
+                <on_target_delete>DEL_AUTO</on_target_delete>
+              </field>
+            </fields>
+            <methods/>
+            <presentation>
+              <details>
+              </details>
+              <search>
+              </search>
+              <list>
+              </list>
+            </presentation>
+        </class>
+
         <class id="UserRequest" _delta="must_exist">
             <fields>
                 <field id="pull_requests" xsi:type="Combodo\iTop\VCSManagement\Attribute\AttributeJSON" _delta="define">
                     <sql>pull_requests</sql>
                     <is_null_allowed>true</is_null_allowed>
                     <tracking_level>none</tracking_level>
+                </field>
+
+                <field id="persons_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+                    <linked_class>lnkBugToPerson</linked_class>
+                    <ext_key_to_me>bug_id</ext_key_to_me>
+                    <count_min>0</count_min>
+                    <count_max>0</count_max>
+                    <ext_key_to_remote>person_id</ext_key_to_remote>
+                    <duplicates/>
                 </field>
             </fields>
             <presentation>
@@ -2261,6 +2316,7 @@ JS
             <![CDATA[
 
 
+
 	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     $sObjectClass = $this->Get('object_class');
@@ -2268,24 +2324,26 @@ JS
                     $sObjectAttCode = trim($this->Get('object_att_code'));
                     $sRefRegexPattern = $this->Get('ref_regex_pattern');
                     $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
+                    $sNicknameVar = $this->Get('nickname_var');
 
                     $bScopeData = !empty($this->Get('scope_var'));
 
-                                        // get object destination attribute
-                    $oAttDef = MetaModel::GetAttributeDef($sObjectClass, $sObjectAttCode);
+                    $oObject = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $sObjectClass, $bScopeData, $sRefRegexPattern, $sRefRegexSubjectData, $sObjectRefAttCode, $aPayload, $aScopeData);
 
-                    // retrieve payload subject data value
-                    $sRefSubjectDataValue = \Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($bScopeData ? $aScopeData : $aPayload, $sRefRegexSubjectData);
+                    $oContact = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchContactFromNickname($sNicknameVar, $bScopeData, $aPayload, $aScopeData);
+                    IssueLog::Error('Contact: '.$oContact->GetName());
+                    if($oContact !== null){
+                        $oAttribute = MetaModel::GetAttributeDef($sObjectClass, 'persons_list');
+                        $sLinkedClass = $oAttribute->GetLinkedClass();
+                        $oLink = MetaModel::NewObject($sLinkedClass, [
+                            $oAttribute->GetExtKeyToMe() => $oObject->GetKey(),
+                            $oAttribute->GetExtKeyToRemote() => $oContact->GetKey()
+                        ]);
+                        IssueLog::Error($oAttribute->GetExtKeyToMe() . ' => '. $oAttribute->GetExtKeyToRemote());
 
-                    // retrieve destination object
-		            $oObject = null;
-                    if(!utils::IsNullOrEmptyString($sRefRegexPattern)){
-                      $aMatch = [];
-                      preg_match("/$sRefRegexPattern/", $sRefSubjectDataValue, $aMatch);
-                      if(!empty($aMatch)){
-                          $sOQL = "SELECT $sObjectClass WHERE $sObjectRefAttCode=\"$aMatch[1]\"";
-                          $oObject = MetaModel::GetObjectFromOQL($sOQL, [], true);
-                      }
+                        $oLink->DBInsert();
+                        $oOrmLinkSet = $oObject->Get('persons_list');
+                        $oOrmLinkSet->AddItem($oLink);
                     }
 
                     $fnGetValueByPath = function(array $data, string $path, $default = null) {
@@ -2337,7 +2395,8 @@ JS
 	            }
 
 
-                        ]]>
+
+                      ]]>
           </code>
                 </method>
             </methods>
@@ -2361,6 +2420,9 @@ JS
                                         </item>
                                         <item id="scope_var">
                                             <rank>40</rank>
+                                        </item>
+                                        <item id="nickname_var">
+                                            <rank>50</rank>
                                         </item>
                                     </items>
                                 </item>
@@ -2426,6 +2488,25 @@ JS
                 </list>
             </presentation>
         </class>
+
+      <class id="Person" _delta="must_exist">
+        <fields>
+          <field id="github_nickname" xsi:type="AttributeString" _delta="define">
+            <sql>github_nickname</sql>
+            <is_null_allowed>true</is_null_allowed>
+            <tracking_level>none</tracking_level>
+          </field>
+        </fields>
+        <presentation>
+          <details>
+            <items>
+              <item id="github_nickname">
+                <rank>80</rank>
+              </item>
+            </items>
+          </details>
+        </presentation>
+      </class>
 
     </classes>
     <menus>

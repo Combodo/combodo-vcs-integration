@@ -12,6 +12,7 @@ return array(
     'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => $baseDir . '/src/Controller/GitHubController.php',
     'Combodo\\iTop\\VCSManagement\\EventListener\\VCSAutomationEventListener' => $baseDir . '/src/EventListener/VCSAutomationEventListener.php',
     'Combodo\\iTop\\VCSManagement\\EventListener\\VCSWebhookEventListener' => $baseDir . '/src/EventListener/VCSWebhookEventListener.php',
+    'Combodo\\iTop\\VCSManagement\\Helper\\AutomationHelper' => $baseDir . '/src/Helper/AutomationHelper.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => $baseDir . '/src/Helper/ModuleHelper.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => $baseDir . '/src/Helper/SessionHelper.php',
     'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => $baseDir . '/src/Hook/VCSPopupMenu.php',

@@ -35,6 +35,7 @@ class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
         'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => __DIR__ . '/../..' . '/src/Controller/GitHubController.php',
         'Combodo\\iTop\\VCSManagement\\EventListener\\VCSAutomationEventListener' => __DIR__ . '/../..' . '/src/EventListener/VCSAutomationEventListener.php',
         'Combodo\\iTop\\VCSManagement\\EventListener\\VCSWebhookEventListener' => __DIR__ . '/../..' . '/src/EventListener/VCSWebhookEventListener.php',
+        'Combodo\\iTop\\VCSManagement\\Helper\\AutomationHelper' => __DIR__ . '/../..' . '/src/Helper/AutomationHelper.php',
         'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => __DIR__ . '/../..' . '/src/Helper/ModuleHelper.php',
         'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => __DIR__ . '/../..' . '/src/Helper/SessionHelper.php',
         'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => __DIR__ . '/../..' . '/src/Hook/VCSPopupMenu.php',
