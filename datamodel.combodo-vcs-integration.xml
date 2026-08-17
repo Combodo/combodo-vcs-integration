@@ -139,6 +139,7 @@ your private key goes here
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
@@ -164,6 +165,7 @@ your private key goes here
               }
           
                         
+
                         ]]>
           </code>
                 </method>
@@ -173,6 +175,7 @@ your private key goes here
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
               public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
@@ -198,6 +201,7 @@ your private key goes here
               }
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -465,6 +469,7 @@ your private key goes here
                     <static>false</static>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
     public function PrefillCreationForm(&$aContextParam)
@@ -475,6 +480,7 @@ your private key goes here
     }
             
                         
+
                         ]]></code>
                 </method>
                 <!-- GetInitialStateAttributeFlags -->
@@ -483,6 +489,7 @@ your private key goes here
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
               public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
@@ -496,6 +503,7 @@ your private key goes here
               }
           
                         
+
                         ]]>
           </code>
                 </method>
@@ -505,6 +513,7 @@ your private key goes here
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
               public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
@@ -531,6 +540,7 @@ your private key goes here
               }
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -539,6 +549,7 @@ your private key goes here
                     <static>false</static>
                     <type>Custom</type>
                     <code><![CDATA[
+
                         
                         
     public function GetConnector()
@@ -547,6 +558,7 @@ your private key goes here
     }
             
                         
+
                         ]]></code>
                 </method>
             </methods>
@@ -1063,6 +1075,7 @@ your private key goes here
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
                 public function IsConditionUnsetOrMet(array $aPayload)
@@ -1078,6 +1091,7 @@ your private key goes here
                 }
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -1451,11 +1465,6 @@ your private key goes here
                     <sql>scope_var</sql>
                     <is_null_allowed>true</is_null_allowed>
                 </field>
-                <!-- nickname_var -->
-                <field id="nickname_var" xsi:type="AttributeString">
-                  <sql>nickname_var</sql>
-                  <is_null_allowed>true</is_null_allowed>
-                </field>
                 <!-- webhooks_list -->
                 <field id="webhooks_list" xsi:type="AttributeLinkedSetIndirect">
                     <linked_class>lnkVCSAutomationToVCSWebhook</linked_class>
@@ -1481,15 +1490,17 @@ your private key goes here
                     </arguments>
                     <code>
             <![CDATA[
+
                         
                         
 
 
-	            abstract public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []);
+	            abstract public function HandleEvent($oWebhook, $sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []);
 
 
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -1505,20 +1516,23 @@ your private key goes here
                     </arguments>
                     <code>
             <![CDATA[
+
                         
                         
 
-	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
+	            public function HandleScopeEnd($oWebhook, $sEvent, $aPayload, $aAutomationData = []){
 
 	            }
 
             
                         
+
                         ]]>
           </code>
                 </method>
                 <method id="PrefillSearchForm">
                     <code><![CDATA[
+
                         
                          public function PrefillSearchForm(&$aContextParam)
 {
@@ -1532,6 +1546,7 @@ your private key goes here
 }
 
                         
+
                         ]]></code>
                 </method>
                 <method id="DoCheckToWrite">
@@ -1540,6 +1555,7 @@ your private key goes here
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         	public function DoCheckToWrite()
     {
@@ -1570,7 +1586,23 @@ your private key goes here
         }
 	}
                         
+
                         ]]></code>
+                </method>
+                <method id="IsScoped">
+                    <comment/>
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <code><![CDATA[
+
+                        public function IsScoped()
+                        {
+                            return false === empty($this->Get('scope_var'));
+                        }
+
+                        ]]>
+                    </code>
                 </method>
             </methods>
             <presentation>
@@ -1644,6 +1676,7 @@ your private key goes here
                     <access>public</access>
                     <type>Custom</type>
                     <arguments>
+                        <argument>webhook</argument>
                         <argument>event</argument>
                         <argument>payload</argument>
                         <argument>scopeData</argument>
@@ -1651,9 +1684,10 @@ your private key goes here
                     </arguments>
                     <code>
             <![CDATA[
+
                         
                         
-	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
+	            public function HandleEvent($oWebhook, $sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     $bScopeData = !empty($this->Get('scope_var'));
 
@@ -1666,6 +1700,7 @@ your private key goes here
 	            }
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -1675,6 +1710,7 @@ your private key goes here
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
             public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -1693,6 +1729,7 @@ JS
             }
               
                         
+
                         ]]></code>
                 </method>
             </methods>
@@ -1813,6 +1850,11 @@ JS
                     <max_items>1</max_items>
                     <attribute_definition_list>AttributeCaseLog,AttributeText</attribute_definition_list>
                 </field>
+                <!-- nickname_var -->
+                <field id="nickname_var" xsi:type="AttributeString">
+                    <sql>nickname_var</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                </field>
                 <!-- reference regex pattern -->
                 <field id="ref_regex_pattern" xsi:type="AttributeString">
                     <sql>regex</sql>
@@ -1853,6 +1895,7 @@ JS
                     <access>public</access>
                     <type>Custom</type>
                     <arguments>
+                        <argument>webhook</argument>
                         <argument>event</argument>
                         <argument>payload</argument>
                         <argument>scopeData</argument>
@@ -1860,11 +1903,12 @@ JS
                     </arguments>
                     <code>
             <![CDATA[
+
                         
                         
 
 
-	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
+	            public function HandleEvent($oWebhook, $sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
                     // retrieve useful data
                     $sObjectClass = $this->Get('object_class');
@@ -1915,6 +1959,7 @@ JS
 
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -1930,9 +1975,10 @@ JS
                     </arguments>
                     <code>
             <![CDATA[
+
                         
                         
-	            public function HandleScopeEnd($sEvent, $aPayload, $aAutomationData = []){
+	            public function HandleScopeEnd($oWebhook, $sEvent, $aPayload, $aAutomationData = []){
 
                     foreach($aAutomationData as $aItem){
 
@@ -1943,15 +1989,13 @@ JS
                         // add context to payload
                         $aPayload[$this->Get('scope_var')] = $aItem['group_scope_data'];
 
-                        IssueLog::Error('TEST');
-IssueLog::Error(var_export($aPayload, true));
-
                         // log the message
                         $this->LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef);
                     }
 	            }
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -1968,6 +2012,7 @@ IssueLog::Error(var_export($aPayload, true));
                     <code>
             <![CDATA[
 
+
                         
                         
 	            public function LogMessage($sEvent, $aPayload, $oObject, $sObjectAttCode, $oAttDef){
@@ -1982,10 +2027,10 @@ IssueLog::Error(var_export($aPayload, true));
                         // append text
                         if($oValue instanceof ormCaseLog){
                             $sNicknameVar = $this->Get('nickname_var');
-                            IssueLog::Error("VCSLogAttributeAutomation::LogMessage - Searching user from contact nickname: $sNicknameVar");
 
                             $oUser = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchUserFromContactNickname($sNicknameVar, $aPayload);
-                            if ($oUser !== null) {
+
+                             if ($oUser !== null) {
                                 $iUserId = $oUser->Get('id');
                             } else {
                                 // retrieve webhook user and log
@@ -2012,7 +2057,8 @@ IssueLog::Error(var_export($aPayload, true));
             
                         
 
-                      ]]>
+
+                        ]]>
           </code>
                 </method>
                 <!-- DisplayBareRelations -->
@@ -2021,6 +2067,7 @@ IssueLog::Error(var_export($aPayload, true));
                     <access>public</access>
                     <type>Overload-DBObject</type>
                     <code><![CDATA[
+
                         
                         
             public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
@@ -2039,6 +2086,7 @@ JS
             }
             
                         
+
                         ]]>
           </code>
                 </method>
@@ -2154,46 +2202,46 @@ JS
         <class id="lnkBugToPerson" _delta="define">
             <parent>cmdbAbstractObject</parent>
             <properties>
-              <is_link>1</is_link>
-              <category>bizmodel</category>
-              <abstract>false</abstract>
-              <key_type>autoincrement</key_type>
-              <db_table>lnkbugtoperson</db_table>
-              <db_key_field>id</db_key_field>
-              <db_final_class_field/>
-              <naming>
-                <attributes>
-                  <attribute id="bug_id"/>
-                  <attribute id="person_id"/>
-                </attributes>
-              </naming>
-              <style>
-              </style>
-              <reconciliation>
-              </reconciliation>
+                <is_link>1</is_link>
+                <category>bizmodel</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>lnkbugtoperson</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <naming>
+                    <attributes>
+                        <attribute id="bug_id"/>
+                        <attribute id="person_id"/>
+                    </attributes>
+                </naming>
+                <style>
+                </style>
+                <reconciliation>
+                </reconciliation>
             </properties>
             <fields>
-              <field id="bug_id" xsi:type="AttributeExternalKey">
-                <sql>bug_id</sql>
-                <target_class>UserRequest</target_class>
-                <is_null_allowed>false</is_null_allowed>
-                <on_target_delete>DEL_AUTO</on_target_delete>
-              </field>
-              <field id="person_id" xsi:type="AttributeExternalKey">
-                <sql>person_id</sql>
-                <target_class>Person</target_class>
-                <is_null_allowed>false</is_null_allowed>
-                <on_target_delete>DEL_AUTO</on_target_delete>
-              </field>
+                <field id="bug_id" xsi:type="AttributeExternalKey">
+                    <sql>bug_id</sql>
+                    <target_class>UserRequest</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
+                <field id="person_id" xsi:type="AttributeExternalKey">
+                    <sql>person_id</sql>
+                    <target_class>Person</target_class>
+                    <is_null_allowed>false</is_null_allowed>
+                    <on_target_delete>DEL_AUTO</on_target_delete>
+                </field>
             </fields>
             <methods/>
             <presentation>
-              <details>
-              </details>
-              <search>
-              </search>
-              <list>
-              </list>
+                <details>
+                </details>
+                <search>
+                </search>
+                <list>
+                </list>
             </presentation>
         </class>
 
@@ -2212,19 +2260,55 @@ JS
                     <count_max>0</count_max>
                     <ext_key_to_remote>person_id</ext_key_to_remote>
                     <duplicates/>
+                    <display_style>property</display_style>
                 </field>
             </fields>
+            <methods>
+                <method id="GetInitialStateAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+
+  public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+  {
+    if ($sAttCode === 'pull_requests') {
+      return OPT_ATT_READONLY;
+    }
+    return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+  }
+
+                        ]]></code>
+                </method>
+                <method id="GetAttributeFlags">
+                    <comment></comment>
+                    <static>false</static>
+                    <access>public</access>
+                    <code><![CDATA[
+                           	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+    if ($sAttCode === 'pull_requests') {
+      return OPT_ATT_READONLY;
+    }
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+                        ]]></code>
+                </method>
+            </methods>
             <presentation>
                 <details>
                     <items>
                         <item id="col:col3">
                             <rank>100</rank>
                             <items>
-                                <item id="fieldset:pull_requests_overview" >
+                                <item id="fieldset:pull_requests_overview">
                                     <rank>10</rank>
                                     <items>
                                         <item id="pull_requests">
                                             <rank>10</rank>
+                                        </item>
+                                        <item id="persons_list">
+                                            <rank>20</rank>
                                         </item>
                                     </items>
                                 </item>
@@ -2307,6 +2391,7 @@ JS
                     <access>public</access>
                     <type>Custom</type>
                     <arguments>
+                        <argument>webhook</argument>
                         <argument>event</argument>
                         <argument>payload</argument>
                         <argument>scopeData</argument>
@@ -2316,90 +2401,93 @@ JS
             <![CDATA[
 
 
+	            public function HandleEvent($oWebhook, $sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
-	            public function HandleEvent($sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
+                    // retrieve target object
+                    $oObject = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $this->Get('object_class'), $this->IsScoped(), $this->Get('ref_regex_pattern'), $this->Get('ref_regex_subject_data'), $this->Get('object_ref_att_code')->GetValues()[0], $aPayload, $aScopeData);
 
-                    $sObjectClass = $this->Get('object_class');
-                    $sObjectRefAttCode = trim($this->Get('object_ref_att_code'));
-                    $sObjectAttCode = trim($this->Get('object_att_code'));
-                    $sRefRegexPattern = $this->Get('ref_regex_pattern');
-                    $sRefRegexSubjectData = $this->Get('ref_regex_subject_data');
-                    $sNicknameVar = $this->Get('nickname_var');
+                    // filter payload
+                    $aFilteredPayload = Combodo\iTop\VCSManagement\Helper\AutomationHelper::FilterPayload($aPayload['pull_request'], [
+                        'number',
+                        'base.repo.name',
+                        'base.ref',
+                        'html_url',
+                        'state',
+                        'merged',
+                        'requested_reviewers',
+                        'assignee.login',
+                    ]);
 
-                    $bScopeData = !empty($this->Get('scope_var'));
-
-                    $oObject = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $sObjectClass, $bScopeData, $sRefRegexPattern, $sRefRegexSubjectData, $sObjectRefAttCode, $aPayload, $aScopeData);
-
-                    $oContact = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchContactFromNickname($sNicknameVar, $bScopeData, $aPayload, $aScopeData);
-                    IssueLog::Error('Contact: '.$oContact->GetName());
-                    if($oContact !== null){
-                        $oAttribute = MetaModel::GetAttributeDef($sObjectClass, 'persons_list');
-                        $sLinkedClass = $oAttribute->GetLinkedClass();
-                        $oLink = MetaModel::NewObject($sLinkedClass, [
-                            $oAttribute->GetExtKeyToMe() => $oObject->GetKey(),
-                            $oAttribute->GetExtKeyToRemote() => $oContact->GetKey()
-                        ]);
-                        IssueLog::Error($oAttribute->GetExtKeyToMe() . ' => '. $oAttribute->GetExtKeyToRemote());
-
-                        $oLink->DBInsert();
-                        $oOrmLinkSet = $oObject->Get('persons_list');
-                        $oOrmLinkSet->AddItem($oLink);
-                    }
-
-                    $fnGetValueByPath = function(array $data, string $path, $default = null) {
-                        $segments = explode('.', $path);
-                        $current = $data;
-
-                        foreach ($segments as $segment) {
-                            if (!is_array($current) || !array_key_exists($segment, $current)) {
-                                return $default;
-                            }
-                            $current = $current[$segment];
-                        }
-
-                        return $current;
-                    };
-
-                    $fnExtractUsedKeys = function (array $payload, array $usedKeys) use ($fnGetValueByPath): array {
-                        $result = [];
-                        foreach ($usedKeys as $path) {
-                            $result[$path] = $fnGetValueByPath($payload, $path);
-                        }
-                        return $result;
-                    };
-
-                    $aUsedKeys = [
-                    'number',
-                    'base.repo.full_name',
-                    'base.ref',
-                    'html_url',
-                    'state',
-                    'merged_at',
-                    'requested_reviewers',
-                    'assignee.login'];
-
-
-                    $aResult = $fnExtractUsedKeys($aPayload['pull_request'], $aUsedKeys);
-
-                    $aFinalResult = json_decode($oObject->Get($sObjectAttCode) ?? '{}', true);
-
-                    $aFinalResult[$aResult['number']] = $aResult;
-
-                    IssueLog::Error('VCSPullRequestAutomation');
-                    IssueLog::Error(json_encode($aResult));
-
-
-
-                    $oObject->Set($sObjectAttCode, json_encode($aFinalResult));
+                    // update PRs value
+                    $sObjectAttCode = $this->Get('object_att_code')->GetValues()[0];
+                    $aValue = json_decode($oObject->Get($sObjectAttCode) ?? '{}', true);
+                    $aValue[$aPayload['pull_request']['id']] = $aFilteredPayload;
+                    $oObject->Set($sObjectAttCode, json_encode($aValue));
                     $oObject->DBUpdate();
+
+                    $oGitHubAPIService = \Combodo\iTop\VCSManagement\Service\GitHubAPIService::GetInstance();
+                    $oReviews = $oGitHubAPIService->GetPullRequestReview($oWebhook, $aPayload['pull_request']['base']['repo']['owner']['login'], $aPayload['pull_request']['base']['repo']['name'], $aPayload['pull_request']['number']);
+                    IssueLog::Error(var_export($oReviews, true));
 	            }
 
 
-
-                      ]]>
+                        ]]>
           </code>
                 </method>
+                <method id="GetInitialStateAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+
+  public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+  {
+    if ($sAttCode === 'events_list') {
+      return OPT_ATT_HIDDEN;
+    }
+        if ($sAttCode === 'scope_var') {
+      return OPT_ATT_HIDDEN;
+    }
+    return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+  }
+
+                        ]]></code>
+                </method>
+                <method id="GetAttributeFlags">
+                    <comment></comment>
+                    <static>false</static>
+                    <access>public</access>
+                    <code><![CDATA[
+                           	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+    if ($sAttCode === 'events_list') {
+      return OPT_ATT_READONLY;
+    }
+        if ($sAttCode === 'scope_var') {
+      return OPT_ATT_HIDDEN;
+    }
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+                        ]]></code>
+                </method>
             </methods>
+            <event_listeners>
+                <event_listener id="OnAfterWrite" _delta="define">
+                    <event>EVENT_DB_AFTER_WRITE</event>
+                    <rank>0</rank>
+                    <code><![CDATA[
+      function(\Combodo\iTop\Service\Events\EventData $oEventData)
+      {
+        $oObject = $oEventData->Get('object');
+        $bIsNew = $oEventData->Get('is_new');
+
+        if($bIsNew){
+           \Combodo\iTop\VCSManagement\Helper\AutomationHelper::AddAutomationSubscribedEvents($oObject, ['pull_request']);
+        }
+      }
+]]></code>
+                </event_listener>
+            </event_listeners>
             <presentation>
                 <details>
                     <items>
@@ -2420,9 +2508,6 @@ JS
                                         </item>
                                         <item id="scope_var">
                                             <rank>40</rank>
-                                        </item>
-                                        <item id="nickname_var">
-                                            <rank>50</rank>
                                         </item>
                                     </items>
                                 </item>
@@ -2489,24 +2574,277 @@ JS
             </presentation>
         </class>
 
-      <class id="Person" _delta="must_exist">
-        <fields>
-          <field id="github_nickname" xsi:type="AttributeString" _delta="define">
-            <sql>github_nickname</sql>
-            <is_null_allowed>true</is_null_allowed>
-            <tracking_level>none</tracking_level>
-          </field>
-        </fields>
-        <presentation>
-          <details>
-            <items>
-              <item id="github_nickname">
-                <rank>80</rank>
-              </item>
-            </items>
-          </details>
-        </presentation>
-      </class>
+        <class id="VCSCopilotsAutomation" _delta="define">
+            <parent>VCSAutomation</parent>
+            <properties>
+                <category>bizmodel,searchable</category>
+                <abstract>false</abstract>
+                <key_type>autoincrement</key_type>
+                <db_table>vcs_copilots_automation</db_table>
+                <db_key_field>id</db_key_field>
+                <db_final_class_field/>
+                <obsolescence>
+                </obsolescence>
+                <naming>
+                    <format>%1$s</format>
+                    <attributes>
+                        <attribute id="name"/>
+                    </attributes>
+                </naming>
+                <display_template/>
+                <reconciliation>
+                    <attributes>
+                    </attributes>
+                </reconciliation>
+            </properties>
+            <fields>
+                <!-- Object class -->
+                <field id="object_class" xsi:type="AttributeClass">
+                    <sql>object_class</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <class_category>searchable</class_category>
+                    <more_values>true</more_values>
+                </field>
+                <!-- Object Attribute -->
+                <field id="object_att_code" xsi:type="AttributeClassAttCodeSet">
+                    <class_field>object_class</class_field>
+                    <sql>object_att_code</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <dependencies>
+                        <attribute id="object_class"></attribute>
+                    </dependencies>
+                    <max_items>1</max_items>
+                    <attribute_definition_list>AttributeLinkedSetIndirect</attribute_definition_list>
+                </field>
+                <!-- reference regex pattern -->
+                <field id="ref_regex_pattern" xsi:type="AttributeString">
+                    <sql>regex</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- reference regex subject data -->
+                <field id="ref_regex_subject_data" xsi:type="AttributeString">
+                    <sql>data</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                </field>
+                <!-- Object Ref Attribute -->
+                <field id="object_ref_att_code" xsi:type="AttributeClassAttCodeSet">
+                    <class_field>object_class</class_field>
+                    <sql>object_ref_att_code</sql>
+                    <is_null_allowed>false</is_null_allowed>
+                    <dependencies>
+                        <attribute id="object_class"></attribute>
+                    </dependencies>
+                    <max_items>1</max_items>
+                    <attribute_definition_list>AttributeString</attribute_definition_list>
+                </field>
+            </fields>
+            <methods>
+                <!-- HandleEvent -->
+                <method id="HandleEvent">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Custom</type>
+                    <arguments>
+                        <argument>webhook</argument>
+                        <argument>event</argument>
+                        <argument>payload</argument>
+                        <argument>scopeData</argument>
+                        <argument>automationData</argument>
+                    </arguments>
+                    <code>
+            <![CDATA[
+
+	            public function HandleEvent($oWebhook, $sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
+
+                    // retrieve target object
+                    $oObject = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $this->Get('object_class'), $this->IsScoped(), $this->Get('ref_regex_pattern'), $this->Get('ref_regex_subject_data'), $this->Get('object_ref_att_code')->GetValues()[0], $aPayload, $aScopeData);
+
+                    // retrieve iTop contact from GitHub nickname
+                    $oContact = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchContactFromNickname('review->user->login', $this->IsScoped(), $aPayload, $aScopeData);
+
+                    // add contact to copilots (persons_list)
+                    if($oContact !== null){
+
+                        // create link
+                        $oAttribute = MetaModel::GetAttributeDef($this->Get('object_class'), 'persons_list');
+                        $sLinkedClass = $oAttribute->GetLinkedClass();
+                        $oLink = MetaModel::NewObject($sLinkedClass, [
+                            $oAttribute->GetExtKeyToMe() => $oObject->GetKey(),
+                            $oAttribute->GetExtKeyToRemote() => $oContact->GetKey()
+                        ]);
+                        $oLink->DBInsert();
+
+                        // attach link (@todo prevent duplicates !)
+                        $oOrmLinkSet = $oObject->Get('persons_list');
+                        $oOrmLinkSet->AddItem($oLink);
+                        $oObject->DBUpdate();
+                    }
+	            }
+
+
+                        ]]>
+          </code>
+                </method>
+                <method id="GetInitialStateAttributeFlags">
+                    <static>false</static>
+                    <access>public</access>
+                    <type>Overload-DBObject</type>
+                    <code><![CDATA[
+
+    public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+      {
+        if ($sAttCode === 'events_list') {
+          return OPT_ATT_HIDDEN;
+        }
+        if ($sAttCode === 'scope_var') {
+          return OPT_ATT_HIDDEN;
+        }
+        return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+      }
+
+                        ]]></code>
+                </method>
+                <method id="GetAttributeFlags">
+                    <comment></comment>
+                    <static>false</static>
+                    <access>public</access>
+                    <code><![CDATA[
+
+   	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+        if ($sAttCode === 'events_list') {
+          return OPT_ATT_READONLY;
+        }
+            if ($sAttCode === 'scope_var') {
+          return OPT_ATT_HIDDEN;
+        }
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
+                        ]]></code>
+                </method>
+            </methods>
+            <event_listeners>
+                <event_listener id="OnAfterWrite" _delta="define">
+                    <event>EVENT_DB_AFTER_WRITE</event>
+                    <rank>0</rank>
+                    <code><![CDATA[
+      function(\Combodo\iTop\Service\Events\EventData $oEventData)
+      {
+        $oObject = $oEventData->Get('object');
+        $bIsNew = $oEventData->Get('is_new');
+
+        if($bIsNew){
+         \Combodo\iTop\VCSManagement\Helper\AutomationHelper::AddAutomationSubscribedEvents($oObject, ['pull_request_review']);
+        }
+      }
+]]></code>
+                </event_listener>
+            </event_listeners>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="col:col1">
+                            <rank>10</rank>
+                            <items>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:automation">
+                                    <rank>10</rank>
+                                    <items>
+                                        <item id="name">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="provider">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="events_list">
+                                            <rank>30</rank>
+                                        </item>
+                                        <item id="scope_var">
+                                            <rank>40</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:target">
+                                    <rank>20</rank>
+                                    <items>
+                                        <item id="object_class">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="object_att_code">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                                <item id="fieldset:Class:VCSLogAttributeAutomation:reference">
+                                    <rank>30</rank>
+                                    <items>
+                                        <item id="object_ref_att_code">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="ref_regex_subject_data">
+                                            <rank>20</rank>
+                                        </item>
+                                        <item id="ref_regex_pattern">
+                                            <rank>30</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="webhooks_list">
+                            <rank>30</rank>
+                        </item>
+                    </items>
+                </details>
+                <default_search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </default_search>
+                <search>
+                    <items>
+                        <item id="name">
+                            <rank>10</rank>
+                        </item>
+                        <item id="provider">
+                            <rank>20</rank>
+                        </item>
+                    </items>
+                </search>
+                <list>
+                    <items>
+                        <item id="provider">
+                            <rank>10</rank>
+                        </item>
+                    </items>
+                </list>
+            </presentation>
+        </class>
+
+        <class id="Person" _delta="must_exist">
+            <fields>
+                <field id="github_nickname" xsi:type="AttributeString" _delta="define">
+                    <sql>github_nickname</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <tracking_level>none</tracking_level>
+                </field>
+            </fields>
+            <presentation>
+                <details>
+                    <items>
+                        <item id="github_nickname">
+                            <rank>80</rank>
+                        </item>
+                    </items>
+                </details>
+            </presentation>
+        </class>
 
     </classes>
     <menus>
@@ -2558,6 +2896,10 @@ JS
                             <dashlet id="24" xsi:type="DashletBadge">
                                 <rank>4</rank>
                                 <class>VCSPullRequestAutomation</class>
+                            </dashlet>
+                            <dashlet id="25" xsi:type="DashletBadge">
+                                <rank>4</rank>
+                                <class>VCSCopilotsAutomation</class>
                             </dashlet>
                         </dashlets>
                     </cell>

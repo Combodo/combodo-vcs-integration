@@ -213,9 +213,9 @@ class TemplatingService
 		$condition = $aMatch[2];
 		$templateIf = ltrim($aMatch[3]);
 		$templateElse = ltrim($aMatch[5] ?? '');
-		\IssueLog::Error(var_export($aMatch, true));
 
 		$oData = ModuleHelper::ExtractDataFromArray($aPayload, $data);
+		$sLoopText = '';
 		if (preg_match("#$condition#", $oData)) {
 			$sLoopText = $this->ParseTemplate($templateIf, $sEvent, $aPayload);
 		} elseif ('' !== $templateElse) {

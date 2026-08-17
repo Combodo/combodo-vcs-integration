@@ -13,27 +13,6 @@ use DBObject;
 
 class AttributeJSON extends AttributeDBField
 {
-	/**
-	 * @return null
-	 *
-	 * persist data as json
-	 *
-	 * PRID => [
-	 *
-	 * number
-	 * base->repo->fullname
-	 * base->ref
-	 * html_url
-	 * state
-	 * merged_at
-	 * requested_reviewers
-	 * assignee->login
-	 * ],
-	 * PRID => [
- *
-	 *
-	 */
-
 	public function GetEditClass()
 	{
 		return "HTML";
@@ -44,50 +23,40 @@ class AttributeJSON extends AttributeDBField
 		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
 	}
 
-	public function FromSQLToValue($aCols, $sPrefix = '')
-	{
-		return $aCols[$sPrefix.''];
-	}
-
 	public function GetDefaultValue(?DBObject $oHostObject = null)
 	{
 		return json_encode([]);
 	}
 
-	public function GetSize(?string $sValue)
-	{
-		// If the value is null, we return 0
-		if ($sValue === null) {
-			return 0;
-		}
-
-		return strlen($sValue);
-	}
-
 	public function GetMaxSize()
 	{
-		// Is there a way to know the current limitation for mysql?
-		// See mysql_field_len()
 		return 65535;
 	}
 
-	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true): string
 	{
-		$sHtml = '<table class="ibo-datatable ibo-content-block ibo-block dataTable no-footer">';
+		$sHtml = '<table class="ibo-datatable ibo-content-block ibo-block dataTable no-footer combodo-vcs-integration--pr--table">';
 		$sHtml .= '<thead>';
-		$sHtml .= '<tr><th>Target</th><th>Status</th><th>At</th><th>Reviewers</th><th>Assignee</th></tr>';
+		$sHtml .= '<tr><th><input type="checkbox" checked><label>Hide cancelled</label></th><th class="reviewers_requested"></th><th class="reviewers_changes"></th><th class="reviewers_comment"></th><th class="reviewers_approved"></th><th class="merged"></th></tr>';
 		$sHtml .= '</thead>';
 		$sHtml .= '<tbody>';
 
 		if ($sValue !== null) {
 			$aPR = json_decode($sValue, true);
 			foreach ($aPR as $prId => $prData) {
-				$sHtml .= '<tr>';
-				$sHtml .= '<td>'.htmlspecialchars($prData['base.repo.full_name'] ?? '').'<br>'.htmlspecialchars($prData['base.ref'] ?? '').'</td>';
-				$sHtml .= '<td>'.htmlspecialchars($prData['state'] ?? '').'</td>';
-				$sHtml .= '<td>'.htmlspecialchars($prData['merged_at'] ?? '').'</td>';
-				$sHtml .= '<td>'.count($prData['requested_reviewers'] ?? []).'</td>';
-				$sHtml .= '<td>'.htmlspecialchars($prData['assignee.login'] ?? '').'</td>';
+
+				$sRowStyle = '';
+				if (!$prData['merged'] && $prData['state'] === 'closed') {
+					$sRowStyle = ' style="display: none;"';
+				}
+
+				$sHtml .= '<tr data-role="vcs-pr-row" data-url="'.$prData['html_url'].'" data-state="'.$prData['state'].'" data-merged="'.$prData['merged'].'" '.$sRowStyle.'>';
+				$sHtml .= '<td><span class="ibo-field-badge" data-pr-state="'.$prData['state'].'"></span>'.htmlspecialchars($prData['number']).' <span class="repo">'.htmlspecialchars($prData['base.repo.name'] ?? '').'</span> <span class="branch"><i class="fas fa-code-branch"></i> '.htmlspecialchars($prData['base.ref'] ?? '').'</span></td>';
+				$sHtml .= '<td class="reviewers">'.count($prData['requested_reviewers'] ?? []).'</td>';
+                $sHtml .= '<td class="reviewers">'.count($prData['requested_reviewers'] ?? []).'</td>';
+                $sHtml .= '<td class="reviewers">'.count($prData['requested_reviewers'] ?? []).'</td>';
+                $sHtml .= '<td class="reviewers">'.count($prData['requested_reviewers'] ?? []).'</td>';
+				$sHtml .= '<td class="merged">'. ($prData['merged'] ? '<i class="fas fa-check-square"></i>' : '<i class="far fa-square"></i>') .'</td>';
 				$sHtml .= '</tr>';
 			}
 		}
@@ -97,35 +66,14 @@ class AttributeJSON extends AttributeDBField
 		return $sHtml;
 	}
 
-	public static function IsScalar()
+	public function GetWidth()
 	{
-		return true;
+		return $this->GetOptional('width', '');
 	}
 
-	public function GetEditValue($sValue, $oHostObj = null)
+	public function GetHeight()
 	{
-		return $sValue ?? '';
+		return $this->GetOptional('height', '');
 	}
 
-	public function GetSQLColumns($bFullSpec = false)
-	{
-		$aColumns = [];
-		$aColumns[$this->Get('sql')] = $this->GetSQLCol($bFullSpec);
-		return $aColumns;
-	}
-
-	public function GetBasicFilterOperators()
-	{
-		return null;
-	}
-
-	public function GetBasicFilterLooseOperator()
-	{
-		return null;
-	}
-
-	public function GetBasicFilterSQLExpr($sOpCode, $value)
-	{
-		return null;
-	}
 }

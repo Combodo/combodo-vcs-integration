@@ -91,11 +91,11 @@ class AutomationManager
 					$AutomationGroupData = [];
 					foreach ($aData as $ScopeData) {
 						$ScopeData['context'] = $aPayload;
-						self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload, $ScopeData, $AutomationGroupData);
+						self::LaunchAutomationHandleEvent($oWebhook, $oAutomation, $sType, $aPayload, $ScopeData, $AutomationGroupData);
 					}
-					self::LaunchAutomationHandleScopeEnd($oAutomation, $sType, $aPayload, $AutomationGroupData);
+					self::LaunchAutomationHandleScopeEnd($oWebhook, $oAutomation, $sType, $aPayload, $AutomationGroupData);
 				} else {
-					self::LaunchAutomationHandleEvent($oAutomation, $sType, $aPayload);
+					self::LaunchAutomationHandleEvent($oWebhook, $oAutomation, $sType, $aPayload);
 				}
 
 				$iAutomationTriggeredCount++;
@@ -108,6 +108,7 @@ class AutomationManager
 	/**
 	 * Launch automation handle data.
 	 *
+	 * @param DBObject $oWebhook
 	 * @param DBObject $oAutomation
 	 * @param string $sType
 	 * @param array $aPayload
@@ -116,10 +117,10 @@ class AutomationManager
 	 *
 	 * @return void
 	 */
-	private static function LaunchAutomationHandleEvent(DBObject $oAutomation, string $sType, array $aPayload, array $aScopeData = [], array &$AutomationData = []): void
+	private static function LaunchAutomationHandleEvent(DBObject $oWebhook, DBObject $oAutomation, string $sType, array $aPayload, array $aScopeData = [], array &$AutomationData = []): void
 	{
 		try {
-			$oAutomation->HandleEvent($sType, $aPayload, $aScopeData, $AutomationData);
+			$oAutomation->HandleEvent($oWebhook, $sType, $aPayload, $aScopeData, $AutomationData);
 		} catch (Exception $e) {
 			ExceptionLog::LogException($e, [
 				'happened on' => 'LaunchAutomationHandleEvent in AutomationManager.php',
@@ -131,6 +132,7 @@ class AutomationManager
 	/**
 	 * Launch automation handle scope end.
 	 *
+	 * @param DBObject $oWebhook
 	 * @param DBObject $oAutomation
 	 * @param string $sType
 	 * @param array $aPayload
@@ -138,10 +140,10 @@ class AutomationManager
 	 *
 	 * @return void
 	 */
-	private static function LaunchAutomationHandleScopeEnd(DBObject $oAutomation, string $sType, array $aPayload, array $aAutomationData = []): void
+	private static function LaunchAutomationHandleScopeEnd(DBObject $oWebhook, DBObject $oAutomation, string $sType, array $aPayload, array $aAutomationData = []): void
 	{
 		try {
-			$oAutomation->HandleScopeEnd($sType, $aPayload, $aAutomationData);
+			$oAutomation->HandleScopeEnd($oWebhook, $sType, $aPayload, $aAutomationData);
 		} catch (Exception $e) {
 			ExceptionLog::LogException($e, [
 				'happened on' => 'LaunchAutomationHandleScopeEnd in AutomationManager.php',

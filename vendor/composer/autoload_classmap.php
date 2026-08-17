@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Combodo\\iTop\\VCSManagement\\Attribute\\AttributeJSON' => $baseDir . '/src/Attribute/AttributeJSON.php',
+    'Combodo\\iTop\\VCSManagement\\Attribute\\VCSBackofficeLinkedStylesheetsExtension' => $baseDir . '/src/Attribute/VCSBackofficeLinkedStylesheetsExtension.php',
     'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => $baseDir . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
     'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => $baseDir . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
     'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => $baseDir . '/src/Controller/GitHubController.php',
@@ -15,6 +16,7 @@ return array(
     'Combodo\\iTop\\VCSManagement\\Helper\\AutomationHelper' => $baseDir . '/src/Helper/AutomationHelper.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => $baseDir . '/src/Helper/ModuleHelper.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => $baseDir . '/src/Helper/SessionHelper.php',
+    'Combodo\\iTop\\VCSManagement\\Hook\\VCSBackofficeLinkedStylesheetsExtension' => $baseDir . '/src/Hook/VCSBackofficeLinkedStylesheetsExtension.php',
     'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => $baseDir . '/src/Hook/VCSPopupMenu.php',
     'Combodo\\iTop\\VCSManagement\\Service\\AbstractGitHubAPI' => $baseDir . '/src/Service/AbstractGitHubAPI.php',
     'Combodo\\iTop\\VCSManagement\\Service\\AutomationManager' => $baseDir . '/src/Service/AutomationManager.php',

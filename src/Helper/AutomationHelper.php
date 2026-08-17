@@ -46,9 +46,6 @@ class AutomationHelper
 	public static function SearchUserFromContactNickname($sNicknameVar, $aPayload): ?DBObject
 	{
 		$sNicknameVarValue = ModuleHelper::ExtractDataFromArray($aPayload, $sNicknameVar);
-		\IssueLog::Error("Nickname var: $sNicknameVar");
-		\IssueLog::Error("Nickname value: $sNicknameVarValue");
-		\IssueLog::Error("array:".var_export($aPayload, true));
 
 		$sNicknameAttribute = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_CONTACT_ATTRIBUTE_FOR_GITHUB_NICKNAME);
 		if (empty($sNicknameAttribute)) {
@@ -75,5 +72,47 @@ class AutomationHelper
 		$oSearch = DBSearch::FromOQL("SELECT Person WHERE $sNicknameAttribute = '$sNicknameVarValue'");
 		$oSet = new DBObjectSet($oSearch, iLimitCount: 1);
 		return $oSet->Fetch();
+	}
+
+	public static function GetValueByPath(array $data, string $path, $default = null)
+	{
+		$segments = explode('.', $path);
+		$current = $data;
+
+		foreach ($segments as $segment) {
+			if (!is_array($current) || !array_key_exists($segment, $current)) {
+				return $default;
+			}
+			$current = $current[$segment];
+		}
+
+		return $current;
+	}
+
+	public static function FilterPayload(array $payload, array $usedKeys): array
+	{
+		$result = [];
+		foreach ($usedKeys as $path) {
+			$result[$path] = self::GetValueByPath($payload, $path);
+		}
+		return $result;
+	}
+
+	public static function AddAutomationSubscribedEvents($oAutomation, $aEvents): void
+	{
+		foreach ($aEvents as $sEvent) {
+
+			// Create link to event
+			$oEvent = MetaModel::GetObjectByName('VCSEvent', $sEvent);
+			$oLink = MetaModel::NewObject('lnkVCSAutomationToVCSEvent');
+			$oLink->Set('automation_id', $oAutomation->GetKey());
+			$oLink->Set('event_id', $oEvent->GetKey());
+			$oLink->DBInsert();
+
+			// Append the event to the list of events in the automation
+			$oValue = $oAutomation->Get('events_list');
+			$oValue->AddItem($oLink);
+			$oAutomation->DBUpdate();
+		}
 	}
 }

@@ -376,4 +376,27 @@ class GitHubAPIService extends AbstractGitHubAPI
 		$res = $client->sendAsync($request)->wait();
 		return json_decode($res->getBody(), true);
 	}
+
+	/**
+	 * List pull request reviews.
+	 *
+	 * https://docs.github.com/en/rest/pulls/reviews?apiVersion=2026-03-10#list-reviews-for-a-pull-request
+	 * GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews
+	 *
+	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOrganization Organization name.
+	 * @param string $sRepository The repository name.
+	 * @param string $sPullRequestNumber The pull request number.
+	 *
+	 * @return array The webhook information, including its ID, URL, events, and configuration.
+	 * @throws \CoreException
+	 */
+	public function GetPullRequestReview(DBObject $oWebhook, string $sOrganization, string $sRepository, string $sPullRequestNumber): array
+	{
+		// API call
+		$client = new Client();
+		$request = new Request('GET', $this->GetAPIUri("/repos/$sOrganization/$sRepository/pulls/$sPullRequestNumber/reviews"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$res = $client->sendAsync($request)->wait();
+		return json_decode($res->getBody(), true);
+	}
 }
