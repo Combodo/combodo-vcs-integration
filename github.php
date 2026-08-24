@@ -6,14 +6,15 @@
  */
 
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
+use Combodo\iTop\VCSManagement\Service\AutomationManager;
 
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
-// Temporary workaround to make sure mandatory parameters are provided
-if (!array_key_exists('transaction_id', $_REQUEST)) {
-	$_REQUEST['transaction_id'] = utils::GetNewTransactionId();
-}
+//// Temporary workaround to make sure mandatory parameters are provided
+//if (!array_key_exists('transaction_id', $_REQUEST)) {
+//	$_REQUEST['transaction_id'] = utils::GetNewTransactionId();
+//}
 if (!array_key_exists('HTTP_REFERER', $_SERVER)) {
 	$_SERVER['HTTP_REFERER'] = 'https://github.com/';
 }
@@ -106,11 +107,17 @@ ModuleHelper::LogInfo("Receiving GitHub Event #".$sDeliveryId, [
 	'type' => $sType,
 ]);
 
-// handle webhook
-/** @var VCSWebhookPayload $oWebhookPayload */
-$oWebhookPayload = MetaModel::NewObject('VCSWebhookPayload');
-$oWebhookPayload->Set('provider', 'github');
-$oWebhookPayload->Set('type', $sType);
-$oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
-$oWebhookPayload->Set('payload', $json);
-$oWebhookPayload->DBInsert();
+if (ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_ASYNCHRONOUS_DISABLED, false)) {
+	// handle webhook synchronously
+	$oAutomationInstance = AutomationManager::GetInstance();
+	$iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($sType, $oWebhook, json_decode($json, true));
+} else {
+
+	// append payload to asynchronous handler
+	$oWebhookPayload = MetaModel::NewObject('VCSWebhookPayload');
+	$oWebhookPayload->Set('provider', 'github');
+	$oWebhookPayload->Set('type', $sType);
+	$oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
+	$oWebhookPayload->Set('payload', $json);
+	$oWebhookPayload->DBInsert();
+}

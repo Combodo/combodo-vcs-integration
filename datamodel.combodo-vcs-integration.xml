@@ -2665,8 +2665,18 @@ JS
                     // add contact to copilots (persons_list)
                     if($oContact !== null){
 
-                        // create link
+                        // copilots attribute
                         $oAttribute = MetaModel::GetAttributeDef($this->Get('object_class'), 'persons_list');
+
+                        // check if the contact is already linked to the object
+                        $oOrmLinkSet = $oObject->Get('persons_list');
+                        foreach($oOrmLinkSet->GetColumnAsArray($oAttribute->GetExtKeyToRemote(), false) as $iPersonId){
+                            if($iPersonId == $oContact->GetKey()){
+                                return;
+                            }
+                        }
+
+                        // create new link
                         $sLinkedClass = $oAttribute->GetLinkedClass();
                         $oLink = MetaModel::NewObject($sLinkedClass, [
                             $oAttribute->GetExtKeyToMe() => $oObject->GetKey(),
@@ -2674,8 +2684,7 @@ JS
                         ]);
                         $oLink->DBInsert();
 
-                        // attach link (@todo prevent duplicates !)
-                        $oOrmLinkSet = $oObject->Get('persons_list');
+                        // attach link
                         $oOrmLinkSet->AddItem($oLink);
                         $oObject->DBUpdate();
                     }

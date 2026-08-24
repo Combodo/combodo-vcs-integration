@@ -102,6 +102,11 @@ class AutomationManager
 			}
 		}
 
+		// increment events count and last date
+		$oWebhook->DBIncrement('event_count');
+		$oWebhook->Set('last_event_date', time());
+		$oWebhook->DBUpdate();
+
 		return $iAutomationTriggeredCount;
 	}
 

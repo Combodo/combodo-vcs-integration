@@ -26,9 +26,9 @@ class ModuleHelper
 	public static string $PARAM_CONTACT_ATTRIBUTE_FOR_GITHUB_NICKNAME = 'contact_attribute_for_github_nickname';
 	public static string $PARAM_SYNCHRO_AUTO_INTERVAL = 'synchro_auto_interval';
 	public static string $PARAM_ASYNCHRONOUS_HANDLER_INTERVAL = 'asynchronous_handler_interval';
+	public static string $PARAM_ASYNCHRONOUS_DISABLED = 'asynchronous_disabled';
 	public static string $PARAM_WEBHOOK_HOST_OVERLOAD = 'webhook_host_overload';
 	public static string $PARAM_WEBHOOK_SCHEME_OVERLOAD = 'webhook_scheme_overload';
-
 	/**
 	 * Get module absolute url.
 	 *
