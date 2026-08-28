@@ -2403,10 +2403,28 @@ JS
 
 	            public function HandleEvent($oWebhook, $sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
+
                     // retrieve target object
                     $oObject = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $this->Get('object_class'), $this->IsScoped(), $this->Get('ref_regex_pattern'), $this->Get('ref_regex_subject_data'), $this->Get('object_ref_att_code')->GetValues()[0], $aPayload, $aScopeData);
 
-                    // filter payload
+                    // current PRs value
+                    $sObjectAttCode = $this->Get('object_att_code')->GetValues()[0];
+                    $aValue = json_decode($oObject->Get($sObjectAttCode) ?? '{}', true);
+
+                    $sPrId = $aPayload['pull_request']['id'];
+                    $aPrValue = [];
+                    $aGithub = [];
+                    $aReviewers = [];
+                    $aValidationState = [];
+
+                    if(array_key_exists($sPrId, $aValue)){
+                        $aPrValue = $aValue[$sPrId];
+                        $aGithub = $aPrValue['github'] ?? [];
+                        $aReviewers = $aPrValue['computed_reviewers'] ?? [];
+	                    $aValidationState = $aPrValue['validation_state'] ?? [];
+                    }
+
+                    // filter and store payload
                     $aFilteredPayload = Combodo\iTop\VCSManagement\Helper\AutomationHelper::FilterPayload($aPayload['pull_request'], [
                         'number',
                         'base.repo.name',
@@ -2414,22 +2432,42 @@ JS
                         'html_url',
                         'state',
                         'merged',
-                        'requested_reviewers',
                         'assignee.login',
                     ]);
+                    $aValue[$sPrId]['github'] = $aFilteredPayload;
 
-                    // update PRs value
-                    $sObjectAttCode = $this->Get('object_att_code')->GetValues()[0];
-                    $aValue = json_decode($oObject->Get($sObjectAttCode) ?? '{}', true);
-                    $aValue[$aPayload['pull_request']['id']] = $aFilteredPayload;
+                    // compute and store reviewers state
+                    switch($sEvent){
+                        case 'pull_request':
+							if($aPayload['action'] === 'review_requested') {
+								// pending
+								$aReviewers[$aPayload['requested_reviewer']['login']] = 'pending';
+							}
+                            break;
+                        case 'pull_request_review':
+                            // approved, changes_requested
+                            $sLogin = $aPayload['review']['user']['login'];
+                            if(in_array($aPayload['review']['state'], ['approved', 'changes_requested'])){
+                                $aReviewers[$sLogin] = $aPayload['review']['state'];
+	                            $aValidationState[$sLogin] = $aPayload['review']['state'];
+                            }
+	                        if(in_array($aPayload['review']['state'], ['commented'])){
+		                        $aReviewers[$sLogin] = $aValidationState[$sLogin] ?? 'commented';
+		                        $aValidationState[$sLogin] = $aPayload['review']['state'];
+	                        }
+                            if(in_array($aPayload['review']['state'], ['dismissed'])){
+//		                        unset($aValidationState[$sLogin]);
+		                        $aReviewers[$sLogin] = $aValidationState[$sLogin] ?? 'pending';
+	                        }
+                            break;
+                    }
+                    $aValue[$sPrId]['computed_reviewers'] = $aReviewers;
+                    $aValue[$sPrId]['validation_state'] = $aValidationState;
+
+                    // save the new value
                     $oObject->Set($sObjectAttCode, json_encode($aValue));
                     $oObject->DBUpdate();
-
-                    $oGitHubAPIService = \Combodo\iTop\VCSManagement\Service\GitHubAPIService::GetInstance();
-                    $oReviews = $oGitHubAPIService->GetPullRequestReview($oWebhook, $aPayload['pull_request']['base']['repo']['owner']['login'], $aPayload['pull_request']['base']['repo']['name'], $aPayload['pull_request']['number']);
-                    IssueLog::Error(var_export($oReviews, true));
-	            }
-
+}
 
                         ]]>
           </code>
@@ -2482,7 +2520,7 @@ JS
         $bIsNew = $oEventData->Get('is_new');
 
         if($bIsNew){
-           \Combodo\iTop\VCSManagement\Helper\AutomationHelper::AddAutomationSubscribedEvents($oObject, ['pull_request']);
+           \Combodo\iTop\VCSManagement\Helper\AutomationHelper::AddAutomationSubscribedEvents($oObject, ['pull_request', 'pull_request_review']);
         }
       }
 ]]></code>

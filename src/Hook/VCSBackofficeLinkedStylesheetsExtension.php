@@ -445,7 +445,7 @@ td{
     background-color: var(--ibo-color-grey-700);
 }
 
-th.reviewers_requested::before {
+th.reviewers_pending::before {
 content: '';
 display: inline-block;
 width: 16px;
