@@ -80,6 +80,16 @@ class VCSPopupMenu implements iPopupMenuExtension
 						);
 						$oItem->SetIconClass('fab fa-github-alt');
 						$aResult[] = $oItem;
+
+						// test graphql
+						$oItem = new JSPopupMenuItem(
+							'GitHubTestGraphQL',
+							Dict::S('Test'),
+							'iTopGithubWorker.TestGraphQL("'.$param->GetKey().'");',
+							['env-'.utils::GetCurrentEnvironment().'/combodo-vcs-integration/assets/js/github.js']
+						);
+						$oItem->SetIconClass('fab fa-github-alt');
+						$aResult[] = $oItem;
 					}
 
 				}

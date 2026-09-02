@@ -17,6 +17,7 @@ const iTopGithubWorker = new function () {
     const ROUTE_SYNCHRONIZE_WEBHOOK_CONFIGURATION = 'github.synchronize_webhook_configuration';
     const ROUTE_CHECK_WEBHOOK_CONFIGURATION_SYNCHRO = 'github.check_webhook_configuration_synchro';
     const ROUTE_REGENERATE_ACCESS_TOKEN = 'github.regenerate_access_token';
+    const ROUTE_TEST_GRAPHQL = 'github.test_graph_ql';
 
     /**
      * Synchronize webhook
@@ -159,6 +160,22 @@ const iTopGithubWorker = new function () {
 
     }
 
+    async function TestGraphQL(webhook_reference) {
+        try {
+
+            // endpoint call
+            const response = await CombodoHTTP.Fetch(`${ROUTER_BASE_URL}?route=${ROUTE_TEST_GRAPHQL}&webhook_id=` + webhook_reference);
+            const data = await response.json();
+            console.log(data);
+
+        } catch (error) {
+
+            // log
+            console.error(error);
+        }
+
+    }
+
 
     /**
      * Check errors.
@@ -225,5 +242,6 @@ const iTopGithubWorker = new function () {
         OpenUrl,
         SynchronizeWebhook,
         RegenerateAccessToken,
+        TestGraphQL,
     }
 };
