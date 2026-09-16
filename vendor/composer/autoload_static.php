@@ -9,6 +9,7 @@ class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
     public static $prefixLengthsPsr4 = array (
         'F' =>
         array (
+            'FastVolt\\Helper\\Markdown\\' => 25,
             'FastVolt\\Helper\\' => 16,
         ),
         'C' =>
@@ -18,6 +19,10 @@ class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
     );
 
     public static $prefixDirsPsr4 = array (
+        'FastVolt\\Helper\\Markdown\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown',
+        ),
         'FastVolt\\Helper\\' =>
         array (
             0 => __DIR__ . '/..' . '/fastvolt/markdown/src',
@@ -30,7 +35,6 @@ class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
 
     public static $classMap = array (
         'Combodo\\iTop\\VCSManagement\\Attribute\\AttributeJSON' => __DIR__ . '/../..' . '/src/Attribute/AttributeJSON.php',
-        'Combodo\\iTop\\VCSManagement\\Attribute\\VCSBackofficeLinkedStylesheetsExtension' => __DIR__ . '/../..' . '/src/Attribute/VCSBackofficeLinkedStylesheetsExtension.php',
         'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
         'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
         'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => __DIR__ . '/../..' . '/src/Controller/GitHubController.php',
@@ -43,13 +47,19 @@ class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
         'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => __DIR__ . '/../..' . '/src/Hook/VCSPopupMenu.php',
         'Combodo\\iTop\\VCSManagement\\Service\\AbstractGitHubAPI' => __DIR__ . '/../..' . '/src/Service/AbstractGitHubAPI.php',
         'Combodo\\iTop\\VCSManagement\\Service\\AutomationManager' => __DIR__ . '/../..' . '/src/Service/AutomationManager.php',
+        'Combodo\\iTop\\VCSManagement\\Service\\CombodoAutomationManager' => __DIR__ . '/../..' . '/src/Service/CombodoAutomationManager.php',
         'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIAuthenticationService' => __DIR__ . '/../..' . '/src/Service/GitHubAPIAuthenticationService.php',
         'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIService' => __DIR__ . '/../..' . '/src/Service/GitHubAPIService.php',
         'Combodo\\iTop\\VCSManagement\\Service\\GitHubManager' => __DIR__ . '/../..' . '/src/Service/GitHubManager.php',
         'Combodo\\iTop\\VCSManagement\\Service\\TemplatingService' => __DIR__ . '/../..' . '/src/Service/TemplatingService.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'FastVolt\\Helper\\Libs\\Markdown\\ParseMarkdown' => __DIR__ . '/..' . '/fastvolt/markdown/src/Libs/Markdown/ParseMarkdown.php',
         'FastVolt\\Helper\\Markdown' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown.php',
+        'FastVolt\\Helper\\Markdown\\Interface\\MarkdownInterface' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown/Interface/MarkdownInterface.php',
+        'FastVolt\\Helper\\Markdown\\Libs\\ParseMarkdown' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown/Libs/ParseMarkdown.php',
+        'Fastvolt\\Helper\\Markdown\\Enums\\MarkdownEnum' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown/Enums/MarkdownEnum.php',
+        'Fastvolt\\Helper\\Markdown\\Exceptions\\MarkdownEnumNotFound' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown/Exceptions/MarkdownEnumNotFound.php',
+        'Fastvolt\\Helper\\Markdown\\Exceptions\\MarkdownException' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown/Exceptions/MarkdownException.php',
+        'Fastvolt\\Helper\\Markdown\\Exceptions\\MarkdownFileNotFound' => __DIR__ . '/..' . '/fastvolt/markdown/src/Markdown/Exceptions/MarkdownFileNotFound.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

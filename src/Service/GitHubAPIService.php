@@ -403,13 +403,13 @@ class GitHubAPIService extends AbstractGitHubAPI
 
 	/**
 	 * @param DBObject $oWebhook
-	 * @param string $sOrganization
+	 * @param string $sOwner
 	 * @param string $sRepository
-	 * @param string $sPullRequestNumber
+	 * @param int $sPullRequestNumber
 	 * @return array
 	 * @throws CoreException
 	 */
-	public function GetPullRequestReviewGraphQL(DBObject $oWebhook, string $sOrganization, string $sRepository, int $iPullRequestNumber): array
+	public function GetPullRequestReviewGraphQL(DBObject $oWebhook, string $sOwner, string $sRepository, int $iPullRequestNumber): array
 	{
 		// API call
 		$client = new Client();
@@ -435,7 +435,54 @@ class GitHubAPIService extends AbstractGitHubAPI
         GRAPHQL;
 
 		$aVariables = [
-			'owner' => $sOrganization,
+			'owner' => $sOwner,
+			'repo' => $sRepository,
+			'number' => $iPullRequestNumber,
+		];
+
+		$request = new Request('POST', $this->GetAPIUri("/graphql"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook), json_encode(['query' => $query, 'variables' => $aVariables]));
+		$res = $client->sendAsync($request)->wait();
+		return json_decode($res->getBody(), true);
+	}
+
+	/**
+	 * @param DBObject $oWebhook
+	 * @param string $sOwner
+	 * @param string $sRepository
+	 * @param int $sPullRequestNumber
+	 * @return array
+	 * @throws CoreException
+	 */
+	public function GetPullRequestPendingReviewerGraphQL(DBObject $oWebhook, string $sOwner, string $sRepository, int $iPullRequestNumber): array
+	{
+		// API call
+		$client = new Client();
+
+		$query = <<<'GRAPHQL'
+        query($owner: String!, $repo: String!, $number: Int!) {
+          repository(owner: $owner, name: $repo) {
+            pullRequest(number: $number) {
+              reviewRequests(first: 50) {
+                totalCount
+                nodes {
+                  requestedReviewer {
+                    ... on User {
+                      login
+                    }
+                    ... on Team {
+                      name
+                      slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        GRAPHQL;
+
+		$aVariables = [
+			'owner' => $sOwner,
 			'repo' => $sRepository,
 			'number' => $iPullRequestNumber,
 		];

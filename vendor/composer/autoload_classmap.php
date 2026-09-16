@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Combodo\\iTop\\VCSManagement\\Attribute\\AttributeJSON' => $baseDir . '/src/Attribute/AttributeJSON.php',
-    'Combodo\\iTop\\VCSManagement\\Attribute\\VCSBackofficeLinkedStylesheetsExtension' => $baseDir . '/src/Attribute/VCSBackofficeLinkedStylesheetsExtension.php',
     'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => $baseDir . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
     'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => $baseDir . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
     'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => $baseDir . '/src/Controller/GitHubController.php',
@@ -20,11 +19,17 @@ return array(
     'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => $baseDir . '/src/Hook/VCSPopupMenu.php',
     'Combodo\\iTop\\VCSManagement\\Service\\AbstractGitHubAPI' => $baseDir . '/src/Service/AbstractGitHubAPI.php',
     'Combodo\\iTop\\VCSManagement\\Service\\AutomationManager' => $baseDir . '/src/Service/AutomationManager.php',
+    'Combodo\\iTop\\VCSManagement\\Service\\CombodoAutomationManager' => $baseDir . '/src/Service/CombodoAutomationManager.php',
     'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIAuthenticationService' => $baseDir . '/src/Service/GitHubAPIAuthenticationService.php',
     'Combodo\\iTop\\VCSManagement\\Service\\GitHubAPIService' => $baseDir . '/src/Service/GitHubAPIService.php',
     'Combodo\\iTop\\VCSManagement\\Service\\GitHubManager' => $baseDir . '/src/Service/GitHubManager.php',
     'Combodo\\iTop\\VCSManagement\\Service\\TemplatingService' => $baseDir . '/src/Service/TemplatingService.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'FastVolt\\Helper\\Libs\\Markdown\\ParseMarkdown' => $vendorDir . '/fastvolt/markdown/src/Libs/Markdown/ParseMarkdown.php',
     'FastVolt\\Helper\\Markdown' => $vendorDir . '/fastvolt/markdown/src/Markdown.php',
+    'FastVolt\\Helper\\Markdown\\Interface\\MarkdownInterface' => $vendorDir . '/fastvolt/markdown/src/Markdown/Interface/MarkdownInterface.php',
+    'FastVolt\\Helper\\Markdown\\Libs\\ParseMarkdown' => $vendorDir . '/fastvolt/markdown/src/Markdown/Libs/ParseMarkdown.php',
+    'Fastvolt\\Helper\\Markdown\\Enums\\MarkdownEnum' => $vendorDir . '/fastvolt/markdown/src/Markdown/Enums/MarkdownEnum.php',
+    'Fastvolt\\Helper\\Markdown\\Exceptions\\MarkdownEnumNotFound' => $vendorDir . '/fastvolt/markdown/src/Markdown/Exceptions/MarkdownEnumNotFound.php',
+    'Fastvolt\\Helper\\Markdown\\Exceptions\\MarkdownException' => $vendorDir . '/fastvolt/markdown/src/Markdown/Exceptions/MarkdownException.php',
+    'Fastvolt\\Helper\\Markdown\\Exceptions\\MarkdownFileNotFound' => $vendorDir . '/fastvolt/markdown/src/Markdown/Exceptions/MarkdownFileNotFound.php',
 );

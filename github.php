@@ -24,7 +24,6 @@ set_error_handler(function ($severity, $message, $file, $line) {
 });
 
 set_exception_handler(function ($e) {
-	header('HTTP/1.1 500 Internal Server Error');
 	echo "Error on line {$e->getLine()}: ".htmlSpecialChars($e->getMessage());
 	die();
 });

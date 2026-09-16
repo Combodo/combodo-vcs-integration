@@ -44,6 +44,7 @@ class AttributeJSON extends AttributeDBField
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true): string
 	{
+		return (string) $sValue;
 		$sHtml = '<table class="ibo-datatable ibo-content-block ibo-block dataTable no-footer combodo-vcs-integration--pr--table">';
 		$sHtml .= '<thead>';
 		$sHtml .= '<tr><th colspan="2"><input type="checkbox" checked style="display: none;"><label style="display: none;">Hide cancelled</label></th><th class="reviewers_pending"></th><th class="reviewers_changes"></th><th class="reviewers_approved"></th><th class="merged"></th></tr>';

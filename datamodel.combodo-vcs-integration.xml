@@ -2252,7 +2252,11 @@ JS
                     <is_null_allowed>true</is_null_allowed>
                     <tracking_level>none</tracking_level>
                 </field>
-
+                <field id="pull_requests_reviewers" xsi:type="Combodo\iTop\VCSManagement\Attribute\AttributeJSON" _delta="define">
+                    <sql>pull_requests_reviewers</sql>
+                    <is_null_allowed>true</is_null_allowed>
+                    <tracking_level>none</tracking_level>
+                </field>
                 <field id="persons_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
                     <linked_class>lnkBugToPerson</linked_class>
                     <ext_key_to_me>bug_id</ext_key_to_me>
@@ -2272,7 +2276,7 @@ JS
 
   public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
   {
-    if ($sAttCode === 'pull_requests') {
+    if ($sAttCode === 'pull_requests' || $sAttCode === 'pull_requests_reviewers') {
       return OPT_ATT_READONLY;
     }
     return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
@@ -2287,7 +2291,7 @@ JS
                     <code><![CDATA[
                            	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
-    if ($sAttCode === 'pull_requests') {
+    if ($sAttCode === 'pull_requests' || $sAttCode === 'pull_requests_reviewers') {
       return OPT_ATT_READONLY;
     }
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
@@ -2309,6 +2313,9 @@ JS
                                         </item>
                                         <item id="persons_list">
                                             <rank>20</rank>
+                                        </item>
+                                        <item id="pull_requests_reviewers">
+                                          <rank>30</rank>
                                         </item>
                                     </items>
                                 </item>
@@ -2405,68 +2412,29 @@ JS
 
 
                     // retrieve target object
-                    $oObject = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $this->Get('object_class'), $this->IsScoped(), $this->Get('ref_regex_pattern'), $this->Get('ref_regex_subject_data'), $this->Get('object_ref_att_code')->GetValues()[0], $aPayload, $aScopeData);
+                    $oUserRequest = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $this->Get('object_class'), $this->IsScoped(), $this->Get('ref_regex_pattern'), $this->Get('ref_regex_subject_data'), $this->Get('object_ref_att_code')->GetValues()[0], $aPayload, $aScopeData);
 
                     // current PRs value
                     $sObjectAttCode = $this->Get('object_att_code')->GetValues()[0];
-                    $aValue = json_decode($oObject->Get($sObjectAttCode) ?? '{}', true);
+                    $aValue = json_decode($oUserRequest->Get($sObjectAttCode) ?? '{}', true);
 
                     $sPrId = $aPayload['pull_request']['id'];
-                    $aPrValue = [];
-                    $aGithub = [];
-                    $aReviewers = [];
-                    $aValidationState = [];
-
-                    if(array_key_exists($sPrId, $aValue)){
-                        $aPrValue = $aValue[$sPrId];
-                        $aGithub = $aPrValue['github'] ?? [];
-                        $aReviewers = $aPrValue['computed_reviewers'] ?? [];
-	                    $aValidationState = $aPrValue['validation_state'] ?? [];
-                    }
 
                     // filter and store payload
                     $aFilteredPayload = Combodo\iTop\VCSManagement\Helper\AutomationHelper::FilterPayload($aPayload['pull_request'], [
                         'number',
                         'base.repo.name',
-                        'base.ref',
-                        'html_url',
-                        'state',
-                        'merged',
-                        'assignee.login',
+                        'base.repo.owner.login',
                     ]);
                     $aValue[$sPrId]['github'] = $aFilteredPayload;
 
-                    // compute and store reviewers state
-                    switch($sEvent){
-                        case 'pull_request':
-							if($aPayload['action'] === 'review_requested') {
-								// pending
-								$aReviewers[$aPayload['requested_reviewer']['login']] = 'pending';
-							}
-                            break;
-                        case 'pull_request_review':
-                            // approved, changes_requested
-                            $sLogin = $aPayload['review']['user']['login'];
-                            if(in_array($aPayload['review']['state'], ['approved', 'changes_requested'])){
-                                $aReviewers[$sLogin] = $aPayload['review']['state'];
-	                            $aValidationState[$sLogin] = $aPayload['review']['state'];
-                            }
-	                        if(in_array($aPayload['review']['state'], ['commented'])){
-		                        $aReviewers[$sLogin] = $aValidationState[$sLogin] ?? 'commented';
-		                        $aValidationState[$sLogin] = $aPayload['review']['state'];
-	                        }
-                            if(in_array($aPayload['review']['state'], ['dismissed'])){
-//		                        unset($aValidationState[$sLogin]);
-		                        $aReviewers[$sLogin] = $aValidationState[$sLogin] ?? 'pending';
-	                        }
-                            break;
-                    }
-                    $aValue[$sPrId]['computed_reviewers'] = $aReviewers;
-                    $aValue[$sPrId]['validation_state'] = $aValidationState;
-
                     // save the new value
-                    $oObject->Set($sObjectAttCode, json_encode($aValue));
-                    $oObject->DBUpdate();
+                    $oUserRequest->Set($sObjectAttCode, json_encode($aValue));
+                    $oUserRequest->DBUpdate();
+
+                    $oCombodoAutomationManager = \Combodo\iTop\VCSManagement\Service\CombodoAutomationManager::GetInstance();
+                    \IssueLog::Error(__FILE__ . '::' . __LINE__);
+                    $oCombodoAutomationManager->UpdateWebhookPRInformation($this, $oUserRequest, $oWebhook, $aFilteredPayload['number'], $aFilteredPayload['base.repo.owner.login'], $aFilteredPayload['base.repo.name']);
 }
 
                         ]]>
