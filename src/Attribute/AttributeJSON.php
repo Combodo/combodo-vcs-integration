@@ -7,93 +7,85 @@
 
 namespace Combodo\iTop\VCSManagement\Attribute;
 
-use CMDBSource;
-use Combodo\iTop\Core\AttributeDefinition\AttributeDBField;
-use DBObject;
+use Combodo\iTop\Application\TwigBase\Twig\Extension;
+use Combodo\iTop\Core\AttributeDefinition\AttributeText;
+use Throwable;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Loader\ArrayLoader;
+use utils;
 
-class AttributeJSON extends AttributeDBField
+/**
+ * Attribute JSON
+ *
+ * Attribute to store JSON data in a text field and render it as HTML using an inline Twig template.
+ *
+ */
+class AttributeJSON extends AttributeText
 {
-	public function GetEditClass()
-	{
-		return "HTML";
-	}
-
-	protected function GetSQLCol($bFullSpec = false)
-	{
-		return "TEXT".CMDBSource::GetSqlStringColumnDefinition();
-	}
-
-	public function GetDefaultValue(?DBObject $oHostObject = null)
-	{
-		return json_encode([]);
-	}
-
-	public function GetMaxSize()
-	{
-		return 65535;
-	}
-
-	private function GetReviewersByState($aPR): array
-	{
-		$aReviewers = [];
-		foreach ($aPR['computed_reviewers'] ?? [] as $sLogin => $sState) {
-			$aReviewers[$sState][] = $sLogin;
-		}
-		return $aReviewers;
-	}
-
+	/** @inheritDoc */
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true): string
 	{
-		return (string) $sValue;
-		$sHtml = '<table class="ibo-datatable ibo-content-block ibo-block dataTable no-footer combodo-vcs-integration--pr--table">';
-		$sHtml .= '<thead>';
-		$sHtml .= '<tr><th colspan="2"><input type="checkbox" checked style="display: none;"><label style="display: none;">Hide cancelled</label></th><th class="reviewers_pending"></th><th class="reviewers_changes"></th><th class="reviewers_approved"></th><th class="merged"></th></tr>';
-		$sHtml .= '</thead>';
-		$sHtml .= '<tbody>';
-
-		if ($sValue !== null) {
-			$aPR = json_decode($sValue, true);
-			$aPR = array_reverse($aPR);
-
-			foreach ($aPR as $prId => $prData) {
-
-				$aReviewersByState = $this->GetReviewersByState($prData);
-
-				$prData = $prData['github'];
-
-				$sRowStyle = '';
-				if (!$prData['merged'] && $prData['state'] === 'closed') {
-					$sRowStyle = ' style="display: none;"';
-				}
-
-				$sHtml .= '<tr data-role="vcs-pr-row" data-url="'.$prData['html_url'].'" data-state="'.$prData['state'].'" data-merged="'.$prData['merged'].'" '.$sRowStyle.'>';
-				$sHtml .= '<td style="width:60px"><span class="ibo-field-badge" data-pr-state="'.$prData['state'].'"></span>'.htmlspecialchars($prData['number']).'</td>';
-				$sHtml .= '<td><span class="repo">'.htmlspecialchars($prData['base.repo.name'] ?? '').'</span> <span class="branch"><i class="fas fa-code-branch"></i> '.htmlspecialchars($prData['base.ref'] ?? '').'</span></td>';
-				$sHtml .= '<td class="reviewers_pending">'.count($aReviewersByState['pending'] ?? []).'</td>';
-				$sHtml .= '<td class="reviewers_changes">'.count($aReviewersByState['changes_requested'] ?? []).'</td>';
-				$sHtml .= '<td class="reviewers_approved">'.count($aReviewersByState['approved'] ?? []).'</td>';
-				$sHtml .= '<td class="merged">'.($prData['merged'] ? '<i class="fas fa-check-square"></i>' : '<i class="far fa-square"></i>').'</td>';
-				$sHtml .= '</tr>';
-			}
-
-			if (count($aPR) === 0) {
-				$sHtml .= '<tr><td colspan="6" style="text-align: center;">No pull requests found</td></tr>';
-			}
+		// empty
+		$sEmptyMessage = (string) $this->GetOptional('empty_message', '');
+		if ($sValue === null || $sValue === '') {
+			return \Dict::S($sEmptyMessage);
 		}
 
-		$sHtml .= '</tbody>';
-		$sHtml .= '</table>';
-		return $sHtml;
+		// decoding JSON
+		$aDecoded = json_decode((string) $sValue, true);
+		if (!is_array($aDecoded)) {
+			return parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
+		}
+
+		// inline template
+		$sTemplateInline = (string) $this->GetOptional('template_inline', '');
+		if (trim($sTemplateInline) === '') {
+			return $this->RenderFallback($aDecoded);
+		}
+		try {
+			return $this->RenderInlineTemplate($sTemplateInline, [
+				'data' => $aDecoded,
+			]);
+		} catch (Throwable $oException) {
+			\IssueLog::Warning('Unable to render inline twig template for AttributeJSON', null, [
+				'attribute_code' => $this->GetCode(),
+				'message' => $oException->getMessage(),
+			]);
+
+			return $this->RenderFallback($aDecoded);
+		}
 	}
 
-	public function GetWidth()
+	/**
+	 * @throws SyntaxError
+	 * @throws RuntimeError
+	 * @throws LoaderError
+	 */
+	private function RenderInlineTemplate(string $sTemplate, array $aParams): string
 	{
-		return $this->GetOptional('width', '');
+		$oTwig = new Environment(new ArrayLoader([
+			'inline_template' => $sTemplate,
+		]), [
+			'debug' => utils::IsDevelopmentEnvironment(),
+		]);
+
+		Extension::RegisterTwigExtensions($oTwig);
+
+		return $oTwig->render('inline_template', $aParams);
 	}
 
-	public function GetHeight()
+	/**
+	 * Fallback rendering.
+	 *
+	 * @param array $aDecoded
+	 * @return string
+	 */
+	private function RenderFallback(array $aDecoded): string
 	{
-		return $this->GetOptional('height', '');
+		return '<pre class="vcs-attribute-json">'.utils::EscapeHtml(json_encode($aDecoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)).'</pre>';
 	}
 
 }

@@ -11,10 +11,6 @@ use Combodo\iTop\VCSManagement\Service\AutomationManager;
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
-//// Temporary workaround to make sure mandatory parameters are provided
-//if (!array_key_exists('transaction_id', $_REQUEST)) {
-//	$_REQUEST['transaction_id'] = utils::GetNewTransactionId();
-//}
 if (!array_key_exists('HTTP_REFERER', $_SERVER)) {
 	$_SERVER['HTTP_REFERER'] = 'https://github.com/';
 }
@@ -24,7 +20,7 @@ set_error_handler(function ($severity, $message, $file, $line) {
 });
 
 set_exception_handler(function ($e) {
-	echo "Error on line {$e->getLine()}: ".htmlSpecialChars($e->getMessage());
+	IssueLog::Error("Exception: ".htmlSpecialChars($e->getMessage())." in ".$e->getFile()." on line ".$e->getLine());
 	die();
 });
 

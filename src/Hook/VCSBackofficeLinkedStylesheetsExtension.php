@@ -34,7 +34,7 @@ class VCSBackofficeLinkedStylesheetsExtension implements \iBackofficeStyleExtens
         function UpdateVisiblePRRows(checkbox, table) {
         table.querySelectorAll('[data-role="vcs-pr-row"]').forEach(row => {
             if (checkbox.checked) {
-                row.getAttribute('data-state') === 'closed' && !row.getAttribute('data-merged') ? row.style.display = 'none' : row.style.display = '';
+                row.getAttribute('data-state') === 'closed' && row.getAttribute('data-merged-at') === '' ? row.style.display = 'none' : row.style.display = '';
             } else {
                 row.style.display = '';
             }
@@ -285,8 +285,8 @@ JS;
 /* COMMENT */
 
 /* comment */
-.vcs-log.vcs-e-pull_request_review_comment .vcs-title .vcs-event:before {
-    content: 'Comment';
+.vcs-log.vcs-e-pull_request_review_comment .vcs-title .vcs-state:after {
+    content: 'New Message';
 }
 
 .vcs-log.vcs-e-pull_request_review_comment.vcs-a-created .vcs-title:before {
@@ -420,6 +420,7 @@ JS;
 
 .branch{
     margin-left: 6px;
+            white-space: nowrap !important;
 }
 
 td{
@@ -443,6 +444,18 @@ td{
 
 .ibo-field-badge[data-pr-state="closed"]:before {
     background-color: var(--ibo-color-grey-700);
+}
+
+tr[data-draft="1"]{
+opacity: 0.4;
+}
+
+td.middle{
+    text-align: center!important;
+}
+
+th.filter > span{
+    display: flex;
 }
 
 th.reviewers_pending::before {
@@ -489,7 +502,25 @@ height: 16px;
 background-size: contain;
     background-image: url("data:image/svg+xml,%3Csvg%20width%3D%22800px%22%20height%3D%22800px%22%20viewBox%3D%220%200%2016%2016%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%3E%0A%20%20%20%20%3Cpath%20fill%3D%22%23000000%22%20fill-rule%3D%22evenodd%22%0A%20%20%20%20%20%20%20%20%20%20d%3D%22M4.644%206.865A3.001%203.001%200%20003.75%201%203%203%200%20003%206.905V14a.75.75%200%20001.5%200V9.518c.21.266.436.527.675.78C6.21%2011.39%207.619%2012.432%209.08%2012.69a3.001%203.001%200%2010.038-1.526c-.92-.237-1.951-.946-2.855-1.899A9.018%209.018%200%20014.955%207.52a4.969%204.969%200%2001-.311-.655zM3.75%202.5a1.5%201.5%200%20100%203%201.5%201.5%200%20000-3zM10.5%2012a1.5%201.5%200%20103%200%201.5%201.5%200%2000-3%200z%22%0A%20%20%20%20%20%20%20%20%20%20clip-rule%3D%22evenodd%22%2F%3E%0A%3C%2Fsvg%3E");
 }
-    
+
+td.reviewers_approved span:not([data-count="0"]){
+    background-color: var(--ibo-color-green-400);
+    color: white;
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+td.reviewers_changes span:not([data-count="0"]){
+    background-color: var(--ibo-color-orange-400);
+    color: white;
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+td.pr_number{
+font-weight: 700;
+}
+
 
 CSS;
 

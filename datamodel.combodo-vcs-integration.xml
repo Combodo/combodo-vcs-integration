@@ -2028,7 +2028,8 @@ JS
                         if($oValue instanceof ormCaseLog){
                             $sNicknameVar = $this->Get('nickname_var');
 
-                            $oUser = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchUserFromContactNickname($sNicknameVar, $aPayload);
+		                    $sNicknameVarValue = Combodo\iTop\VCSManagement\Helper\ModuleHelper::ExtractDataFromArray($aPayload, $sNicknameVar);
+                            $oUser = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchUserFromContactNickname($sNicknameVarValue);
 
                              if ($oUser !== null) {
                                 $iUserId = $oUser->Get('id');
@@ -2247,15 +2248,48 @@ JS
 
         <class id="UserRequest" _delta="must_exist">
             <fields>
-                <field id="pull_requests" xsi:type="Combodo\iTop\VCSManagement\Attribute\AttributeJSON" _delta="define">
-                    <sql>pull_requests</sql>
-                    <is_null_allowed>true</is_null_allowed>
-                    <tracking_level>none</tracking_level>
-                </field>
                 <field id="pull_requests_reviewers" xsi:type="Combodo\iTop\VCSManagement\Attribute\AttributeJSON" _delta="define">
                     <sql>pull_requests_reviewers</sql>
                     <is_null_allowed>true</is_null_allowed>
                     <tracking_level>none</tracking_level>
+                    <empty_message>Class:UserRequest/Attribute:pull_requests_reviewers:no_review</empty_message>
+                    <template_inline><![CDATA[
+<table class="ibo-datatable ibo-content-block ibo-block dataTable no-footer combodo-vcs-integration--pr--table">
+    <thead>
+        <tr>
+            <th  class="filter" colspan="2">
+                <span>
+                    <input type="checkbox" checked>
+                    <label>{{ 'Class:UserRequest/Attribute:pull_requests_reviewers:hide_closed'|dict_s }}</label>
+                </span>
+            </th>
+            <th class="reviewers_pending" title="{{ 'Class:UserRequest/Attribute:pull_requests_reviewers:pending_reviewers'|dict_s }}"></th>
+            <th class="reviewers_changes" title="{{ 'Class:UserRequest/Attribute:pull_requests_reviewers:changes_requested'|dict_s }}"></th>
+            <th class="reviewers_approved" title="{{ 'Class:UserRequest/Attribute:pull_requests_reviewers:approved'|dict_s }}"></th>
+            <th class="merged" title="{{ 'Class:UserRequest/Attribute:pull_requests_reviewers:merged'|dict_s }}"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pr in data %}
+            {% set pending = pr.state_counter.PENDING|default(0) %}
+            {% set changes = pr.state_counter.CHANGES_REQUESTED|default(0) %}
+            {% set approved = pr.state_counter.APPROVED|default(0) %}
+            {% set row_style = '' %}
+            {% if pr.merged_at === null and pr.state == 'closed' %}
+                {% set row_style = 'display: none;' %}
+            {% endif %}
+            <tr data-role="vcs-pr-row" data-url="{{ pr.html_url }}" data-state="{{ pr.state }}" data-merged-at="{{ pr.merged_at }}" data-draft="{{ pr.draft }}" style="{{ row_style }}" title="{{ pr.decision }}">
+                <td><span class="repo">{{ pr.repo_name }}</span> <span class="branch"><i class="fas fa-code-branch"></i> {{ pr['base.ref'] }}</span></td>
+                <td class="pr_number"><span class="ibo-field-badge" data-pr-state="{{ pr.state }}"></span>#{{ pr.number }}</td>
+                <td class="reviewers_pending middle"><span data-count="{{ pending }}">{{ pending }}</span></td>
+                <td class="reviewers_changes middle"><span data-count="{{ changes }}">{{ changes }}</span></td>
+                <td class="reviewers_approved middle"><span data-count="{{ approved }}">{{ approved }}</span></td>
+                <td class="merged middle">{% if pr.merged_at !== null %}<i class="fas fa-check-square"></i>{% else %}<i class="far fa-square"></i>{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+]]></template_inline>
                 </field>
                 <field id="persons_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
                     <linked_class>lnkBugToPerson</linked_class>
@@ -2276,8 +2310,8 @@ JS
 
   public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
   {
-    if ($sAttCode === 'pull_requests' || $sAttCode === 'pull_requests_reviewers') {
-      return OPT_ATT_READONLY;
+    if ($sAttCode === 'pull_requests_reviewers') {
+      return OPT_ATT_HIDDEN;
     }
     return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
   }
@@ -2291,7 +2325,7 @@ JS
                     <code><![CDATA[
                            	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
-    if ($sAttCode === 'pull_requests' || $sAttCode === 'pull_requests_reviewers') {
+    if ($sAttCode === 'pull_requests_reviewers') {
       return OPT_ATT_READONLY;
     }
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
@@ -2305,17 +2339,14 @@ JS
                         <item id="col:col3">
                             <rank>100</rank>
                             <items>
-                                <item id="fieldset:pull_requests_overview">
+                                <item id="fieldset:Class:UserRequest:pull_requests_overview">
                                     <rank>10</rank>
                                     <items>
-                                        <item id="pull_requests">
+                                        <item id="pull_requests_reviewers">
                                             <rank>10</rank>
                                         </item>
                                         <item id="persons_list">
                                             <rank>20</rank>
-                                        </item>
-                                        <item id="pull_requests_reviewers">
-                                          <rank>30</rank>
                                         </item>
                                     </items>
                                 </item>
@@ -2410,34 +2441,16 @@ JS
 
 	            public function HandleEvent($oWebhook, $sEvent, $aPayload, $aScopeData = [], &$aAutomationData = []){
 
-
                     // retrieve target object
                     $oUserRequest = \Combodo\iTop\VCSManagement\Helper\AutomationHelper::SearchObjectFromRegexp($this, $this->Get('object_class'), $this->IsScoped(), $this->Get('ref_regex_pattern'), $this->Get('ref_regex_subject_data'), $this->Get('object_ref_att_code')->GetValues()[0], $aPayload, $aScopeData);
 
                     // current PRs value
                     $sObjectAttCode = $this->Get('object_att_code')->GetValues()[0];
-                    $aValue = json_decode($oUserRequest->Get($sObjectAttCode) ?? '{}', true);
-
-                    $sPrId = $aPayload['pull_request']['id'];
-
-                    // filter and store payload
-                    $aFilteredPayload = Combodo\iTop\VCSManagement\Helper\AutomationHelper::FilterPayload($aPayload['pull_request'], [
-                        'number',
-                        'base.repo.name',
-                        'base.repo.owner.login',
-                    ]);
-                    $aValue[$sPrId]['github'] = $aFilteredPayload;
-
-                    // save the new value
-                    $oUserRequest->Set($sObjectAttCode, json_encode($aValue));
-                    $oUserRequest->DBUpdate();
 
                     $oCombodoAutomationManager = \Combodo\iTop\VCSManagement\Service\CombodoAutomationManager::GetInstance();
-                    \IssueLog::Error(__FILE__ . '::' . __LINE__);
-                    $oCombodoAutomationManager->UpdateWebhookPRInformation($this, $oUserRequest, $oWebhook, $aFilteredPayload['number'], $aFilteredPayload['base.repo.owner.login'], $aFilteredPayload['base.repo.name']);
-}
-
-                        ]]>
+                    $oCombodoAutomationManager->UpdateWebhookPRInformation($this, $oWebhook, $oUserRequest, $sObjectAttCode, $aPayload['pull_request']);
+                }
+]]>
           </code>
                 </method>
                 <method id="GetInitialStateAttributeFlags">
@@ -2860,8 +2873,37 @@ JS
                 </details>
             </presentation>
         </class>
-
     </classes>
+    <dictionaries>
+        <dictionary id="EN US">
+            <entries>
+                <entry id="Class:UserRequest:pull_requests_overview" _delta="define"><![CDATA[GitHub Pull Requests]]></entry>
+                <entry id="Class:UserRequest/Attribute:persons_list" _delta="define"><![CDATA[Copilots]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests" _delta="define"><![CDATA[Pull Requests]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers" _delta="define"><![CDATA[Pull Requests Reviews]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:no_review" _delta="define"><![CDATA[No pull request for now.]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:hide_closed" _delta="define"><![CDATA[Hide closed]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:pending_reviewers" _delta="define"><![CDATA[Pending reviewers]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:changes_requested" _delta="define"><![CDATA[Changes requested]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:approved" _delta="define"><![CDATA[Approved]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:merged" _delta="define"><![CDATA[Merged]]></entry>
+            </entries>
+        </dictionary>
+        <dictionary id="FR FR">
+            <entries>
+                <entry id="Class:UserRequest:pull_requests_overview" _delta="define"><![CDATA[GitHub Pull Requests]]></entry>
+                <entry id="Class:UserRequest/Attribute:persons_list" _delta="define"><![CDATA[Copilots]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests" _delta="define"><![CDATA[Pull Requests]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers" _delta="define"><![CDATA[Pull Requests Reviews]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:no_review" _delta="define"><![CDATA[Aucune pull request pour le moment.]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:hide_closed" _delta="define"><![CDATA[Masquer les fermées]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:pending_reviewers" _delta="define"><![CDATA[Attente revue copilot]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:changes_requested" _delta="define"><![CDATA[Changements demandés]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:approved" _delta="define"><![CDATA[Approbation]]></entry>
+                <entry id="Class:UserRequest/Attribute:pull_requests_reviewers:merged" _delta="define"><![CDATA[Mergée]]></entry>
+            </entries>
+        </dictionary>
+    </dictionaries>
     <menus>
         <menu id="ConfigurationTools:VCSManagement" xsi:type="DashboardMenuNode" _delta="define">
             <rank>200</rank>
@@ -2971,4 +3013,19 @@ JS
             </profile>
         </profiles>
     </user_rights>
+    <meta>
+        <attribute_definitions>
+            <attribute_definition id="Combodo\iTop\VCSManagement\Attribute\AttributeJSON" _delta="define">
+                <properties>
+                    <property id="template_inline"/>
+                    <property id="empty_message"/>
+                    <property id="default_value"/>
+                    <property id="is_null_allowed"/>
+                    <property id="allowed_values"/>
+                    <property id="depends_on"/>
+                    <property id="sql"/>
+                </properties>
+            </attribute_definition>
+        </attribute_definitions>
+    </meta>
 </itop_design>

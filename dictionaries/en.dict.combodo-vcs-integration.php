@@ -184,6 +184,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:VCSLogAttributeAutomation:target' => 'Target Object',
 	'Class:VCSLogAttributeAutomation:reference' => 'Target Object Reference',
 	'Class:VCSLogAttributeAutomation:message' => 'Message to append',
+	'Class:VCSLogAttributeAutomation/Attribute:nickname_var' => 'GitHub nickname',
+	'Class:VCSLogAttributeAutomation/Attribute:nickname_var+' => 'The GitHub user nickname attached to the payload event',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data' => 'Data containing the reference',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data+' => 'Data in the VCS webhook payload containing the target objet reference',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern' => 'Regex to retrieve reference',

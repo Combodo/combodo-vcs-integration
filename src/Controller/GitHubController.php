@@ -201,8 +201,8 @@ class GitHubController extends AbstractController
 			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
 
 			// revoke token
-			$aData['reviews'] = $oGitHubApiService->GetPullRequestReviewGraphQL($oWebhook, 'VCSintegration', 'test', 2);
-			$aData['reviewers'] = $oGitHubApiService->GetPullRequestPendingReviewerGraphQL($oWebhook, 'VCSintegration', 'test', 2);
+			$aData['reviews'] = $oGitHubApiService->GetPullRequestReviewGraphQL($oWebhook, 'MinoOrganization', 'benji', 23);
+			$aData['reviewers'] = $oGitHubApiService->GetPullRequestPendingReviewerGraphQL($oWebhook, 'MinoOrganization', 'benji', 23);
 
 		} catch (Exception $e) {
 

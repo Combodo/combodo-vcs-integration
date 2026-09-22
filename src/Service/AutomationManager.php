@@ -7,6 +7,7 @@
 
 namespace Combodo\iTop\VCSManagement\Service;
 
+use Combodo\iTop\VCSManagement\Helper\AutomationHelper;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
 use DBObject;
 use Exception;
@@ -181,6 +182,15 @@ class AutomationManager
 			if ($res === 1) {
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
 				if ($val === 'null') {
+					return false;
+				}
+			}
+
+			$res = preg_match('/IS_KNOWN_USER\((.*)\)/', $sCondition, $aMatch);
+			if ($res === 1) {
+				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
+				$oUser = AutomationHelper::SearchUserFromContactNickname($val);
+				if ($oUser === null) {
 					return false;
 				}
 			}

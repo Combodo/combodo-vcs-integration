@@ -5,7 +5,6 @@ namespace Combodo\iTop\VCSManagement\Helper;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
-use Hybridauth\User\Contact;
 use MetaModel;
 use User;
 use utils;
@@ -43,10 +42,8 @@ class AutomationHelper
 	/**
 	 * @return User|null
 	 */
-	public static function SearchUserFromContactNickname($sNicknameVar, $aPayload): ?DBObject
+	public static function SearchUserFromContactNickname($sNicknameVarValue): ?DBObject
 	{
-		$sNicknameVarValue = ModuleHelper::ExtractDataFromArray($aPayload, $sNicknameVar);
-
 		$sNicknameAttribute = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_CONTACT_ATTRIBUTE_FOR_GITHUB_NICKNAME);
 		if (empty($sNicknameAttribute)) {
 			return null;
@@ -57,9 +54,6 @@ class AutomationHelper
 		return $oSet->Fetch();
 	}
 
-	/**
-	 * @return Contact|null
-	 */
 	public static function SearchContactFromNickname($sNicknameVar, $bScopeData, $aPayload, $aScopeData): ?DBObject
 	{
 		$sNicknameVarValue = ModuleHelper::ExtractDataFromArray($bScopeData ? $aScopeData : $aPayload, $sNicknameVar);

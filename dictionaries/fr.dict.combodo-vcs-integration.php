@@ -184,6 +184,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:VCSLogAttributeAutomation:target' => 'Objet cible',
 	'Class:VCSLogAttributeAutomation:reference' => 'Référence Objet cible',
 	'Class:VCSLogAttributeAutomation:message' => 'Message à insérer',
+	'Class:VCSLogAttributeAutomation/Attribute:nickname_var' => 'Utilisateur GitHub',
+	'Class:VCSLogAttributeAutomation/Attribute:nickname_var+' => 'Utilisateur GitHub associé à l\'événement',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data' => 'Donnée contenant la réference de l\'objet',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_subject_data+' => 'Donnée de la charge utile du webhook contenant la référence de l\'objet cible',
 	'Class:VCSLogAttributeAutomation/Attribute:ref_regex_pattern' => 'Regex pour extraire la référence',
