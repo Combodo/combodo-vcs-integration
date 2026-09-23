@@ -34,7 +34,6 @@ SetupWebPage::AddModule(
 			'src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
 			'src/EventListener/VCSAutomationEventListener.php',
 			'src/EventListener/VCSWebhookEventListener.php',
-			'src/Hook/VCSBackofficeLinkedStylesheetsExtension.php',
 		],
 		'webservice' => [],
 		'data.struct' => [// add your 'structure' definition XML files here,

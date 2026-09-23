@@ -68,30 +68,6 @@ class AutomationHelper
 		return $oSet->Fetch();
 	}
 
-	public static function GetValueByPath(array $data, string $path, $default = null)
-	{
-		$segments = explode('.', $path);
-		$current = $data;
-
-		foreach ($segments as $segment) {
-			if (!is_array($current) || !array_key_exists($segment, $current)) {
-				return $default;
-			}
-			$current = $current[$segment];
-		}
-
-		return $current;
-	}
-
-	public static function FilterPayload(array $payload, array $usedKeys): array
-	{
-		$result = [];
-		foreach ($usedKeys as $path) {
-			$result[$path] = self::GetValueByPath($payload, $path);
-		}
-		return $result;
-	}
-
 	public static function AddAutomationSubscribedEvents($oAutomation, $aEvents): void
 	{
 		foreach ($aEvents as $sEvent) {

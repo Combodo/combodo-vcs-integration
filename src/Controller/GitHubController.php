@@ -9,7 +9,6 @@ namespace Combodo\iTop\VCSManagement\Controller;
 
 use Combodo\iTop\Controller\AbstractController;
 use Combodo\iTop\VCSManagement\Service\GitHubAPIAuthenticationService;
-use Combodo\iTop\VCSManagement\Service\GitHubAPIService;
 use Combodo\iTop\VCSManagement\Service\GitHubManager;
 use Combodo\iTop\VCSManagement\Service\TemplatingService;
 use Exception;
@@ -176,34 +175,6 @@ class GitHubController extends AbstractController
 
 			// revoke token
 			$oGitHubApiAuthenticationService->RegenerateAccessToken($oConnector);
-		} catch (Exception $e) {
-
-			$aData['errors'][] = $e->getMessage();
-		}
-
-		return $oPage->SetData($aData);
-	}
-
-	public function OperationTestGraphQL(): ?JsonPage
-	{
-		// variables
-		$oPage = new JsonPage();
-		$aData = [];
-
-		try {
-
-			// services injection
-			$oGitHubManager  = GitHubManager::GetInstance();
-			$oGitHubApiService = GitHubAPIService::GetInstance();
-
-			// retrieve webhook
-			/** @var \VCSWebhook $oWebhook */
-			$oWebhook = $oGitHubManager->ExtractWebhookFromRequestParam();
-
-			// revoke token
-			$aData['reviews'] = $oGitHubApiService->GetPullRequestReviewGraphQL($oWebhook, 'MinoOrganization', 'benji', 23);
-			$aData['reviewers'] = $oGitHubApiService->GetPullRequestPendingReviewerGraphQL($oWebhook, 'MinoOrganization', 'benji', 23);
-
 		} catch (Exception $e) {
 
 			$aData['errors'][] = $e->getMessage();

@@ -1,5 +1,5 @@
-
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -20,8 +20,10 @@ set_error_handler(function ($severity, $message, $file, $line) {
 });
 
 set_exception_handler(function ($e) {
-	IssueLog::Error("Exception: ".htmlSpecialChars($e->getMessage())." in ".$e->getFile()." on line ".$e->getLine());
-	die();
+	header('HTTP/1.1 500 Internal Server Error');
+	$sMessage = "Exception: ".htmlSpecialChars($e->getMessage())." in ".$e->getFile()." on line ".$e->getLine();
+	IssueLog::Error($sMessage);
+	die($sMessage);
 });
 
 // retrieve VCS webhook
@@ -41,9 +43,6 @@ try {
 $sHookSecret = $oWebhook->Get('secret');
 
 $sRawPost = null;
-
-$res = parse_url($_SERVER['REQUEST_URI']);
-echo json_encode($res);
 
 if ($sHookSecret !== null) {
 	if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {

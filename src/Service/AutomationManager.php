@@ -132,6 +132,7 @@ class AutomationManager
 				'happened on' => 'LaunchAutomationHandleEvent in AutomationManager.php',
 				'error message' => $e->getMessage(),
 			]);
+			throw $e;
 		}
 	}
 
@@ -191,6 +192,15 @@ class AutomationManager
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
 				$oUser = AutomationHelper::SearchUserFromContactNickname($val);
 				if ($oUser === null) {
+					return false;
+				}
+			}
+
+			$res = preg_match('/IS_UNKNOWN_USER\((.*)\)/', $sCondition, $aMatch);
+			if ($res === 1) {
+				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
+				$oUser = AutomationHelper::SearchUserFromContactNickname($val);
+				if ($oUser !== null) {
 					return false;
 				}
 			}
