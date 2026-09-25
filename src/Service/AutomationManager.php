@@ -76,7 +76,7 @@ class AutomationManager
 				}
 
 				// automation condition
-				if (!$oLnk->IsConditionUnsetOrMet($aPayload)) {
+				if (!$oLnk->IsConditionUnsetOrMet($aPayload, $oWebhook)) {
 					continue;
 				}
 
@@ -167,7 +167,7 @@ class AutomationManager
 	 * @return bool
 	 * @throws \Exception
 	 */
-	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, int $iConditionNumber, array $aPayload): bool
+	public function IsConditionUnsetOrMet(DBObject $oLnkAutomationToRepository, $oWebhook, int $iConditionNumber, array $aPayload): bool
 	{
 		// check condition number
 		if ($iConditionNumber <= 0 || $iConditionNumber > 3) {
@@ -190,7 +190,7 @@ class AutomationManager
 			$res = preg_match('/IS_KNOWN_USER\((.*)\)/', $sCondition, $aMatch);
 			if ($res === 1) {
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
-				$oUser = AutomationHelper::SearchUserFromContactNickname($val);
+				$oUser = AutomationHelper::SearchUserFromContactNickname($val, $oWebhook->Get('connector_provider'));
 				if ($oUser === null) {
 					return false;
 				}
@@ -199,7 +199,7 @@ class AutomationManager
 			$res = preg_match('/IS_UNKNOWN_USER\((.*)\)/', $sCondition, $aMatch);
 			if ($res === 1) {
 				$val = ModuleHelper::ExtractDataFromArray($aPayload, $aMatch[1]);
-				$oUser = AutomationHelper::SearchUserFromContactNickname($val);
+				$oUser = AutomationHelper::SearchUserFromContactNickname($val, $oWebhook->Get('connector_provider'));
 				if ($oUser !== null) {
 					return false;
 				}

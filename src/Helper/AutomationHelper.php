@@ -42,14 +42,12 @@ class AutomationHelper
 	/**
 	 * @return User|null
 	 */
-	public static function SearchUserFromContactNickname($sNicknameVarValue): ?DBObject
+	public static function SearchUserFromContactNickname($sNicknameVarValue, $sPlatform): ?DBObject
 	{
-		$sNicknameAttribute = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_CONTACT_ATTRIBUTE_FOR_GITHUB_NICKNAME);
-		if (empty($sNicknameAttribute)) {
-			return null;
-		}
-
-		$oSearch = DBSearch::FromOQL("SELECT User AS u JOIN Person AS p ON u.contactid = p.id WHERE p.$sNicknameAttribute = '$sNicknameVarValue'");
+		$oSearch = DBSearch::FromOQL("SELECT User AS u
+		    JOIN Person AS p ON u.contactid = p.id
+		    JOIN PersonPseudo AS pp ON pp.person_id = p.id
+		    WHERE pp.pseudo = '$sNicknameVarValue' AND pp.plateform = '$sPlatform'");
 		$oSet = new DBObjectSet($oSearch, iLimitCount: 1);
 		return $oSet->Fetch();
 	}
