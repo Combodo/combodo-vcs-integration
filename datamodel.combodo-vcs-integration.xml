@@ -2041,7 +2041,7 @@ JS
                                 $oValue->AddLogEntry($sText, '', $iUserId);
                             }
                             else{
-                                $oValue->AddLogEntry($sText, 'github');
+                                $oValue->AddLogEntry($sText, $sNicknameVarValue);
                             }
 
                             // save
