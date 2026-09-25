@@ -167,9 +167,7 @@ class TemplatingService
 		foreach ($aExtensions as $sExtensionClass) {
 			/** @var VCSTemplatingExtensionInterface $oExtension */
 			$oExtension = new $sExtensionClass();
-			if (method_exists($oExtension, 'ParseTemplate')) {
-				$sTemplate = $oExtension->ParseTemplate($sTemplate, $aPayload);
-			}
+			$sTemplate = $oExtension->ParseTemplate($sTemplate, $aPayload);
 		}
 
 		// finally parse data
@@ -367,9 +365,7 @@ class TemplatingService
 		$markdown = new Markdown(false);
 		$markdown->setContent($data);
 
-		$sHtml =  $markdown->toHtml();
-
-		return $sHtml;
+		return $markdown->toHtml();
 	}
 
 	/**
