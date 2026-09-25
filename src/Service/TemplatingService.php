@@ -8,7 +8,9 @@
 namespace Combodo\iTop\VCSManagement\Service;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
+use Combodo\iTop\VCSManagement\Hook\VCSTemplatingExtensionInterface;
 use DateTimeImmutable;
 use DBObject;
 use Exception;
@@ -159,6 +161,16 @@ class TemplatingService
 			fn ($matches) => $this->CallBackCount($aPayload, $matches),
 			$sTemplate
 		);
+
+		// extensibility point for additional custom statements
+		$aExtensions = InterfaceDiscovery::GetInstance()->FindItopClasses('Combodo\iTop\VCSManagement\Hook\VCSTemplatingExtensionInterface');
+		foreach ($aExtensions as $sExtensionClass) {
+			/** @var VCSTemplatingExtensionInterface $oExtension */
+			$oExtension = new $sExtensionClass();
+			if (method_exists($oExtension, 'ParseTemplate')) {
+				$sTemplate = $oExtension->ParseTemplate($sTemplate, $aPayload);
+			}
+		}
 
 		// finally parse data
 		$sTemplate = preg_replace_callback(
@@ -351,12 +363,13 @@ class TemplatingService
 		// prepare template
 		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataText);
 
-		// markdown processing
+		// markdown processingt
 		$markdown = new Markdown(false);
-		$data = nl2br($data);
 		$markdown->setContent($data);
 
-		return $markdown->toHtml();
+		$sHtml =  $markdown->toHtml();
+
+		return $sHtml;
 	}
 
 	/**
