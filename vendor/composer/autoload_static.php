@@ -34,7 +34,6 @@ class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
     );
 
     public static $classMap = array (
-        'Combodo\\iTop\\VCSManagement\\Attribute\\AttributeJSON' => __DIR__ . '/../..' . '/src/Attribute/AttributeJSON.php',
         'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookAsynchronousHandler' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookAsynchronousHandler.php',
         'Combodo\\iTop\\VCSManagement\\BackgroundProcess\\VCSWebhookSynchroProcess' => __DIR__ . '/../..' . '/src/BackgroundProcess/VCSWebhookSynchroProcess.php',
         'Combodo\\iTop\\VCSManagement\\Controller\\GitHubController' => __DIR__ . '/../..' . '/src/Controller/GitHubController.php',
