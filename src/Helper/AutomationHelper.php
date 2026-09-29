@@ -1,10 +1,14 @@
 <?php
 
+/*
+ * @copyright   Copyright (C) 2010-2023 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 namespace Combodo\iTop\VCSManagement\Helper;
 
 use DBObject;
-use DBObjectSet;
-use DBSearch;
+use Exception;
 use MetaModel;
 use User;
 use utils;
@@ -44,26 +48,29 @@ class AutomationHelper
 	 */
 	public static function SearchUserFromContactNickname($sNicknameVarValue, $sPlatform): ?DBObject
 	{
-		$oSearch = DBSearch::FromOQL("SELECT User AS u
-		    JOIN Person AS p ON u.contactid = p.id
-		    JOIN PersonPseudo AS pp ON pp.person_id = p.id
-		    WHERE pp.pseudo = '$sNicknameVarValue' AND pp.plateform = '$sPlatform'");
-		$oSet = new DBObjectSet($oSearch, iLimitCount: 1);
-		return $oSet->Fetch();
-	}
-
-	public static function SearchContactFromNickname($sNicknameVar, $bScopeData, $aPayload, $aScopeData): ?DBObject
-	{
-		$sNicknameVarValue = ModuleHelper::ExtractDataFromArray($bScopeData ? $aScopeData : $aPayload, $sNicknameVar);
-
-		$sNicknameAttribute = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_CONTACT_ATTRIBUTE_FOR_GITHUB_NICKNAME);
-		if (empty($sNicknameAttribute)) {
+		$oUserResolverClassName = ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_USER_RESOLVER_CLASS_NAME);
+		if ($oUserResolverClassName === null) {
+			ModuleHelper::LogInfo('User resolver class name is not set in module settings');
 			return null;
 		}
 
-		$oSearch = DBSearch::FromOQL("SELECT Person WHERE $sNicknameAttribute = '$sNicknameVarValue'");
-		$oSet = new DBObjectSet($oSearch, iLimitCount: 1);
-		return $oSet->Fetch();
+		try {
+			$oUserResolver = new $oUserResolverClassName();
+			return $oUserResolver->resolveUserFromNickname($sNicknameVarValue, $sPlatform);
+		} catch (Exception $e) {
+			ModuleHelper::LogInfo('Error while resolving user from nickname', [
+				'nickname' => $sNicknameVarValue,
+				'platform' => $sPlatform,
+				'error' => $e->getMessage(),
+			]);
+			return null;
+		}
+	}
+
+	public static function SearchContactFromNickname($sNicknameVarValue, $sPlatform): ?DBObject
+	{
+		$oUser = self::SearchUserFromContactNickname($sNicknameVarValue, $sPlatform);
+		return  MetaModel::GetObject('Person', $oUser->Get('contactid'));
 	}
 
 	public static function AddAutomationSubscribedEvents($oAutomation, $aEvents): void

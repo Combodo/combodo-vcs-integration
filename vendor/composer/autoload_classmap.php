@@ -14,6 +14,7 @@ return array(
     'Combodo\\iTop\\VCSManagement\\Helper\\AutomationHelper' => $baseDir . '/src/Helper/AutomationHelper.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => $baseDir . '/src/Helper/ModuleHelper.php',
     'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => $baseDir . '/src/Helper/SessionHelper.php',
+    'Combodo\\iTop\\VCSManagement\\Hook\\AbstractVCSUserResolver' => $baseDir . '/src/Hook/AbstractVCSUserResolver.php',
     'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => $baseDir . '/src/Hook/VCSPopupMenu.php',
     'Combodo\\iTop\\VCSManagement\\Hook\\VCSTemplatingExtensionInterface' => $baseDir . '/src/Hook/VCSTemplatingExtensionInterface.php',
     'Combodo\\iTop\\VCSManagement\\Service\\AbstractGitHubAPI' => $baseDir . '/src/Service/AbstractGitHubAPI.php',

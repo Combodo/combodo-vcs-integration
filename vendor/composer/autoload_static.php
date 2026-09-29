@@ -42,6 +42,7 @@ class ComposerStaticInit3d9382c6cef22c8d4621db029b9e3f30
         'Combodo\\iTop\\VCSManagement\\Helper\\AutomationHelper' => __DIR__ . '/../..' . '/src/Helper/AutomationHelper.php',
         'Combodo\\iTop\\VCSManagement\\Helper\\ModuleHelper' => __DIR__ . '/../..' . '/src/Helper/ModuleHelper.php',
         'Combodo\\iTop\\VCSManagement\\Helper\\SessionHelper' => __DIR__ . '/../..' . '/src/Helper/SessionHelper.php',
+        'Combodo\\iTop\\VCSManagement\\Hook\\AbstractVCSUserResolver' => __DIR__ . '/../..' . '/src/Hook/AbstractVCSUserResolver.php',
         'Combodo\\iTop\\VCSManagement\\Hook\\VCSPopupMenu' => __DIR__ . '/../..' . '/src/Hook/VCSPopupMenu.php',
         'Combodo\\iTop\\VCSManagement\\Hook\\VCSTemplatingExtensionInterface' => __DIR__ . '/../..' . '/src/Hook/VCSTemplatingExtensionInterface.php',
         'Combodo\\iTop\\VCSManagement\\Service\\AbstractGitHubAPI' => __DIR__ . '/../..' . '/src/Service/AbstractGitHubAPI.php',
