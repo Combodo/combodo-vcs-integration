@@ -15,7 +15,7 @@ class ModuleHelperTest extends ItopTestCase
 	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once dirname(__DIR__, 3).'/vendor/autoload.php';
+		$this->RequireOnceItopFile('/env-production/combodo-vcs-integration/vendor/autoload.php');
 	}
 
 	public function testExtractDataFromArrayReturnsNestedValue(): void
