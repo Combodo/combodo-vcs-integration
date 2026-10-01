@@ -69,11 +69,6 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 					$iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
 					$oWebhookPayload->DBDelete();
 
-					// increment events count and last date
-					$oWebhook->DBIncrement('event_count');
-					$oWebhook->Set('last_event_date', time());
-					$oWebhook->DBUpdate();
-
 					// log
 					ModuleHelper::LogDebug('Processing payload Ref:'.$iKey, [
 						'VCSWebhookPayload' => $iKey,

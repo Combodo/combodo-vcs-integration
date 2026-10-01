@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'combodo-vcs-integration/1.1.1',
+	'combodo-vcs-integration/1.2.0',
 	[
 		// Identification
 		//
@@ -18,6 +18,7 @@ SetupWebPage::AddModule(
 		'dependencies' => [
 			'itop-structure/3.2.0',
 			'itop-tickets/2.7.0',
+			'itop-request-mgmt/3.2.0',
 		],
 		'mandatory' => false,
 		'visible' => true,
@@ -49,6 +50,7 @@ SetupWebPage::AddModule(
 		//
 		'settings' => [
 			'webhook_user_id' => null,
+			'contact_attribute_for_gihub_nickname' => null,
 		],
 	]
 );

@@ -23,11 +23,12 @@ class ModuleHelper
 
 	// module parameters
 	public static string $PARAM_WEBHOOK_USER_ID = 'webhook_user_id';
+	public static string $PARAM_USER_RESOLVER_CLASS_NAME = 'user_resolver_class_name';
 	public static string $PARAM_SYNCHRO_AUTO_INTERVAL = 'synchro_auto_interval';
 	public static string $PARAM_ASYNCHRONOUS_HANDLER_INTERVAL = 'asynchronous_handler_interval';
+	public static string $PARAM_ASYNCHRONOUS_DISABLED = 'asynchronous_disabled';
 	public static string $PARAM_WEBHOOK_HOST_OVERLOAD = 'webhook_host_overload';
 	public static string $PARAM_WEBHOOK_SCHEME_OVERLOAD = 'webhook_scheme_overload';
-
 	/**
 	 * Get module absolute url.
 	 *

@@ -8,7 +8,9 @@
 namespace Combodo\iTop\VCSManagement\Service;
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Service\InterfaceDiscovery\InterfaceDiscovery;
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
+use Combodo\iTop\VCSManagement\Hook\VCSTemplatingExtensionInterface;
 use DateTimeImmutable;
 use DBObject;
 use Exception;
@@ -25,7 +27,7 @@ class TemplatingService
 
 	/** @var string regex */
 	private static string $REGEX_FOR_STATEMENT = "/\[\[@for\s+([\>\w-]+)\]\]([.\s\S]*?)\[\[@endfor\]\]/";
-	private static string $REGEX_IF_STATEMENT = "/\[\[@if\s+([\>\w-]+)==([\w|]+)\]\]([.\s\S]*?)\[\[@endif\]\]/";
+	private static string $REGEX_IF_STATEMENT = "/\[\[@if\s+([\>\w-]+)\s*==\s*([\w|]+)\]\]([.\s\S]*?)(\[\[@else\]\]([.\s\S]*?))?\[\[@endif\]\]/";
 	private static string $REGEX_EVENT_STATEMENT = "/\[\[event\]\]/";
 	private static string $REGEX_HYPERLINK_STATEMENT = "/\[\[@hyperlink\s+([\>\w-]+)(\s+as\s+([\>\w\s-]+))?\]\]/";
 	private static string $REGEX_BUTTON_STATEMENT = "/\[\[@button\s+([\>\w-]+)\s+as\s+([\>\w\s-]+)\]\]/";
@@ -160,6 +162,14 @@ class TemplatingService
 			$sTemplate
 		);
 
+		// extensibility point for additional custom statements
+		$aExtensions = InterfaceDiscovery::GetInstance()->FindItopClasses('Combodo\iTop\VCSManagement\Hook\VCSTemplatingExtensionInterface');
+		foreach ($aExtensions as $sExtensionClass) {
+			/** @var VCSTemplatingExtensionInterface $oExtension */
+			$oExtension = new $sExtensionClass();
+			$sTemplate = $oExtension->ParseTemplate($sTemplate, $aPayload);
+		}
+
 		// finally parse data
 		$sTemplate = preg_replace_callback(
 			self::$REGEX_DATA,
@@ -211,15 +221,15 @@ class TemplatingService
 		// data
 		$data = $aMatch[1];
 		$condition = $aMatch[2];
-		$template = $aMatch[3];
-
-		// prepare template
-		$template = ltrim($template);
-		$sLoopText = '';
+		$templateIf = ltrim($aMatch[3]);
+		$templateElse = ltrim($aMatch[5] ?? '');
 
 		$oData = ModuleHelper::ExtractDataFromArray($aPayload, $data);
+		$sLoopText = '';
 		if (preg_match("#$condition#", $oData)) {
-			$sLoopText = $this->ParseTemplate($template, $sEvent, $aPayload);
+			$sLoopText = $this->ParseTemplate($templateIf, $sEvent, $aPayload);
+		} elseif ('' !== $templateElse) {
+			$sLoopText = $this->ParseTemplate($templateElse, $sEvent, $aPayload);
 		}
 
 		return $sLoopText;
@@ -351,9 +361,8 @@ class TemplatingService
 		// prepare template
 		$data = ModuleHelper::ExtractDataFromArray($aPayload, $sDataText);
 
-		// markdown processing
+		// markdown processingt
 		$markdown = new Markdown(false);
-		$data = nl2br($data);
 		$markdown->setContent($data);
 
 		return $markdown->toHtml();

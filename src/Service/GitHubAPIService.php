@@ -8,6 +8,7 @@
 namespace Combodo\iTop\VCSManagement\Service;
 
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
+use CoreException;
 use DBObject;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -55,7 +56,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 *
 	 * @return array The repository information, including the number of watchers, forks,
 	 *               open issues, and clone URL.
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function GetRepositoryInfo(DBObject $oWebhook): array
 	{
@@ -96,7 +97,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param array $aListeningEvents events to listen
 	 *
 	 * @return array The created webhook object.
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function CreateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sSecret, array $aListeningEvents): array
 	{
@@ -145,7 +146,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param array $aListeningEvents events to listen
 	 *
 	 * @return array The created webhook object.
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function CreateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sSecret, array $aListeningEvents): array
 	{
@@ -192,7 +193,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param array $aListeningEvents events to listen
 	 *
 	 * @return array The created webhook object.
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function UpdateRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents): array
 	{
@@ -238,7 +239,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param array $aListeningEvents events to listen
 	 *
 	 * @return array The created webhook object.
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function UpdateOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sUrl, string $sHookId, string $sSecret, array $aListeningEvents): array
 	{
@@ -278,7 +279,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function DeleteRepositoryWebhook(DBObject $oWebhook, string $sOwner, string $sHookId): bool
 	{
@@ -311,7 +312,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param string $sHookId The webhook configuration id.
 	 *
 	 * @return bool
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function DeleteOrganizationWebhook(DBObject $oWebhook, string $sOrganization, string $sHookId): bool
 	{
@@ -341,7 +342,7 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function GetRepositoryWebhookConfiguration(DBObject $oWebhook, string $sOwner, string $sHookId): array
 	{
@@ -366,13 +367,127 @@ class GitHubAPIService extends AbstractGitHubAPI
 	 * @param string $sHookId The ID of the webhook.
 	 *
 	 * @return array The webhook information, including its ID, URL, events, and configuration.
-	 * @throws \CoreException
+	 * @throws CoreException
 	 */
 	public function GetOrganizationWebhookConfiguration(DBObject $oWebhook, string $sOrganization, string $sHookId): array
 	{
 		// API call
 		$client = new Client();
 		$request = new Request('GET', $this->GetAPIUri("/orgs/$sOrganization/hooks/$sHookId"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$res = $client->sendAsync($request)->wait();
+		return json_decode($res->getBody(), true);
+	}
+
+	/**
+	 * List pull request reviews.
+	 *
+	 * https://docs.github.com/en/rest/pulls/reviews?apiVersion=2026-03-10#list-reviews-for-a-pull-request
+	 * GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews
+	 *
+	 * @param DBObject $oWebhook The webhook.
+	 * @param string $sOrganization Organization name.
+	 * @param string $sRepository The repository name.
+	 * @param string $sPullRequestNumber The pull request number.
+	 *
+	 * @return array The webhook information, including its ID, URL, events, and configuration.
+	 * @throws CoreException
+	 */
+	public function GetPullRequestReview(DBObject $oWebhook, string $sOrganization, string $sRepository, string $sPullRequestNumber): array
+	{
+		// API call
+		$client = new Client();
+		$request = new Request('GET', $this->GetAPIUri("/repos/$sOrganization/$sRepository/pulls/$sPullRequestNumber/reviews"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook));
+		$res = $client->sendAsync($request)->wait();
+		return json_decode($res->getBody(), true);
+	}
+
+	/**
+	 * @param DBObject $oWebhook
+	 * @param string $sOwner
+	 * @param string $sRepository
+	 * @param int $sPullRequestNumber
+	 * @return array
+	 * @throws CoreException
+	 */
+	public function GetPullRequestReviewGraphQL(DBObject $oWebhook, string $sOwner, string $sRepository, int $iPullRequestNumber): array
+	{
+		// API call
+		$client = new Client();
+
+		$query = <<<'GRAPHQL'
+        query($owner: String!, $repo: String!, $number: Int!) {
+          repository(owner: $owner, name: $repo) {
+            pullRequest(number: $number) {
+              number
+              title
+              reviewDecision
+              reviews(first: 100) {
+                totalCount
+                nodes {
+                  state
+                  author { login }
+                  submittedAt
+                }
+              }
+            }
+          }
+        }
+        GRAPHQL;
+
+		$aVariables = [
+			'owner' => $sOwner,
+			'repo' => $sRepository,
+			'number' => $iPullRequestNumber,
+		];
+
+		$request = new Request('POST', $this->GetAPIUri("/graphql"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook), json_encode(['query' => $query, 'variables' => $aVariables]));
+		$res = $client->sendAsync($request)->wait();
+		return json_decode($res->getBody(), true);
+	}
+
+	/**
+	 * @param DBObject $oWebhook
+	 * @param string $sOwner
+	 * @param string $sRepository
+	 * @param int $sPullRequestNumber
+	 * @return array
+	 * @throws CoreException
+	 */
+	public function GetPullRequestPendingReviewerGraphQL(DBObject $oWebhook, string $sOwner, string $sRepository, int $iPullRequestNumber): array
+	{
+		// API call
+		$client = new Client();
+
+		$query = <<<'GRAPHQL'
+        query($owner: String!, $repo: String!, $number: Int!) {
+          repository(owner: $owner, name: $repo) {
+            pullRequest(number: $number) {
+              reviewRequests(first: 50) {
+                totalCount
+                nodes {
+                  requestedReviewer {
+                    ... on User {
+                      login
+                    }
+                    ... on Team {
+                      name
+                      slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        GRAPHQL;
+
+		$aVariables = [
+			'owner' => $sOwner,
+			'repo' => $sRepository,
+			'number' => $iPullRequestNumber,
+		];
+
+		$request = new Request('POST', $this->GetAPIUri("/graphql"), $this->oAPIAuthenticationService->CreateAuthorizationHeader($oWebhook), json_encode(['query' => $query, 'variables' => $aVariables]));
 		$res = $client->sendAsync($request)->wait();
 		return json_decode($res->getBody(), true);
 	}

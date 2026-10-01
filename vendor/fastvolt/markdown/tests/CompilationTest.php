@@ -2,122 +2,150 @@
 
 declare(strict_types=1);
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use FastVolt\Helper\Markdown;
+use Fastvolt\Helper\Markdown\Enums\MarkdownEnum;
 
 class CompilationTest extends \PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test Markdown File to Html Conversion
-	 *
-	 * @return void
-	 */
-	public function testMdFileToHtml(): void
-	{
-		# convert md to html
-		$markdown = Markdown::new()
-		  ->setFile(file_name: __DIR__.'/files/hello.md')
-		  ->toHtml();
+  /**
+   * Test Markdown to Html Conversion
+   * 
+   * @return void
+   */
+  public function testMdtoHtml(): void
+  {
+    $markdown = Markdown::new()
+      ->setInlineContent('_This is an inline markdown content_')
+      ->toHtml(); // <h1>hello 1</h1>
 
-		$this->assertSame(expected: '<h1>hello 1</h1>', actual: $markdown);
-	}
+    $this->assertSame(expected: '<i>This is an inline markdown content</i>', actual: $markdown);
+  }
 
-	/**
-	 * Test Markdown to Html Conversion
-	 *
-	 * @return void
-	 */
-	public function testMdtoHtml(): void
-	{
-		$markdown = Markdown::new()
-		  ->setInlineContent('_This is an inline markdown content_')
-		  ->toHtml(); // <h1>hello 1</h1>
+  /**
+   * Test Markdown Compilation
+   * 
+   * @return void
+   */
+  public function testMarkdownCompilation(): void
+  {
+    $markdown = Markdown::new()
+      ->setContent('# Title')
+      ->setContent('# Sub-Title')
+      ->setInlineContent('_first word with_')
+      ->setInlineContent('[A LINK](https://github.com/fastvolt)')
+      ->toHtml();
 
-		$this->assertSame(expected: '<i>This is an inline markdown content</i>', actual: $markdown);
-	}
+    $this->assertIsString($markdown);
+  }
 
-	/**
-	 * Test Markdown File to Html File Conversion
-	 *
-	 * @return void
-	 */
-	public function testMdFiletoHtmlFile(): void
-	{
-		$markdown = Markdown::new()
-		  ->setFile(file_name: __DIR__.'/files/hello-2.md')
-		  ->setCompileDir(directory: './pages/')
-		  ->toHtmlFile(file_name: 'hello-2.html'); // <h2>hello 2</h2>
+  public function testGetHtmlFromMixedContent(): void
+  {
+    $markdown = Markdown::new(true); // Test with sanitize=true (default)
 
-		$this->assertIsBool(actual: $markdown);
-		$this->assertTrue(condition: $markdown);
-	}
+    // Multi-line content
+    $markdown->setContent("## Heading 2");
 
-	/**
-	 * Test Markdown Content to Html File Conversion
-	 *
-	 * @return void
-	 */
-	public function testMdContentToHtmlFile(): void
-	{
-		$markdown = Markdown::new()
-		  ->setContent(content: '### hello 3')
-		  ->setCompileDir(directory: './pages/')
-		  ->toHtmlFile(file_name: 'hello-3.html'); // <h3>hello 3</h3>
+    $markdown->setContent("## Title\n* List Item");
+                                     
+    // Inline content
+    $markdown->setInlineContent('This is **bold**');
 
-		$this->assertIsBool(actual: $markdown);
+    // File content
+    $markdown->addFile(__DIR__ . '/markdown/file1.md');
 
-		$this->assertTrue(condition: $markdown);
-	}
+    // File content
+    $markdown->addFile(__DIR__ . '/markdown/test.md');
 
-	/**
-	 * Test Markdown Compilation
-	 *
-	 * @return void
-	 */
-	public function testMarkdownCompilation(): void
-	{
-		$markdown = Markdown::new()
-		  ->setContent('# Title')
-		  ->setContent('# Sub-Title')
-		  ->setInlineContent('_first word with_')
-		  ->setInlineContent('[A LINK](https://github.com/fastvolt)')
-		  ->toHtml();
+    $html = $markdown->getHtml();
 
-		$this->assertIsString($markdown);
-	}
+    // Check for core elements from all sources
+    //$this->assertStringContainsString('<h2>Title</h2>', $html);
+    $this->assertStringContainsString('<li>List Item</li>', $html);
+    //$this->assertStringContainsString('This is <strong>bold</strong>', $html);
+    //$this->assertStringContainsString('<h1>Header 1</h1>', $html);
 
-	/**
-	 * Test Markdown Compilation
-	 *
-	 * @return void
-	 */
-	public function testMarkdownAdvancedCompilation(): void
-	{
-		$markdown = Markdown::new(sanitize: true)
-		  ->setFile(__DIR__.'/files/heading.md')
-		  ->setInlineContent('_My name is **vincent**, the co-author of this blog_')
-		  ->setContent('Kindly follow me on my github page via: [@vincent](https://github.com/oladoyinbov).')
-		  ->setContent('Here are the lists of my projects:')
-		  ->setContent('
+    // Test run() alias
+    $html_alias = $markdown->run(MarkdownEnum::TO_HTML);
+    $this->assertSame($html, $html_alias);
+  }
+
+  public function testSaveToHtmlFileInSingleDirectory(): void
+  {
+    $markdown = Markdown::new();
+    $markdown->setContent('Test Content');
+    $markdown->addOutputDirectory(directory: __DIR__ . '/pages');
+
+    $success = $markdown->saveToHtmlFile(file_name: 'test-output'); // Should automatically add .html
+    $this->assertTrue($success);
+
+    $filePath = __DIR__ . '/pages/test-output.html';
+    $this->assertFileExists($filePath);
+    $this->assertStringContainsString('<p>Test Content</p>', file_get_contents($filePath));
+  }
+
+  public function testSaveToHtmlFileInMultipleDirectories(): void
+  {
+    $outputDirB = __DIR__ . '/pages/backup/';
+
+    $markdown = Markdown::new();
+    $markdown->setContent('Multi-Save');
+
+    // Add two different output directories
+    $markdown->addOutputDirectory(directory: __DIR__ . '/pages/');
+    $markdown->addMultipleOutputDirectories(directories: [$outputDirB]); // Test multiple method
+
+    $success = $markdown->saveToHtmlFile(file_name: 'multi.html');
+    $this->assertTrue($success);
+
+    // Check existence in both directories
+    $this->assertFileExists(filename: __DIR__ . '/pages/multi.html');
+    $this->assertFileExists(filename: $outputDirB . 'multi.html');
+  }
+
+  public function testFileSavingThrowsExceptionIfNoOutputDirSet(): void
+  {
+    $this->expectException(\LogicException::class);
+    $this->expectExceptionMessage('Ensure To Set A Storage Directory');
+
+    Markdown::new()
+      ->setContent('a')
+      ->saveToHtmlFile();
+  }
+
+  /**
+   * Test Markdown Compilation
+   * 
+   * @return void
+   */
+  public function testMarkdownAdvancedCompilation(): void
+  {
+    $markdown = Markdown::new(sanitize: true)
+      ->addFile(__DIR__ . '/markdown/header.md')
+      ->setInlineContent('_My name is **vincent**, the co-author of this blog_')
+      ->setContent('Kindly follow me on my github page via: [@vincent](https://github.com/oladoyinbov).')
+      ->setContent('Here are the lists of my projects:')
+      ->setContent('
         - Dragon CMS
         - Fastvolt Framework.
             + Fastvolt Router
             + Markdown Parser.
             ')
-		  ->setFile(__DIR__.'/files/footer.md');
+      ->addFile(__DIR__ . '/markdown/footer.md');
 
-		// set compilation directory
-		$markdown->setCompileDir('./pages/');
 
-		// set second compilation directory (OPTIONAL)
-		$markdown->setCompileDir('./pages/backup/');
+    // set compilation directory
+    $markdown->addOutputDirectory(__DIR__ . '/pages/');
 
-		// Compile The Markdown with File Name 'homepage'
-		$result = $markdown->toHtmlFile(file_name: 'homepage');
+    // set second compilation directory (OPTIONAL)
+    $markdown->addOutputDirectory(__DIR__ . '/pages/backup/');
 
-		$this->assertIsBool($result);
+    // Compile The Markdown with File Name 'homepage'
+    $result = $markdown->saveToHtmlFile(file_name: 'homepage');
 
-		$this->assertTrue($result === true);
-	}
+    $this->assertIsBool($result);
+
+    $this->assertTrue($result === true);
+  }
 }

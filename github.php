@@ -1,19 +1,16 @@
-
 <?php
+
 /*
  * @copyright   Copyright (C) 2010-2023 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\VCSManagement\Helper\ModuleHelper;
+use Combodo\iTop\VCSManagement\Service\AutomationManager;
 
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
-// Temporary workaround to make sure mandatory parameters are provided
-if (!array_key_exists('transaction_id', $_REQUEST)) {
-	$_REQUEST['transaction_id'] = utils::GetNewTransactionId();
-}
 if (!array_key_exists('HTTP_REFERER', $_SERVER)) {
 	$_SERVER['HTTP_REFERER'] = 'https://github.com/';
 }
@@ -24,8 +21,9 @@ set_error_handler(function ($severity, $message, $file, $line) {
 
 set_exception_handler(function ($e) {
 	header('HTTP/1.1 500 Internal Server Error');
-	echo "Error on line {$e->getLine()}: ".htmlSpecialChars($e->getMessage());
-	die();
+	$sMessage = "Exception: ".htmlSpecialChars($e->getMessage())." in ".$e->getFile()." on line ".$e->getLine();
+	IssueLog::Error($sMessage);
+	die($sMessage);
 });
 
 // retrieve VCS webhook
@@ -45,9 +43,6 @@ try {
 $sHookSecret = $oWebhook->Get('secret');
 
 $sRawPost = null;
-
-$res = parse_url($_SERVER['REQUEST_URI']);
-echo json_encode($res);
 
 if ($sHookSecret !== null) {
 	if (!isset($_SERVER['HTTP_X_HUB_SIGNATURE'])) {
@@ -106,11 +101,17 @@ ModuleHelper::LogInfo("Receiving GitHub Event #".$sDeliveryId, [
 	'type' => $sType,
 ]);
 
-// handle webhook
-/** @var VCSWebhookPayload $oWebhookPayload */
-$oWebhookPayload = MetaModel::NewObject('VCSWebhookPayload');
-$oWebhookPayload->Set('provider', 'github');
-$oWebhookPayload->Set('type', $sType);
-$oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
-$oWebhookPayload->Set('payload', $json);
-$oWebhookPayload->DBInsert();
+if (ModuleHelper::GetModuleSetting(ModuleHelper::$PARAM_ASYNCHRONOUS_DISABLED, false)) {
+	// handle webhook synchronously
+	$oAutomationInstance = AutomationManager::GetInstance();
+	$iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($sType, $oWebhook, json_decode($json, true));
+} else {
+
+	// append payload to asynchronous handler
+	$oWebhookPayload = MetaModel::NewObject('VCSWebhookPayload');
+	$oWebhookPayload->Set('provider', 'github');
+	$oWebhookPayload->Set('type', $sType);
+	$oWebhookPayload->Set('webhook_id', $oWebhook->GetKey());
+	$oWebhookPayload->Set('payload', $json);
+	$oWebhookPayload->DBInsert();
+}
