@@ -46,11 +46,16 @@ SetupWebPage::AddModule(
 		'doc.manual_setup' => '', // hyperlink to manual setup documentation, if any
 		'doc.more_information' => '', // hyperlink to more information, if any
 
+		// Security
+		'delegated_authentication_endpoints' => [
+			'github.php',
+		],
+
 		// Default settings
 		//
 		'settings' => [
 			'webhook_user_id' => null,
-			'contact_attribute_for_gihub_nickname' => null,
+			'user_resolver_class_name' => null,
 		],
 	]
 );
