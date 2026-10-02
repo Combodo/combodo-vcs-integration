@@ -12,6 +12,7 @@ use Combodo\iTop\VCSManagement\Helper\SessionHelper;
 use DateTime;
 use DateTimeZone;
 use DBObject;
+use Exception;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
@@ -39,7 +40,7 @@ class GitHubAPIAuthenticationService extends AbstractGitHubAPI
 	 * GetInstance.
 	 *
 	 * @return GitHubAPIAuthenticationService
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function GetInstance(): GitHubAPIAuthenticationService
 	{

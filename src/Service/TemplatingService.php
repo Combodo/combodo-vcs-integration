@@ -14,6 +14,7 @@ use Combodo\iTop\VCSManagement\Hook\VCSTemplatingExtensionInterface;
 use DateTimeImmutable;
 use DBObject;
 use Exception;
+use ExceptionLog;
 use FastVolt\Helper\Markdown;
 
 /**

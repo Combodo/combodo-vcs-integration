@@ -11,6 +11,7 @@ namespace Combodo\iTop\VCSManagement\Hook;
 
 use Dict;
 use Exception;
+use ExceptionLog;
 use iPopupMenuExtension;
 use JSPopupMenuItem;
 use SeparatorPopupMenuItem;
