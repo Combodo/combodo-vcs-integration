@@ -31,7 +31,7 @@
                 </style>
                 <reconciliation>
                     <attributes>
-                        <attribute id="id"/>
+                        <attribute id="name"/>
                     </attributes>
                 </reconciliation>
             </properties>
@@ -319,7 +319,7 @@ your private key goes here
                 </style>
                 <reconciliation>
                     <attributes>
-                        <attribute id="id"/>
+                        <attribute id="name"/>
                     </attributes>
                 </reconciliation>
             </properties>
@@ -672,7 +672,7 @@ your private key goes here
                 </style>
                 <reconciliation>
                     <attributes>
-                        <attribute id="id"/>
+                        <attribute id="webhook_id"/>
                     </attributes>
                 </reconciliation>
             </properties>
@@ -794,7 +794,7 @@ your private key goes here
                 </style>
                 <reconciliation>
                     <attributes>
-                        <attribute id="contact_id"/>
+                        <attribute id="contact_name"/>
                         <attribute id="vcswebhook_name"/>
                     </attributes>
                 </reconciliation>
@@ -890,8 +890,8 @@ your private key goes here
                 </style>
                 <reconciliation>
                     <attributes>
-                        <attribute id="document_id"/>
-                        <attribute id="vcswebhook_id"/>
+                        <attribute id="document_name"/>
+                        <attribute id="vcswebhook_name"/>
                     </attributes>
                 </reconciliation>
                 <uniqueness_rules>
@@ -989,8 +989,8 @@ your private key goes here
                 </style>
                 <reconciliation>
                     <attributes>
-                        <attribute id="vcswebhook_id"/>
-                        <attribute id="automation_id"/>
+                        <attribute id="vcswebhook_name"/>
+                        <attribute id="automation_name"/>
                     </attributes>
                 </reconciliation>
                 <uniqueness_rules>
@@ -1314,8 +1314,8 @@ your private key goes here
                 <style/>
                 <reconciliation>
                     <attributes>
-                        <attribute id="automation_id"/>
-                        <attribute id="event_id"/>
+                        <attribute id="automation_name"/>
+                        <attribute id="event_name"/>
                     </attributes>
                 </reconciliation>
                 <uniqueness_rules>
@@ -1429,7 +1429,8 @@ your private key goes here
                 </style>
                 <reconciliation>
                     <attributes>
-                        <attribute id="id"/>
+                        <attribute id="provider"/>
+                        <attribute id="name"/>
                     </attributes>
                 </reconciliation>
             </properties>
