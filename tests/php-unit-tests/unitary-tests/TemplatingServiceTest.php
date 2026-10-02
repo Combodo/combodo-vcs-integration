@@ -16,6 +16,7 @@ class TemplatingServiceTest extends ItopTestCase
 	{
 		parent::setUp();
 		$this->RequireOnceItopFile('/env-production/combodo-vcs-integration/vendor/autoload.php');
+		$this->RequireOnceItopFile('/setup/setuputils.class.inc.php');
 	}
 
 	public function testParseTemplateReplacesEventAndDataInIfBranch(): void
