@@ -129,5 +129,5 @@ Stable packages are available on the [iTop Hub Store](https://store.itophub.io/e
 This extension is sponsored, led, and supported by [Combodo](https://www.combodo.com).
 
 
-
+test N°5367 - Test combodo-vcs-integration 1.2.1
 
