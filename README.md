@@ -2,7 +2,7 @@
 
 ## Overview
 
-`combodo-vcs-integration` connects GitHub events to iTop objects through configurable automations.
+`combodo-vcs-integration` connects GitHub events to iTop objects through configurable automations via webhooks.
 
 Main use cases:
 
