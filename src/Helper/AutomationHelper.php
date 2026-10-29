@@ -70,7 +70,10 @@ class AutomationHelper
 	public static function SearchContactFromNickname($sNicknameVarValue, $sPlatform): ?DBObject
 	{
 		$oUser = self::SearchUserFromContactNickname($sNicknameVarValue, $sPlatform);
-		return  MetaModel::GetObject('Person', $oUser->Get('contactid'));
+		if ($oUser === null) {
+			return null;
+		}
+		return MetaModel::GetObject('Person', $oUser->Get('contactid'));
 	}
 
 	public static function AddAutomationSubscribedEvents($oAutomation, $aEvents): void
