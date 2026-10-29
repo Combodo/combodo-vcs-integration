@@ -130,4 +130,4 @@ This extension is sponsored, led, and supported by [Combodo](https://www.combodo
 
 
 test N°5367 - Test combodo-vcs-integration 1.2.1
-
+test N°5367 - Lenaick feedback
