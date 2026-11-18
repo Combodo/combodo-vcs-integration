@@ -66,8 +66,8 @@ class VCSWebhookAsynchronousHandler implements iBackgroundProcess
 				if ($oWebhookPayload->Get('provider') == 'github') {
 					/** @var VCSWebhook $oWebhook */
 					$oWebhook = MetaModel::GetObject('VCSWebhook', $oWebhookPayload->Get('webhook_id'));
-					$iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
 					$oWebhookPayload->DBDelete();
+					$iAutomationsTriggeredCount = $oAutomationInstance->HandleWebhook($oWebhookPayload->Get('type'), $oWebhook, json_decode($oWebhookPayload->Get('payload'), true));
 
 					// log
 					ModuleHelper::LogDebug('Processing payload Ref:'.$iKey, [
